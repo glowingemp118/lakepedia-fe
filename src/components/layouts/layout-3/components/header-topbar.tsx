@@ -16,9 +16,7 @@ import { NotificationsSheet } from '../../layout-1/shared/topbar/notifications-s
 export function HeaderTopbar() {
   return (
     <div className="flex items-center gap-2 lg:gap-3.5">
-      <Button asChild className="hidden md:inline-flex">
-        <Link to="/layout-3/empty">Get Started</Link>
-      </Button>
+   
       <SearchDialog
         trigger={
           <Button

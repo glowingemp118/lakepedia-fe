@@ -14,7 +14,7 @@ import {
   Users,
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { toAbsoluteUrl } from '@/lib/helpers';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -31,6 +31,10 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Switch } from '@/components/ui/switch';
+import { useDispatch } from 'react-redux';
+import { logout, selectUser } from '@/store/slices/userSlice';
+import { useSelector } from 'react-redux';
+import { paths } from '@/components/layouts/layout-3/components/paths';
 
 const I18N_LANGUAGES = [
   {
@@ -60,11 +64,30 @@ const I18N_LANGUAGES = [
 ];
 
 export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
+
+  const dispatch = useDispatch();
+
+  const user = useSelector(selectUser);
+
+  const isAdmin = user?.role === 'admin';
+
+  const isTraveler= user?.role === 'traveler';
+
+  const isBusiness= user?.role === 'business';
+
+  const navigage=useNavigate();
+
   const currenLanguage = I18N_LANGUAGES[0];
+
   const { theme, setTheme } = useTheme();
 
   const handleThemeToggle = (checked: boolean) => {
     setTheme(checked ? 'dark' : 'light');
+  };
+  const handleLogout = () => {
+    dispatch(logout());
+    navigage(isAdmin && paths.adminDashboard.root || isTraveler && paths.travelerDashboard.root || isBusiness && paths.businessDashboard.root || '/auth/signin');
+
   };
 
   return (
@@ -252,7 +275,7 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
           </div>
         </DropdownMenuItem>
         <div className="p-2 mt-1">
-          <Button variant="outline" size="sm" className="w-full">
+          <Button variant="outline" size="sm" className="w-full" onClick={handleLogout}>
             Logout
           </Button>
         </div>

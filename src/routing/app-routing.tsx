@@ -4,6 +4,7 @@ import { useLoadingBar } from 'react-top-loading-bar';
 import { AppRoutingSetup } from './app-routing-setup';
 
 export function AppRouting() {
+
   const { start, complete } = useLoadingBar({
     color: 'var(--color-primary)',
     shadow: false,
@@ -13,6 +14,7 @@ export function AppRouting() {
   });
 
   const [firstLoad, setFirstLoad] = useState(true);
+  
   const location = useLocation();
 
   useEffect(() => {

@@ -10,6 +10,8 @@ import { TwoFactorAuth } from './pages/extended/tfa';
 import { ResetPasswordPage } from './pages/reset-password-page';
 import { SignInPage } from './pages/signin-page';
 import { SignUpPage } from './pages/signup-page';
+import { AdminSignInPage } from './pages/admin-signin-page';
+import { VerifyOTP } from './pages/verify-otp';
 
 // Define the auth routes
 export const authRoutes: RouteObject[] = [
@@ -22,8 +24,16 @@ export const authRoutes: RouteObject[] = [
         element: <SignInPage />,
       },
       {
+        path: 'admin/signin',
+        element: <AdminSignInPage />,
+      },
+      {
         path: 'signup',
         element: <SignUpPage />,
+      },
+      {
+        path: 'verify-otp',
+        element: <VerifyOTP />
       },
       {
         path: 'change-password',

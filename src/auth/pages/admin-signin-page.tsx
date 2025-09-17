@@ -1,8 +1,6 @@
-import { Icons } from '@/components/common/icons';
 import { paths } from '@/components/layouts/layout-3/components/paths';
 import { Alert, AlertIcon, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import {
   Form,
   FormControl,
@@ -12,7 +10,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useBoolean } from '@/hooks/use-boolean';
 import { useLoginMutation } from '@/store/Reducer/auth';
 import { setUser } from '@/store/slices/userSlice';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -20,10 +17,11 @@ import { AlertCircle, Check, Eye, EyeOff, LoaderCircleIcon } from 'lucide-react'
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getSigninSchema, SigninSchemaType } from '../forms/signin-schema';
+import { useBoolean } from '@/hooks/use-boolean';
 
-export function SignInPage() {
+export function AdminSignInPage() {
 
   const [searchParams] = useSearchParams();
 
@@ -35,14 +33,14 @@ export function SignInPage() {
 
   const process = useBoolean();
 
-  const Google = useBoolean();
-
   const [login] = useLoginMutation();
 
   const [error, setError] = useState<string | null>(null);
 
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
+
+  // Check for success message from password reset or error messages
   useEffect(() => {
 
     const pwdReset = searchParams.get('pwd_reset');
@@ -90,12 +88,12 @@ export function SignInPage() {
     defaultValues: {
       email: '',
       password: '',
-      rememberMe: true,
     },
   });
 
   async function onSubmit(values: SigninSchemaType) {
     try {
+      // setIsProcessing(true);
       process.onTrue();
       setError(null);
 
@@ -116,9 +114,10 @@ export function SignInPage() {
       }
       const res = await login({ email: values.email, password: values.password, ...defaultValues }).unwrap();
       if (res?.data) {
-        const user = { ...res.data?.user, token: res.data.token, role: res.data?.user?.user_type === 2 ? 'traveler' : 'business' };
+        console.log('Sign-in successful:', res.data);
+        const user = { ...res.data?.user, token: res.data.token, role: "admin" };
         dispatch(setUser(user));
-        const nextPath = searchParams.get('next') || (user?.role === 'traveler' ? paths.travelerDashboard.root : paths.businessDashboard.root);
+        const nextPath = searchParams.get('next') || paths.adminDashboard.root;
         navigate(nextPath);
       }
       // Get the 'next' parameter from URL if it exists
@@ -135,36 +134,6 @@ export function SignInPage() {
     }
   }
 
-  // Handle Google Sign In with Supabase OAuth
-  const handleGoogleSignIn = async () => {
-    try {
-      Google.onTrue();
-      setError(null);
-
-      // Get the next path if available
-      const nextPath = searchParams.get('next');
-
-      // Calculate the redirect URL
-      const redirectTo = nextPath
-        ? `${window.location.origin}/auth/callback?next=${encodeURIComponent(nextPath)}`
-        : `${window.location.origin}/auth/callback`;
-
-      console.log('Initiating Google sign-in with redirect:', redirectTo);
-
-      // Use our adapter to initiate the OAuth flow
-      // await SupabaseAdapter.signInWithOAuth('google', { redirectTo });
-
-      // The browser will be redirected automatically
-    } catch (err) {
-      console.error('Google sign-in error:', err);
-      setError(
-        err instanceof Error
-          ? err.message
-          : 'Failed to sign in with Google. Please try again.',
-      );
-      Google.onFalse();
-      }
-  };
 
   return (
     <Form {...form}>
@@ -177,45 +146,6 @@ export function SignInPage() {
           <p className="text-sm text-muted-foreground">
             Welcome back! Log in with your credentials.
           </p>
-        </div>
-
-        <Alert appearance="light" size="sm" close={false}>
-          <AlertIcon>
-            <AlertCircle className="text-primary" />
-          </AlertIcon>
-          <AlertTitle className="text-accent-foreground">
-            Use <strong>demo@kt.com</strong> username and {` `}
-            <strong>demo123</strong> password for demo access.
-          </AlertTitle>
-        </Alert>
-
-        <div className="flex flex-col gap-3.5">
-          <Button
-            variant="outline"
-            type="button"
-            onClick={handleGoogleSignIn}
-            disabled={Google.value}
-          >
-            {Google.value ? (
-              <span className="flex items-center gap-2">
-                <LoaderCircleIcon className="size-4! animate-spin" /> Signing in with
-                Google...
-              </span>
-            ) : (
-              <>
-                <Icons.googleColorful className="size-5!" /> Sign in with Google
-              </>
-            )}
-          </Button>
-        </div>
-
-        <div className="relative py-1.5">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t" />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">or</span>
-          </div>
         </div>
 
         {error && (
@@ -287,34 +217,6 @@ export function SignInPage() {
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="rememberMe"
-          render={({ field }) => (
-            <FormItem className="flex flex-col space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <FormLabel className="text-sm font-normal cursor-pointer">
-                    Remember me
-                  </FormLabel>
-                </div>
-                <Link
-                  to="/auth/reset-password"
-                  className="text-sm font-semibold text-foreground hover:text-primary"
-                >
-                  Forgot Password?
-                </Link>
-              </div>
-            </FormItem>
-          )}
-        />
-
         <Button type="submit" className="w-full" disabled={process.value}>
           {process.value ? (
             <span className="flex items-center gap-2">
@@ -324,16 +226,6 @@ export function SignInPage() {
             'Sign In'
           )}
         </Button>
-
-        <div className="text-center text-sm text-muted-foreground">
-          Don't have an account?{' '}
-          <Link
-            to="/auth/signup"
-            className="text-sm font-semibold text-foreground hover:text-primary"
-          >
-            Sign Up
-          </Link>
-        </div>
       </form>
     </Form>
   );

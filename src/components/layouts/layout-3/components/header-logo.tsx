@@ -1,9 +1,4 @@
-import { useEffect, useState } from 'react';
-import { ChevronDown, Menu } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
-import { MENU_ROOT } from '@/config/layout-3.config';
-import { toAbsoluteUrl } from '@/lib/helpers';
-import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 import {
   Sheet,
   SheetBody,
@@ -11,18 +6,30 @@ import {
   SheetHeader,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
+import { MENU_ROOT } from '@/config/layout-3.config';
+import { toAbsoluteUrl } from '@/lib/helpers';
+import { selectUser } from '@/store/slices/userSlice';
+import { Menu } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Link, useLocation } from 'react-router-dom';
+import { paths } from './paths';
 import { SidebarMenu } from './sidebar-menu';
 
 export function HeaderLogo() {
+
   const { pathname } = useLocation();
+
   const [selectedMenuItem, setSelectedMenuItem] = useState(MENU_ROOT[1]);
+
+    const user = useSelector(selectUser);
+
+    const isTraveler = user?.role === 'traveler';
+
+    const isBusiness=user?.role==="business";
+
+    const isAdmin = user?.role === 'admin';
+
 
   useEffect(() => {
     MENU_ROOT.forEach((item) => {
@@ -36,7 +43,7 @@ export function HeaderLogo() {
     <div className="flex items-center gap-2.5">
       {/* Logo */}
       <div className="flex items-center justify-center lg:w-(--sidebar-width) shrink-0">
-        <Sheet>
+        <Sheet >
           <SheetTrigger asChild>
             <Button variant="ghost" mode="icon" className="-ms-2 lg:hidden">
               <Menu className="size-4!" />
@@ -54,22 +61,22 @@ export function HeaderLogo() {
           </SheetContent>
         </Sheet>
 
-        <Link to="/layout-3" className="mx-1">
+        <Link to={isAdmin ? paths.adminDashboard.root : isBusiness ? paths.businessDashboard.root : isTraveler ? paths.travelerDashboard.root : '/'} className="mx-1">
           <img
-            src={toAbsoluteUrl('/media/app/mini-logo-primary.svg')}
-            className="dark:hidden min-h-[24px]"
+            src={toAbsoluteUrl('/media/app/mini-logo.png')}
+            className="dark:hidden md:min-h-[24px] size-10!"
             alt="logo"
           />
           <img
-            src={toAbsoluteUrl('/media/app/mini-logo-primary-dark.svg')}
-            className="hidden dark:inline-block min-h-[24px]"
+            src={toAbsoluteUrl('/media/app/mini-logo.png')}
+            className="hidden dark:inline-block md:min-h-[24px] size-10!"
             alt="logo"
           />
         </Link>
       </div>
 
       {/* Menu Section */}
-      <div className="flex items-center gap-3">
+      {/* <div className="flex items-center gap-3">
         <h3 className="text-accent-foreground text-base hidden md:block">
           Metronic Team
         </h3>
@@ -97,7 +104,7 @@ export function HeaderLogo() {
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
+      </div> */}
     </div>
   );
 }

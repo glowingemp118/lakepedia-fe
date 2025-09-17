@@ -1,17 +1,3 @@
-import {
-  BarChart3,
-  Bell,
-  CheckSquare,
-  Code,
-  HelpCircle,
-  MessageSquare,
-  Settings,
-  Shield,
-  UserCircle,
-  Users,
-} from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import {
   Tooltip,
@@ -19,6 +5,29 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { cn } from '@/lib/utils';
+import { selectUser } from '@/store/slices/userSlice';
+import {
+  BarChart3,
+  Bell,
+  Building2,
+  CheckSquare,
+  Code,
+  CreditCard,
+  Heart,
+  HelpCircle,
+  ImageIcon,
+  MessageSquare,
+  Plane,
+  Settings,
+  Shield,
+  Star,
+  UserCircle,
+  Users
+} from 'lucide-react';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { paths } from './paths';
 
 export interface Item {
   icon: React.ComponentType<{ className?: string }>;
@@ -29,51 +38,121 @@ export interface Item {
 }
 
 export function SidebarMenu() {
-  const items: Item[] = [
+
+  const user = useSelector(selectUser);
+
+  const isTraveler = user?.role === "traveler";
+
+  const isAdmin = user?.role === "admin";
+
+  const isBusiness = user?.role === "business";
+
+
+  const TravelerSidebar = [
+
     {
       icon: BarChart3,
-      path: '/layout-3',
+      path: paths.travelerDashboard.root,
+      title: 'Dashboard',
+    },
+    {
+      icon: Plane,
+      path: paths.travelerDashboard.trips,
+      title: 'Trips'
+    },
+    {
+      icon: ImageIcon,
+      path: paths.travelerDashboard.photos,
+      title: 'Photos'
+    },
+    {
+      icon: Star,
+      path: paths.travelerDashboard.reviews,
+      title: 'Reviews'
+    },
+    {
+      icon: Heart,
+      path: paths.travelerDashboard.favorites,
+      title: 'Favorites'
+    }
+  ]
+  const BusinessSidebar = [
+    {
+      icon: BarChart3,
+      path: paths.businessDashboard.root,
+      title: "Dashboard",
+    },
+    {
+      icon: Building2,
+      path: paths.businessDashboard.profile,
+      title: "Profile",
+    },
+    {
+      icon: ImageIcon,
+      path: paths.businessDashboard.media,
+      title: "Media",
+    },
+    {
+      icon: BarChart3,
+      path: paths.businessDashboard.performance,
+      title: "Performance",
+    },
+    {
+      icon: CreditCard,
+      path: paths.businessDashboard.subscriptions,
+      title: "Subscriptions",
+    },
+    {
+      icon: MessageSquare,
+      path: paths.businessDashboard.chat,
+      title: "Chat",
+    },
+  ];
+  const AdminSidebar = [
+    {
+      icon: BarChart3,
+      path: paths.adminDashboard.root,
       title: 'Dashboard',
     },
     {
       icon: UserCircle,
-      path: '#',
+      path: paths.adminDashboard.profile,
       title: 'Profile',
     },
     {
       icon: Settings,
-      path: '#',
+      path: paths.adminDashboard.account,
       title: 'Account',
     },
     {
       icon: Users,
-      path: '#',
+      path: paths.adminDashboard.network,
       title: 'Network',
       active: true,
     },
     {
       icon: Shield,
-      path: '#',
+      path: paths.adminDashboard.securityLogs,
       title: 'Plans',
     },
     {
       icon: MessageSquare,
-      path: '#',
+      path: paths.adminDashboard.notifications,
       title: 'Security Logs',
     },
     {
       icon: Bell,
-      path: '#',
+      path: paths.adminDashboard.notifications,
       title: 'Notifications',
     },
     {
       icon: CheckSquare,
-      path: '#',
+      path: paths.adminDashboard.acl,
       title: 'ACL',
     },
     {
       icon: Code,
-      path: '#',
+      path: paths.adminDashboard.apiKeys,
       title: 'API Keys',
     },
     {
@@ -81,6 +160,13 @@ export function SidebarMenu() {
       path: 'https://docs.keenthemes.com/metronic-vite',
       title: 'Docs',
     },
+  ];
+
+  const items: Item[] = [
+
+    ...isTraveler ? TravelerSidebar : [],
+    ...isBusiness ? BusinessSidebar : [],
+    ...isAdmin ? AdminSidebar : []
   ];
 
   return (

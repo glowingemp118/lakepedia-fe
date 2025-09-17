@@ -6,7 +6,7 @@ export function Layout3() {
   return (
     <>
       <Helmet>
-        <title>Metronic - Layout 3</title>
+        <title>Dashboard</title>
       </Helmet>
 
       <LayoutProvider>
