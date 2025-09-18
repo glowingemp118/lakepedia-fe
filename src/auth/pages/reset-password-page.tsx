@@ -1,64 +1,115 @@
-import { useState } from 'react';
-import { useAuth } from '@/auth/context/auth-context';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { AlertCircle, Check, MoveLeft } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
 import { Alert, AlertIcon, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import {
   Form,
-  FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
+  FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { LoaderCircleIcon } from 'lucide-react';
+import { useBoolean } from '@/hooks/use-boolean';
+import { useResetPasswordMutation } from '@/store/Reducer/auth';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { AlertCircle, Check, Eye, EyeOff, LoaderCircleIcon, MoveLeft } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import {
-  getResetRequestSchema,
-  ResetRequestSchemaType,
+  getNewPasswordSchema,
+  NewPasswordSchemaType
 } from '../forms/reset-password-schema';
 
 export function ResetPasswordPage() {
-  const {} = useAuth();
-  const [isProcessing, setIsProcessing] = useState(false);
+
+  const { state } = useLocation();
+
+  const navigate = useNavigate();
+
+  const show = useBoolean();
+
+  const process = useBoolean();
+
   const [error, setError] = useState<string | null>(null);
+
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  const form = useForm<ResetRequestSchemaType>({
-    resolver: zodResolver(getResetRequestSchema()),
+  const [codeInputs, setCodeInputs] = useState(Array(6).fill(""));
+
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+  const [resetPassword] = useResetPasswordMutation();
+
+  const form = useForm<NewPasswordSchemaType>({
+    resolver: zodResolver(getNewPasswordSchema()),
     defaultValues: {
-      email: '',
+      password: '',
+      confirmPassword: '',
     },
   });
 
-  async function onSubmit(values: ResetRequestSchemaType) {
+  const {formState:{errors}}=form;
+
+
+ const email = (state as { email: string })?.email || "";
+
+  const otp = (state as { otp: string })?.otp || "";
+
+
+  const handleInputChange = (index: number, value: string) => {
+    if (!/^\d?$/.test(value)) return;
+
+    const updatedInputs = [...codeInputs];
+    updatedInputs[index] = value;
+    setCodeInputs(updatedInputs);
+
+    // keep hidden input in sync with RHF
+    form.setValue("otp", updatedInputs.join(""));
+
+    if (value && index < 5) {
+      inputRefs.current[index + 1]?.focus();
+    }
+  };
+
+  const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Backspace" && !codeInputs[index] && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    }
+  };
+
+
+  useEffect(() => {
+    if (errors.otp && form.watch("otp").length === 6) {
+      form.clearErrors("otp");
+    }
+  }, [errors.otp, form, form.watch("otp")?.length]);
+
+  useEffect(() => {
+    if (otp) {
+      const otpArray = otp.split("");
+      setCodeInputs(otpArray);
+      form.setValue("otp", otp);
+    }
+  }, [otp, form.setValue]);
+
+  async function onSubmit(values: NewPasswordSchemaType) {
     try {
-      setIsProcessing(true);
+      process.onTrue();
       setError(null);
 
-      console.log('Submitting password reset for:', values.email);
+      let response = await resetPassword({
+        otp,
+        email,
+        password: values.password,
+      });
 
-      // Request password reset using Supabase directly
-      // const { error } = await supabase.auth.resetPasswordForEmail(
-      //   values.email,
-      //   {
-      //     redirectTo: `${window.location.origin}/auth/reset-password`,
-      //   },
-      // );
+      if (!response?.error) {
+        toast.success("Password reset successfully");
+        navigate('/auth/signin');
+      }
 
-      // if (error) {
-      //   throw new Error(error.message);
-      // }
 
-      // Set success message
-      setSuccessMessage(
-        `Password reset link sent to ${values.email}! Please check your inbox and spam folder.`,
-      );
-
-      // Reset form
       form.reset();
     } catch (err) {
       console.error('Password reset request error:', err);
@@ -68,7 +119,6 @@ export function ResetPasswordPage() {
           : 'An unexpected error occurred. Please try again or contact support.',
       );
     } finally {
-      setIsProcessing(false);
     }
   }
 
@@ -81,7 +131,7 @@ export function ResetPasswordPage() {
               Reset Password
             </h1>
             <p className="text-sm text-muted-foreground">
-              Enter your email to receive a password reset link
+              Enter your new password.
             </p>
           </div>
 
@@ -104,32 +154,105 @@ export function ResetPasswordPage() {
           )}
 
           <div className="space-y-5">
+
+            <div className="flex flex-wrap justify-center gap-1.5">
+              {codeInputs.map((value, index) => (
+                <Input
+                  key={index}
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={1}
+                  className="size-10 shrink-0 px-0 text-center"
+                  value={value}
+                  ref={(el) => (inputRefs.current[index] = el)}
+                  onKeyDown={(e) => handleKeyDown(index, e)}
+                  onChange={(e) => handleInputChange(index, e.target.value)}
+                  autoFocus={index === 0}
+                />
+              ))}
+            </div>
+
+            <input type="hidden" {...form.register("otp")} />
+
+            {errors.otp && (
+              <p className="text-red-400 text-sm ">{errors.otp.message}</p>
+            )}
+
             <FormField
               control={form.control}
-              name="email"
+              name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
+                  <div className="flex justify-between items-center gap-2.5">
+                    <FormLabel>Password</FormLabel>
+                  </div>
+                  <div className="relative">
                     <Input
-                      placeholder="your.email@example.com"
-                      type="email"
-                      autoComplete="email"
+                      placeholder="Enter New password"
+                      type={show.value ? 'text' : 'password'} // Toggle input type
                       {...field}
                     />
-                  </FormControl>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      mode="icon"
+                      onClick={show.onToggle}
+                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    >
+                      {show.value ? (
+                        <EyeOff className="text-muted-foreground" />
+                      ) : (
+                        <Eye className="text-muted-foreground" />
+                      )}
+                    </Button>
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <Button type="submit" className="w-full" disabled={isProcessing}>
-              {isProcessing ? (
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="flex justify-between items-center gap-2.5">
+                    <FormLabel>Confirm Password</FormLabel>
+                  </div>
+                  <div className="relative">
+                    <Input
+                      placeholder="Enter New password"
+                      type={show.value ? 'text' : 'password'} // Toggle input type
+                      {...field}
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      mode="icon"
+                      onClick={show.onToggle}
+                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    >
+                      {show.value ? (
+                        <EyeOff className="text-muted-foreground" />
+                      ) : (
+                        <Eye className="text-muted-foreground" />
+                      )}
+                    </Button>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+
+
+            <Button type="submit" className="w-full" disabled={process.value}>
+              {process.value ? (
                 <span className="flex items-center gap-2">
-                  <LoaderCircleIcon className="h-4 w-4 animate-spin" /> Sending Link...
+                  <LoaderCircleIcon className="h-4 w-4 animate-spin" /> Submitting
                 </span>
               ) : (
-                'Send Reset Link'
+                'Submit'
               )}
             </Button>
           </div>

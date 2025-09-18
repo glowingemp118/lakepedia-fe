@@ -69,13 +69,15 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
 
   const user = useSelector(selectUser);
 
+  console.log('User from Redux:', user);
+
   const isAdmin = user?.role === 'admin';
 
-  const isTraveler= user?.role === 'traveler';
+  const isTraveler = user?.role === 'traveler';
 
-  const isBusiness= user?.role === 'business';
+  const isBusiness = user?.role === 'business';
 
-  const navigage=useNavigate();
+  const navigage = useNavigate();
 
   const currenLanguage = I18N_LANGUAGES[0];
 
@@ -87,8 +89,11 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
   const handleLogout = () => {
     dispatch(logout());
     navigage(isAdmin && paths.adminDashboard.root || isTraveler && paths.travelerDashboard.root || isBusiness && paths.businessDashboard.root || '/auth/signin');
-
   };
+
+  const handleGoToProfile = () => {
+    navigage(isAdmin && paths.adminDashboard.profile || isTraveler && paths.travelerDashboard.profile || isBusiness && paths.businessDashboard.profile || '/auth/signin');
+  }
 
   return (
     <DropdownMenu>
@@ -99,7 +104,7 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
           <div className="flex items-center gap-2">
             <img
               className="size-9 rounded-full border-2 border-green-500"
-              src={toAbsoluteUrl('/media/avatars/300-2.png')}
+              src={user?.image as string || toAbsoluteUrl('/media/avatars/300-2.png')}
               alt="User avatar"
             />
             <div className="flex flex-col">
@@ -107,13 +112,13 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
                 to="#"
                 className="text-sm text-mono hover:text-primary font-semibold"
               >
-                Sean
+                 {user?.first_name as string} {user?.last_name as string}
               </Link>
               <a
-                href={`mailto:sean@kt.com`}
+                href={`mailto:${user?.email as string}`}
                 className="text-xs text-muted-foreground hover:text-primary"
               >
-                sean@kt.com
+                {user?.email as string}
               </a>
             </div>
           </div>
@@ -126,22 +131,22 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
 
         {/* Menu Items */}
         <DropdownMenuItem asChild>
-          <Link
-            to="#"
+          <div
+            onClick={handleGoToProfile}
             className="flex items-center gap-2"
           >
             <IdCard />
             Public Profile
-          </Link>
+          </div>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link
-            to="#"
+          <div
+            onClick={handleGoToProfile}
             className="flex items-center gap-2"
           >
             <UserCircle />
             My Profile
-          </Link>
+          </div>
         </DropdownMenuItem>
 
         {/* My Account Submenu */}
@@ -161,13 +166,13 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link
-                to="#"
+              <div
+                onClick={handleGoToProfile}
                 className="flex items-center gap-2"
               >
                 <FileText />
                 My Profile
-              </Link>
+              </div>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link

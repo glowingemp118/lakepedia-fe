@@ -14,10 +14,10 @@ export function useBoolean(initialValue: boolean = false) {
         setValue(false)
     }, [])
 
-    const toggle = useCallback(() => {
+    const onToggle = useCallback(() => {
         setValue((prev) => !prev)
     }, [])
 
-    return { value, onTrue, onFalse, toggle }
+    return { value, onTrue, onFalse, onToggle }
 
 }

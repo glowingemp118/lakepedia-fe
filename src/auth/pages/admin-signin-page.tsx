@@ -10,16 +10,17 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useLoginMutation } from '@/store/Reducer/auth';
-import { setUser } from '@/store/slices/userSlice';
+import { useBoolean } from '@/hooks/use-boolean';
+import { useAdminLoginMutation } from '@/store/Reducer/auth';
+import { setToken, setUser } from '@/store/slices/userSlice';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AlertCircle, Check, Eye, EyeOff, LoaderCircleIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { toast } from 'sonner';
 import { getSigninSchema, SigninSchemaType } from '../forms/signin-schema';
-import { useBoolean } from '@/hooks/use-boolean';
 
 export function AdminSignInPage() {
 
@@ -33,7 +34,7 @@ export function AdminSignInPage() {
 
   const process = useBoolean();
 
-  const [login] = useLoginMutation();
+  const [login] = useAdminLoginMutation();
 
   const [error, setError] = useState<string | null>(null);
 
@@ -106,17 +107,16 @@ export function AdminSignInPage() {
       }
 
       // Sign in using the auth context
-      const defaultValues = {
-        "device_id": "demo-123",
-        "device_type": "ios",
-        "language": "en",
-        "timezone": "Asia/Karachi"
-      }
-      const res = await login({ email: values.email, password: values.password, ...defaultValues }).unwrap();
-      if (res?.data) {
-        console.log('Sign-in successful:', res.data);
-        const user = { ...res.data?.user, token: res.data.token, role: "admin" };
-        dispatch(setUser(user));
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const res = await login({ email: values.email, password: values.password, timezone });
+      if (!res?.error) {
+
+        toast.success('Signed in successfully!');
+
+        dispatch(setUser(res?.data?.data?.user));
+
+        dispatch(setToken(res?.data?.data?.token));
+
         const nextPath = searchParams.get('next') || paths.adminDashboard.root;
         navigate(nextPath);
       }

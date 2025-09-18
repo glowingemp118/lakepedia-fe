@@ -12,11 +12,17 @@ export const authApi = createApi({
         body: login,
       }),
     }),
+    adminLogin: builder.mutation({
+      query: (login) => ({
+        url: `admin/auth/login`,
+        method: "POST",
+        body: login,
+      }),
+    }),
     register: builder.mutation({
       query: (register) => ({
         url: `auth/register`,
         method: "POST",
-        // headers: { "Content-Type": "multipart/form-data" },
         body: register,
       }),
     }),
@@ -26,13 +32,38 @@ export const authApi = createApi({
         method: "POST",
         body: login,
       }),
-    })
+    }),
+    verifyOTP: builder.mutation({
+      query: (otpData) => ({
+        url: `auth/verify_email`,
+        method: "PUT",
+        body: otpData,
+      }),
+    }),
+    forgotPassword: builder.mutation({
+      query: (email) => ({
+        url: `auth/forgot_password`,
+        method: "PUT",
+        body: email,
+      }),
+    }),
+    resetPassword: builder.mutation({
+      query: (data) => ({
+        url: `auth/reset_password`,
+        method: "PUT",
+        body: data,
+      }),
+    }),
   }),
-  
+
 });
 
 export const {
   useLoginMutation,
   useRegisterMutation,
-  useGoogleLoginMutation
+  useGoogleLoginMutation,
+  useVerifyOTPMutation,
+  useAdminLoginMutation,
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
 } = authApi;

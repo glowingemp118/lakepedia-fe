@@ -12,6 +12,7 @@ export const paths = {
         photos: `${TRAVELER_DASHBOARD}/photos`,
         reviews: `${TRAVELER_DASHBOARD}/reviews`,
         favorites: `${TRAVELER_DASHBOARD}/favorites`,
+        profile: `${TRAVELER_DASHBOARD}/profile`,
     },
     businessDashboard: {
         root: BUSINESS_DASHBOARD,

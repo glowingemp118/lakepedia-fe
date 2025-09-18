@@ -16,7 +16,7 @@ export const customFetchBaseQuery = (): BaseQueryFn<
   FetchBaseQueryError
 > => {
   const baseQuery = fetchBaseQuery({
-    baseUrl: 'https://27d1vgatca.execute-api.us-east-1.amazonaws.com/dev/api/', // Replace with your API base URL
+    baseUrl: import.meta.env.VITE_API_BASE_URL, // Replace with your API base URL
     prepareHeaders: (headers, { getState }) => {
       const state = getState() as RootState;
       const token = state?.user?.token || '';

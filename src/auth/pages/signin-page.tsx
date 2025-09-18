@@ -14,7 +14,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { useBoolean } from '@/hooks/use-boolean';
 import { useLoginMutation } from '@/store/Reducer/auth';
-import { setUser } from '@/store/slices/userSlice';
+import { setToken, setUser } from '@/store/slices/userSlice';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AlertCircle, Check, Eye, EyeOff, LoaderCircleIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -22,6 +22,7 @@ import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { getSigninSchema, SigninSchemaType } from '../forms/signin-schema';
+import { toast } from 'react-toastify';
 
 export function SignInPage() {
 
@@ -107,21 +108,22 @@ export function SignInPage() {
         return;
       }
 
-      // Sign in using the auth context
-      const defaultValues = {
-        "device_id": "demo-123",
-        "device_type": "ios",
-        "language": "en",
-        "timezone": "Asia/Karachi"
-      }
-      const res = await login({ email: values.email, password: values.password, ...defaultValues }).unwrap();
-      if (res?.data) {
-        const user = { ...res.data?.user, token: res.data.token, role: res.data?.user?.user_type === 2 ? 'traveler' : 'business' };
-        dispatch(setUser(user));
-        const nextPath = searchParams.get('next') || (user?.role === 'traveler' ? paths.travelerDashboard.root : paths.businessDashboard.root);
-        navigate(nextPath);
-      }
-      // Get the 'next' parameter from URL if it exists
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+      const response = await login({ email: values.email, password: values.password, timezone });
+
+      if (!response.error) {
+
+          toast.success('Signed in successfully!');
+
+          dispatch(setUser(response?.data?.data?.user));
+
+          dispatch(setToken(response?.data?.data?.token));
+
+          const nextPath = searchParams.get('next') || (response?.data?.data?.user?.role === 'traveler' ? paths.travelerDashboard.root : paths.businessDashboard.root);
+
+          navigate(nextPath);
+        }
 
     } catch (err) {
       console.error('Unexpected sign-in error:', err);
@@ -151,10 +153,7 @@ export function SignInPage() {
 
       console.log('Initiating Google sign-in with redirect:', redirectTo);
 
-      // Use our adapter to initiate the OAuth flow
-      // await SupabaseAdapter.signInWithOAuth('google', { redirectTo });
-
-      // The browser will be redirected automatically
+      
     } catch (err) {
       console.error('Google sign-in error:', err);
       setError(
@@ -163,7 +162,7 @@ export function SignInPage() {
           : 'Failed to sign in with Google. Please try again.',
       );
       Google.onFalse();
-      }
+    }
   };
 
   return (
@@ -272,7 +271,7 @@ export function SignInPage() {
                   type="button"
                   variant="ghost"
                   mode="icon"
-                  onClick={show.toggle}
+                  onClick={show.onToggle}
                   className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                 >
                   {show.value ? (
@@ -305,7 +304,7 @@ export function SignInPage() {
                   </FormLabel>
                 </div>
                 <Link
-                  to="/auth/reset-password"
+                  to="/auth/forgot-password"
                   className="text-sm font-semibold text-foreground hover:text-primary"
                 >
                   Forgot Password?

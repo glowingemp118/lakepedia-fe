@@ -12,6 +12,7 @@ import { SignInPage } from './pages/signin-page';
 import { SignUpPage } from './pages/signup-page';
 import { AdminSignInPage } from './pages/admin-signin-page';
 import { VerifyOTP } from './pages/verify-otp';
+import { ForgotPasswordPage } from './pages/forgot-password-page';
 
 // Define the auth routes
 export const authRoutes: RouteObject[] = [
@@ -40,6 +41,9 @@ export const authRoutes: RouteObject[] = [
         element: <ChangePasswordPage />,
       },
       {
+        path: 'forgot-password',
+        element: <ForgotPasswordPage />,
+      }, {
         path: 'reset-password',
         element: <ResetPasswordPage />,
       },

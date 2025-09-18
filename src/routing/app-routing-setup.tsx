@@ -17,6 +17,13 @@ import MediaView from '@/pages/business-dashboard/media/view/media-view';
 import PerformanceView from '@/pages/business-dashboard/performance/view/performanc-view';
 import SubscriptionsView from '@/pages/business-dashboard/subscriptions/view/subscriptions-view';
 
+import { ProfileView } from '@/pages/business-dashboard/profile/view/profile-view';
+
+import { ProfileView as TravelerProfileView } from '@/pages/traveler-dashboard/profile/view/profile-view';
+
+import { ProfileView as AdminProfileView } from '@/pages/admin-dasbhoard/profile/view/profile-view';
+
+
 
 export function AppRoutingSetup() {
   return (
@@ -37,6 +44,8 @@ export function AppRoutingSetup() {
 
           {/* Favorites */}
           <Route path="/traveler-dashboard/favorites" element={<FavoritesView />} />
+
+          <Route path="/traveler-dashboard/profile" element={<TravelerProfileView />} />
         </Route>
 
         <Route element={<RequireAuth role={"business"} />}>
@@ -50,11 +59,15 @@ export function AppRoutingSetup() {
 
           {/* Reviews */}
           <Route path="/business-dashboard/subscriptions" element={<SubscriptionsView />} />
+
+          <Route path="/business-dashboard/profile" element={<ProfileView />} />
         </Route>
 
         <Route element={<RequireAuth role={"admin"} />}>
 
           <Route path="/admin-dashboard" element={<Layout3Page />} />
+
+          <Route path="/admin-dashboard/profile" element={<AdminProfileView />} />
         </Route>
 
       </Route>

@@ -1,16 +1,4 @@
-import { ReactNode, useState } from 'react';
-import {
-  Calendar,
-  CheckCheck,
-  MoreVertical,
-  Settings2,
-  Shield,
-  Upload,
-  Users,
-} from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { toAbsoluteUrl } from '@/lib/helpers';
-import { cn } from '@/lib/utils';
+import { AvatarGroup } from '@/components/layouts/layout-1/shared/common/avatar-group';
 import {
   Avatar,
   AvatarFallback,
@@ -39,7 +27,19 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { AvatarGroup } from '@/components/layouts/layout-1/shared/common/avatar-group';
+import { toAbsoluteUrl } from '@/lib/helpers';
+import { cn } from '@/lib/utils';
+import {
+  Calendar,
+  CheckCheck,
+  MoreVertical,
+  Settings2,
+  Shield,
+  Upload,
+  Users,
+} from 'lucide-react';
+import { ReactNode, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 interface Message {
   avatar: string;
@@ -53,58 +53,11 @@ interface Message {
 export function ChatSheet({ trigger }: { trigger: ReactNode }) {
   const [emailInput, setEmailInput] = useState('');
 
-  const messages: Message[] = [
-    {
-      avatar: '/media/avatars/300-5.png',
-      time: '14:04',
-      text: 'Hello! <br> Next week we are closing the project. Do You have questions?',
-      in: true,
-    },
-    {
-      avatar: '/media/avatars/300-2.png',
-      text: 'This is excellent news!',
-      time: '14:08',
-      read: true,
-      out: true,
-    },
-    {
-      avatar: '/media/avatars/300-4.png',
-      time: '14:26',
-      text: 'I have checked the features, can not wait to demo them!',
-      in: true,
-    },
-    {
-      avatar: '/media/avatars/300-1.png',
-      time: '15:09',
-      text: 'I have looked over the rollout plan, and everything seems spot on. I am ready on my end and can not wait for the user feedback.',
-      in: true,
-    },
-    {
-      avatar: '/media/avatars/300-2.png',
-      text: "Haven't seen the build yet, I'll look now.",
-      time: '15:52',
-      read: false,
-      out: true,
-    },
-    {
-      avatar: '/media/avatars/300-2.png',
-      text: 'Checking the build now',
-      time: '15:52',
-      read: false,
-      out: true,
-    },
-    {
-      avatar: '/media/avatars/300-4.png',
-      time: '17:40',
-      text: 'Tomorrow, I will send the link for the meeting',
-      in: true,
-    },
-  ];
-
+ 
   return (
     <Sheet>
       <SheetTrigger asChild>{trigger}</SheetTrigger>
-      <SheetContent className="p-0 gap-0 sm:w-[450px] sm:max-w-none inset-5 start-auto h-auto rounded-lg [&_[data-slot=sheet-close]]:top-4.5 [&_[data-slot=sheet-close]]:end-5">
+      <SheetContent className="p-0 gap-0 sm:w-[450px] sm:max-w-none inset-5 start-auto h-full rounded-lg flex flex-col [&_[data-slot=sheet-close]]:top-4.5 [&_[data-slot=sheet-close]]:end-5">
         <SheetHeader>
           <div className="flex items-center justify-between p-3 border-b border-border">
             <SheetTitle>Chat</SheetTitle>
@@ -197,7 +150,7 @@ export function ChatSheet({ trigger }: { trigger: ReactNode }) {
             </div>
           </div>
         </SheetHeader>
-        <SheetBody className="scrollable-y-auto grow space-y-3.5">
+        <SheetBody className="overflow-y-scroll flex-1 space-y-3.5  ">
           {messages.map((message, index) =>
             message.out ? (
               <div
@@ -255,7 +208,7 @@ export function ChatSheet({ trigger }: { trigger: ReactNode }) {
             ) : null,
           )}
         </SheetBody>
-        <SheetFooter className="block p-0 sm:space-x-0">
+        <SheetFooter className="block p-0 sm:space-x-0 ">
           <div className="p-4 bg-accent/50 flex gap-2">
             <Avatar className="size-9">
               <AvatarImage
@@ -321,3 +274,52 @@ export function ChatSheet({ trigger }: { trigger: ReactNode }) {
     </Sheet>
   );
 }
+
+
+ const messages: Message[] = [
+    {
+      avatar: '/media/avatars/300-5.png',
+      time: '14:04',
+      text: 'Hello! <br> Next week we are closing the project. Do You have questions?',
+      in: true,
+    },
+    {
+      avatar: '/media/avatars/300-2.png',
+      text: 'This is excellent news!',
+      time: '14:08',
+      read: true,
+      out: true,
+    },
+    {
+      avatar: '/media/avatars/300-4.png',
+      time: '14:26',
+      text: 'I have checked the features, can not wait to demo them!',
+      in: true,
+    },
+    {
+      avatar: '/media/avatars/300-1.png',
+      time: '15:09',
+      text: 'I have looked over the rollout plan, and everything seems spot on. I am ready on my end and can not wait for the user feedback.',
+      in: true,
+    },
+    {
+      avatar: '/media/avatars/300-2.png',
+      text: "Haven't seen the build yet, I'll look now.",
+      time: '15:52',
+      read: false,
+      out: true,
+    },
+    {
+      avatar: '/media/avatars/300-2.png',
+      text: 'Checking the build now',
+      time: '15:52',
+      read: false,
+      out: true,
+    },
+    {
+      avatar: '/media/avatars/300-4.png',
+      time: '17:40',
+      text: 'Tomorrow, I will send the link for the meeting',
+      in: true,
+    },
+  ];

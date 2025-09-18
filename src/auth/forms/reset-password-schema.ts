@@ -14,6 +14,9 @@ export const getResetRequestSchema = () => {
 export const getNewPasswordSchema = () => {
   return z
     .object({
+      otp: z
+        .string()
+        .regex(/^\d{6}$/, "OTP must be exactly 6 digits"),
       password: z
         .string()
         .min(6, { message: 'Password must be at least 6 characters.' })
