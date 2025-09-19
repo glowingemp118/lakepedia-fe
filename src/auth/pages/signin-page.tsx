@@ -1,4 +1,3 @@
-import { Icons } from '@/components/common/icons';
 import { paths } from '@/components/layouts/layout-3/components/paths';
 import { Alert, AlertIcon, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
@@ -12,9 +11,12 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useBoolean } from '@/hooks/use-boolean';
 import { useLoginMutation } from '@/store/Reducer/auth';
 import { setToken, setUser } from '@/store/slices/userSlice';
+import { persistor } from '@/store/store';
+import { useAuth0 } from "@auth0/auth0-react";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AlertCircle, Check, Eye, EyeOff, LoaderCircleIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -22,7 +24,6 @@ import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { getSigninSchema, SigninSchemaType } from '../forms/signin-schema';
-import { toast } from 'react-toastify';
 
 export function SignInPage() {
 
@@ -34,15 +35,17 @@ export function SignInPage() {
 
   const show = useBoolean();
 
-  const process = useBoolean();
-
-  const Google = useBoolean();
-
   const [login] = useLoginMutation();
 
   const [error, setError] = useState<string | null>(null);
 
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  const [currentTab, setCurrentTab] = useState("traveler");
+
+  const { loginWithRedirect } = useAuth0();
+
+
 
   useEffect(() => {
 
@@ -95,12 +98,19 @@ export function SignInPage() {
     },
   });
 
+  useEffect(() => {
+    const rememberMeData = localStorage.getItem("rememberMe");
+    if (rememberMeData) {
+      const { email, password, rememberMe } = JSON.parse(rememberMeData);
+      form.setValue("email", email);
+      form.setValue("password", password);
+      form.setValue("rememberMe", rememberMe);
+    }
+  }, []);
+
   async function onSubmit(values: SigninSchemaType) {
     try {
-      process.onTrue();
       setError(null);
-
-      console.log('Attempting to sign in with email:', values.email);
 
       // Simple validation
       if (!values.email.trim() || !values.password) {
@@ -114,16 +124,21 @@ export function SignInPage() {
 
       if (!response.error) {
 
-          toast.success('Signed in successfully!');
+        values.rememberMe ? localStorage.setItem("rememberMe", JSON.stringify({
+          rememberMe: values.rememberMe,
+          email: values.email,
+          password: values.password
+        })) : localStorage.removeItem("rememberMe");
 
-          dispatch(setUser(response?.data?.data?.user));
 
-          dispatch(setToken(response?.data?.data?.token));
+        dispatch(setUser(response?.data?.data?.user));
 
-          const nextPath = searchParams.get('next') || (response?.data?.data?.user?.role === 'traveler' ? paths.travelerDashboard.root : paths.businessDashboard.root);
+        dispatch(setToken(response?.data?.data?.token));
 
-          navigate(nextPath);
-        }
+        const nextPath = searchParams.get('next') || (response?.data?.data?.user?.role === 'traveler' ? paths.travelerDashboard.root : paths.businessDashboard.root);
+
+        navigate(nextPath);
+      }
 
     } catch (err) {
       console.error('Unexpected sign-in error:', err);
@@ -132,91 +147,28 @@ export function SignInPage() {
           ? err.message
           : 'An unexpected error occurred. Please try again.',
       );
-    } finally {
-      process.onFalse();
-    }
+    } 
   }
 
-  // Handle Google Sign In with Supabase OAuth
-  const handleGoogleSignIn = async () => {
-    try {
-      Google.onTrue();
-      setError(null);
-
-      // Get the next path if available
-      const nextPath = searchParams.get('next');
-
-      // Calculate the redirect URL
-      const redirectTo = nextPath
-        ? `${window.location.origin}/auth/callback?next=${encodeURIComponent(nextPath)}`
-        : `${window.location.origin}/auth/callback`;
-
-      console.log('Initiating Google sign-in with redirect:', redirectTo);
-
-      
-    } catch (err) {
-      console.error('Google sign-in error:', err);
-      setError(
-        err instanceof Error
-          ? err.message
-          : 'Failed to sign in with Google. Please try again.',
-      );
-      Google.onFalse();
-    }
-  };
+  const handleChangeTab = (value: string) => {
+    setCurrentTab(value);
+  }
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="block w-full space-y-5"
-      >
-        <div className="text-center space-y-1 pb-3">
-          <h1 className="text-2xl font-semibold tracking-tight">Sign In</h1>
-          <p className="text-sm text-muted-foreground">
-            Welcome back! Log in with your credentials.
-          </p>
-        </div>
-
-        <Alert appearance="light" size="sm" close={false}>
-          <AlertIcon>
-            <AlertCircle className="text-primary" />
-          </AlertIcon>
-          <AlertTitle className="text-accent-foreground">
-            Use <strong>demo@kt.com</strong> username and {` `}
-            <strong>demo123</strong> password for demo access.
-          </AlertTitle>
-        </Alert>
-
-        <div className="flex flex-col gap-3.5">
-          <Button
-            variant="outline"
-            type="button"
-            onClick={handleGoogleSignIn}
-            disabled={Google.value}
-          >
-            {Google.value ? (
-              <span className="flex items-center gap-2">
-                <LoaderCircleIcon className="size-4! animate-spin" /> Signing in with
-                Google...
-              </span>
-            ) : (
-              <>
-                <Icons.googleColorful className="size-5!" /> Sign in with Google
-              </>
-            )}
-          </Button>
-        </div>
-
-        <div className="relative py-1.5">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t" />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">or</span>
-          </div>
-        </div>
-
+    <>
+      <Tabs value={currentTab} onValueChange={handleChangeTab} >
+        <TabsList className="justify-center px-5 mb-2.5" variant="line">
+          <TabsTrigger value="traveler">Traveler</TabsTrigger>
+          <TabsTrigger value="business">Business</TabsTrigger>
+        </TabsList>
+      </Tabs>
+      <div className="text-center space-y-1 pb-3">
+        <h1 className="text-2xl font-semibold tracking-tight">Sign In {currentTab === 'traveler' ? 'Traveler' : 'Business'}</h1>
+        <p className="text-sm text-muted-foreground">
+          Welcome back! Log in with your credentials.
+        </p>
+      </div>
+      <div>
         {error && (
           <Alert
             variant="destructive"
@@ -238,102 +190,193 @@ export function SignInPage() {
             <AlertTitle>{successMessage}</AlertTitle>
           </Alert>
         )}
+      </div>
+      <div className="flex items-center justify-center gap-4">
+        <Button
+          variant="outline"
+          className="py-3 cursor-pointer h-[60px] w-[60px] rounded-full"
+          onClick={() => loginWithRedirect({
+            authorizationParams: {
+              connection: "apple",
+              redirect_uri: "http://localhost:5173/auth/signin",
+            }
+          })}
+        >
+          <span className="w-6 h-6 flex items-center justify-center">
+            <img
+              src="/media/images/social/appleIcon.png"
+              alt="Apple"
+              className="w-[25px] h-[25px] dark:hidden block"
+              width={25}
+              height={25}
+            />
 
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input placeholder="Your email" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <img
+              src="/media/images/social/macIconDark.png"
+              alt="Apple"
+              className="w-[25px] h-[25px] dark:block hidden"
+              width={25}
+              height={25}
+            />
+          </span>
+        </Button>
 
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <div className="flex justify-between items-center gap-2.5">
-                <FormLabel>Password</FormLabel>
-              </div>
-              <div className="relative">
-                <Input
-                  placeholder="Your password"
-                  type={show.value ? 'text' : 'password'} // Toggle input type
-                  {...field}
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  mode="icon"
-                  onClick={show.onToggle}
-                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                >
-                  {show.value ? (
-                    <EyeOff className="text-muted-foreground" />
-                  ) : (
-                    <Eye className="text-muted-foreground" />
-                  )}
-                </Button>
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <Button
+          variant="outline"
+          className=" cursor-pointer h-[60px] w-[60px] rounded-full"
+          onClick={() => loginWithRedirect({
+            authorizationParams: {
+              connection: "google-oauth2",
+              redirect_uri: "http://localhost:5173/auth/signin",
+            }
+          })}
+        >
+          <span className="w-6 h-6 flex items-center justify-center">
 
-        <FormField
-          control={form.control}
-          name="rememberMe"
-          render={({ field }) => (
-            <FormItem className="flex flex-col space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
+            <img
+              src="/media/images/social/googleIcon.png"
+              alt="Google"
+              className="w-[25px] h-[25px]"
+              width={25}
+              height={25}
+            />
+          </span>
+        </Button>
+
+        <Button
+          variant="outline"
+          className=" cursor-pointer h-[60px] w-[60px] rounded-full"
+          onClick={() => loginWithRedirect({
+            authorizationParams: {
+              connection: "facebook",
+              redirect_uri: "http://localhost:5173/auth/signin",
+            }
+          })}
+        >
+          <span className="w-6 h-6 flex items-center justify-center">
+            <img
+              src="/media/images/social/facebook.svg"
+              alt="Meta"
+              className="w-[25px] h-[25px]"
+              width={25}
+              height={25}
+            />
+          </span>
+        </Button>
+      </div>
+      <br />
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="block w-full space-y-5"
+        >
+
+          <div className="relative py-1.5">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-2 text-muted-foreground">or</span>
+            </div>
+          </div>
+
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input placeholder="Your email" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <div className="flex justify-between items-center gap-2.5">
+                  <FormLabel>Password</FormLabel>
+                </div>
+                <div className="relative">
+                  <Input
+                    placeholder="Your password"
+                    type={show.value ? 'text' : 'password'} // Toggle input type
+                    {...field}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    mode="icon"
+                    onClick={show.onToggle}
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                  >
+                    {show.value ? (
+                      <EyeOff className="text-muted-foreground" />
+                    ) : (
+                      <Eye className="text-muted-foreground" />
+                    )}
+                  </Button>
+                </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className='flex justify-between items-center mb-5'>
+            <FormField
+              control={form.control}
+              name="rememberMe"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-0.5 space-y-0 rounded-md">
                   <FormControl>
                     <Checkbox
                       checked={field.value}
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
-                  <FormLabel className="text-sm font-normal cursor-pointer">
-                    Remember me
-                  </FormLabel>
-                </div>
-                <Link
-                  to="/auth/forgot-password"
-                  className="text-sm font-semibold text-foreground hover:text-primary"
-                >
-                  Forgot Password?
-                </Link>
-              </div>
-            </FormItem>
-          )}
-        />
+                  <div className="space-y-1 leading-none">
+                    <FormLabel className="text-sm text-muted-foreground">
+                      Remember me
 
-        <Button type="submit" className="w-full" disabled={process.value}>
-          {process.value ? (
-            <span className="flex items-center gap-2">
-              <LoaderCircleIcon className="h-4 w-4 animate-spin" /> Loading...
-            </span>
-          ) : (
-            'Sign In'
-          )}
-        </Button>
+                    </FormLabel>
+                    <FormMessage />
+                  </div>
+                </FormItem>
+              )}
+            />
+            <Link
+              to="/auth/forgot-password"
+              className="text-sm font-semibold text-foreground hover:text-primary"
+            >
+              Forgot Password?
+            </Link>
+          </div>
 
-        <div className="text-center text-sm text-muted-foreground">
-          Don't have an account?{' '}
-          <Link
-            to="/auth/signup"
-            className="text-sm font-semibold text-foreground hover:text-primary"
-          >
-            Sign Up
-          </Link>
-        </div>
-      </form>
-    </Form>
+          <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+            {form.formState.isSubmitting ? (
+              <span className="flex items-center gap-2">
+                <LoaderCircleIcon className="h-4 w-4 animate-spin" /> Loading...
+              </span>
+            ) : (
+              'Sign In'
+            )}
+          </Button>
+
+          <div className="text-center text-sm text-muted-foreground">
+            Don't have an account?{' '}
+            <Link
+              to="/auth/signup"
+              className="text-sm font-semibold text-foreground hover:text-primary"
+            >
+              Sign Up
+            </Link>
+          </div>
+        </form>
+      </Form >
+    </>
   );
 }

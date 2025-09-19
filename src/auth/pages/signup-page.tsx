@@ -28,13 +28,13 @@ export function SignUpPage() {
 
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
-  const [isProcessing, setIsProcessing] = useState(false);
-
   const [error, setError] = useState<string | null>(null);
 
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const [currentTab, setCurrentTab] = useState("traveler");
+
+  const [timeRemaining, setTimeRemaining] = useState(0);
 
   const form = useForm<SignupSchemaType>({
     resolver: zodResolver(getSignupSchema()),
@@ -49,7 +49,6 @@ export function SignUpPage() {
 
   async function onSubmit(values: SignupSchemaType) {
     try {
-      setIsProcessing(true);
       setError(null);
 
       // Register the user with Supabase
@@ -84,9 +83,7 @@ export function SignUpPage() {
           ? err.message
           : 'An unexpected error occurred during registration. Please try again.',
       );
-    } finally {
-      setIsProcessing(false);
-    }
+    } 
   }
 
   const handleChangeTab = (value: string) => {
@@ -208,8 +205,8 @@ export function SignUpPage() {
           )}
         />
 
-        <Button type="submit" className="w-full" disabled={isProcessing}>
-          {isProcessing ? (
+        <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+          {form.formState.isSubmitting ? (
             <span className="flex items-center gap-2">
               <LoaderCircleIcon className="h-4 w-4 animate-spin" /> Creating account...
             </span>

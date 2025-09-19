@@ -1,19 +1,19 @@
 // redux/store.ts
-import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
-import userReducer from "./slices/userSlice";
 import loaderReducer from "./slices/loaderSlice";
+import userReducer from "./slices/userSlice";
 
 import {
-  persistStore,
-  persistReducer,
   FLUSH,
-  REHYDRATE,
   PAUSE,
   PERSIST,
+  persistReducer,
+  persistStore,
   PURGE,
   REGISTER,
+  REHYDRATE,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
@@ -22,18 +22,19 @@ import { userApi } from "./Reducer/users";
 
 // Combine all reducers into one root reducer
 const rootReducer = combineReducers({
-  [authApi.reducerPath]: authApi.reducer, // Reducer for RTK Query API
-  [userApi.reducerPath]: userApi.reducer, // Reducer for RTK Query API
-  user: userReducer,                     // Slice for user state
-  loader: loaderReducer,                 // Slice for loader state
+  [authApi.reducerPath]: authApi.reducer,
+  [userApi.reducerPath]: userApi.reducer,
+  user: userReducer,
+  loader: loaderReducer,
 });
 
-// Configuration for Redux Persist
+
 const persistConfig = {
   key: "root",
-  storage,
-  whitelist: ["user"], // Only persist the `user` slice
-};
+  storage: storage,
+  whitelist: ["user"],
+}
+
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

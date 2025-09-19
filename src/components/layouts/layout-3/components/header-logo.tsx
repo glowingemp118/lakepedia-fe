@@ -76,15 +76,12 @@ export function HeaderLogo() {
       </div>
 
       {/* Menu Section */}
-      {/* <div className="flex items-center gap-3">
-        <h3 className="text-accent-foreground text-base hidden md:block">
-          Metronic Team
+      <div className="flex items-center gap-3">
+        <h3 className="text-accent-foreground text-lg hidden md:block font-bold">
+          Welcome Back, {isTraveler ? 'Traveler' : isBusiness ? 'Business' : isAdmin ? 'Admin' : 'User'} 👋
         </h3>
-        <span className="text-sm text-muted-foreground font-medium hidden md:inline">
-          /
-        </span>
 
-        <DropdownMenu>
+        {/* <DropdownMenu>
           <DropdownMenuTrigger className="cursor-pointer text-mono font-medium flex items-center gap-2">
             {selectedMenuItem.title}
             <ChevronDown className="size-3.5! text-muted-foreground" />
@@ -103,8 +100,8 @@ export function HeaderLogo() {
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>
-        </DropdownMenu>
-      </div> */}
+        </DropdownMenu> */}
+      </div>
     </div>
   );
 }

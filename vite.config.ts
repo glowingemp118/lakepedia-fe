@@ -5,6 +5,10 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  server:{
+    port: 5173,
+    host:'0.0.0.0'
+  },
   base: process.env.VITE_BASE_URL || '/',
   resolve: {
     alias: {

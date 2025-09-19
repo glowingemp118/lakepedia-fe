@@ -36,7 +36,7 @@ const userSlice = createSlice({
       state.token = action.payload;
     },
     logout: (state) => {
-      localStorage.clear();
+      localStorage.removeItem('persist:root');
       state.user = null;
       state.token = null;
     },

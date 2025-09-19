@@ -9,16 +9,22 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { ImageInput, ImageInputFile } from '@/components/image-input';
+import { useFormContext } from 'react-hook-form';
 
-export function AvatarInput() {
+export function AvatarInput({ name }: { name: string }) {
+
+  const { setValue, getValues } = useFormContext();
+
   const [avatar, setAvatar] = useState<ImageInputFile[]>([
-    { dataURL: toAbsoluteUrl(`/media/avatars/300-2.png`) },
+    {
+      dataURL: toAbsoluteUrl(getValues(name) || `/media/avatars/300-2.png`)
+    },
   ]);
 
   return (
     <ImageInput
       value={avatar}
-      onChange={(selectedAvatar) => setAvatar(selectedAvatar)}
+      onChange={(selectedAvatar) => { setAvatar(selectedAvatar); setValue(name, selectedAvatar[0] as ImageInputFile); }}
     >
       {({ onImageUpload }) => (
         <div
@@ -49,7 +55,13 @@ export function AvatarInput() {
               backgroundImage: `url(${toAbsoluteUrl(`/media/avatars/blank.png`)})`,
             }}
           >
-            {avatar.length > 0 && <img src={avatar[0].dataURL} alt="avatar" />}
+            {avatar.length > 0 && (
+              <img
+                src={avatar[0].dataURL}
+                alt="avatar"
+                className="w-16 h-16 object-cover rounded-full"
+              />
+            )}
             <div className="flex items-center justify-center cursor-pointer h-5 left-0 right-0 bottom-0 bg-black/25 absolute">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

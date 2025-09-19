@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import {
   Form
 } from '@/components/ui/form';
+import { useForgotPasswordMutation } from '@/store/Reducer/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AlertCircle, Check, LoaderCircleIcon, MoveLeft } from 'lucide-react';
 import { useState } from 'react';
@@ -13,16 +14,11 @@ import {
   getResetRequestSchema,
   ResetRequestSchemaType,
 } from '../forms/reset-password-schema';
-import { useBoolean } from '@/hooks/use-boolean';
-import { useForgotPasswordMutation } from '@/store/Reducer/auth';
-import { toast } from 'react-toastify';
 
 export function ForgotPasswordPage() {
 
 
   const navigate = useNavigate();
-
-  const process = useBoolean();
 
   const [error, setError] = useState<string | null>(null);
 
@@ -39,13 +35,12 @@ export function ForgotPasswordPage() {
 
   async function onSubmit(values: ResetRequestSchemaType) {
     try {
-      process.onTrue();
       setError(null);
 
       let response = await forgotPassword({email: values.email});
 
       if (!response?.error) {
-        toast.success("OTP sent to your email");
+        // toast.success("OTP sent to your email");
         navigate('/auth/reset-password', { state: { email: values.email, otp: response?.data?.data?.otp } });
       }
 
@@ -97,8 +92,8 @@ export function ForgotPasswordPage() {
 
             <RHFTextField name='email' label='Email' type='email' placeholder='your.email@example.com' />
 
-            <Button type="submit" className="w-full" disabled={process.value}>
-              {process.value ? (
+            <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+              {form.formState.isSubmitting ? (
                 <span className="flex items-center gap-2">
                   <LoaderCircleIcon className="h-4 w-4 animate-spin" /> Submitting
                 </span>

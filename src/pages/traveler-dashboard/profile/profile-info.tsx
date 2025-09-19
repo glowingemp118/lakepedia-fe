@@ -11,14 +11,11 @@ import ProfileQuickEditForm from './profile-quick-edit-form';
 interface PageProps {
     profileData: {
         photo: string;
-        firstName: string;
-        lastName: string;
-        email: string;
-        country: string;
-        usState: string;
-        favoriteActivities: string[];
-        privacy: string;
-        notifications: boolean;
+        first_name: string;
+        last_name: string;
+        email: string,
+        status: string;
+        role: string;
     };
 
 }
@@ -31,7 +28,7 @@ const ProfileInfo: FC<PageProps> = ({ profileData }) => {
         <>
             <Card className="min-w-full">
                 <CardHeader>
-                    <CardTitle>Traveler Profile Info</CardTitle>
+                    <CardTitle>{profileData?.role === "traveler" && "Traveler" || profileData?.role === "admin" && "Admin" || profileData.role === "business" && "Business"} Profile Info</CardTitle>
                     <Button variant="ghost" mode="icon" onClick={open.onTrue} >
                         <SquarePen size={16} className="text-blue-500" />
                     </Button>
@@ -50,7 +47,7 @@ const ProfileInfo: FC<PageProps> = ({ profileData }) => {
                                     <div className="flex justify-center items-center">
 
                                         <img
-                                            src={"/media/avatars/300-2.png"}
+                                            src={profileData.photo || "/media/avatars/300-2.png"}
                                             alt="Avatar"
                                             className="size-16 rounded-full border-2 border-green-500"
                                         />
@@ -62,7 +59,7 @@ const ProfileInfo: FC<PageProps> = ({ profileData }) => {
                                     First Name
                                 </TableCell>
                                 <TableCell className="py-3 text-foreground font-normal text-sm">
-                                    {profileData.firstName}
+                                    {profileData.first_name?.slice(0,1).toUpperCase() + profileData.first_name?.slice(1)}
                                 </TableCell>
                                 <TableCell className="py-2 text-center">
                                     <span>-</span>
@@ -73,7 +70,7 @@ const ProfileInfo: FC<PageProps> = ({ profileData }) => {
                                     Last Name
                                 </TableCell>
                                 <TableCell className="py-3 text-foreground font-normal text-sm">
-                                    {profileData.lastName}
+                                    {profileData.last_name.slice(0,1).toUpperCase() + profileData.last_name?.slice(1)}
                                 </TableCell>
                                 <TableCell className="py-3 text-center">
                                     <span>-</span>
@@ -90,7 +87,7 @@ const ProfileInfo: FC<PageProps> = ({ profileData }) => {
                                     <span>-</span>
                                 </TableCell>
                             </TableRow>
-                            <TableRow>
+                            {/* <TableRow>
                                 <TableCell className="py-3 text-secondary-foreground font-normal">
                                     UsState
                                 </TableCell>
@@ -134,7 +131,7 @@ const ProfileInfo: FC<PageProps> = ({ profileData }) => {
                                 <TableCell className="py-3 text-center">
                                     <span>-</span>
                                 </TableCell>
-                            </TableRow>
+                            </TableRow> */}
                             <TableRow>
                                 <TableCell className="py-3 text-secondary-foreground font-normal">
                                     Deactivate Account

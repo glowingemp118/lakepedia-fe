@@ -15,7 +15,6 @@ import { AlertCircle, Check, Eye, EyeOff, LoaderCircleIcon, MoveLeft } from 'luc
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import {
   getNewPasswordSchema,
   NewPasswordSchemaType
@@ -28,8 +27,6 @@ export function ResetPasswordPage() {
   const navigate = useNavigate();
 
   const show = useBoolean();
-
-  const process = useBoolean();
 
   const [error, setError] = useState<string | null>(null);
 
@@ -95,7 +92,6 @@ export function ResetPasswordPage() {
 
   async function onSubmit(values: NewPasswordSchemaType) {
     try {
-      process.onTrue();
       setError(null);
 
       let response = await resetPassword({
@@ -105,7 +101,7 @@ export function ResetPasswordPage() {
       });
 
       if (!response?.error) {
-        toast.success("Password reset successfully");
+        // toast.success("Password reset successfully");
         navigate('/auth/signin');
       }
 
@@ -246,8 +242,8 @@ export function ResetPasswordPage() {
 
 
 
-            <Button type="submit" className="w-full" disabled={process.value}>
-              {process.value ? (
+            <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+              {form.formState.isSubmitting ? (
                 <span className="flex items-center gap-2">
                   <LoaderCircleIcon className="h-4 w-4 animate-spin" /> Submitting
                 </span>

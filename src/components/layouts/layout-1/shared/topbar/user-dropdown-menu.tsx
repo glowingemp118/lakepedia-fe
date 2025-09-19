@@ -69,8 +69,6 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
 
   const user = useSelector(selectUser);
 
-  console.log('User from Redux:', user);
-
   const isAdmin = user?.role === 'admin';
 
   const isTraveler = user?.role === 'traveler';
@@ -87,6 +85,7 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
     setTheme(checked ? 'dark' : 'light');
   };
   const handleLogout = () => {
+
     dispatch(logout());
     navigage(isAdmin && paths.adminDashboard.root || isTraveler && paths.travelerDashboard.root || isBusiness && paths.businessDashboard.root || '/auth/signin');
   };
@@ -130,7 +129,7 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
         <DropdownMenuSeparator />
 
         {/* Menu Items */}
-        <DropdownMenuItem asChild>
+        {/* <DropdownMenuItem asChild>
           <div
             onClick={handleGoToProfile}
             className="flex items-center gap-2"
@@ -138,7 +137,7 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
             <IdCard />
             Public Profile
           </div>
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
         <DropdownMenuItem asChild>
           <div
             onClick={handleGoToProfile}
@@ -150,7 +149,7 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
         </DropdownMenuItem>
 
         {/* My Account Submenu */}
-        <DropdownMenuSub>
+        {/* <DropdownMenuSub>
           <DropdownMenuSubTrigger className="flex items-center gap-2">
             <Settings />
             My Account
@@ -211,9 +210,9 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
               </Link>
             </DropdownMenuItem>
           </DropdownMenuSubContent>
-        </DropdownMenuSub>
+        </DropdownMenuSub> */}
 
-        <DropdownMenuItem asChild>
+        {/* <DropdownMenuItem asChild>
           <Link
             to="https://devs.keenthemes.com"
             className="flex items-center gap-2"
@@ -221,7 +220,7 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
             <SquareCode />
             Dev Forum
           </Link>
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
 
         {/* Language Submenu with Radio Group */}
         <DropdownMenuSub>

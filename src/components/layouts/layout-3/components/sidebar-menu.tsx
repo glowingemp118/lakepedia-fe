@@ -26,7 +26,7 @@ import {
   Users
 } from 'lucide-react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { paths } from './paths';
 
 export interface Item {
@@ -38,6 +38,8 @@ export interface Item {
 }
 
 export function SidebarMenu() {
+
+  const { pathname } = useLocation();
 
   const user = useSelector(selectUser);
 
@@ -115,51 +117,30 @@ export function SidebarMenu() {
       title: 'Dashboard',
     },
     {
-      icon: UserCircle,
-      path: paths.adminDashboard.profile,
-      title: 'Profile',
+      icon: Plane,
+      path: "#",
+      title: 'Trips',
     },
     {
-      icon: Settings,
-      path: paths.adminDashboard.account,
-      title: 'Account',
+      icon: ImageIcon,
+      path: "#",
+      title: 'Photos',
     },
     {
-      icon: Users,
-      path: paths.adminDashboard.network,
-      title: 'Network',
-      active: true,
+      icon: Star,
+      path: "#",
+      title: 'Reviews',
     },
     {
-      icon: Shield,
-      path: paths.adminDashboard.securityLogs,
-      title: 'Plans',
+      icon: Heart,
+      path: "#",
+      title: 'Favorites',
     },
     {
-      icon: MessageSquare,
-      path: paths.adminDashboard.notifications,
-      title: 'Security Logs',
-    },
-    {
-      icon: Bell,
-      path: paths.adminDashboard.notifications,
-      title: 'Notifications',
-    },
-    {
-      icon: CheckSquare,
-      path: paths.adminDashboard.acl,
-      title: 'ACL',
-    },
-    {
-      icon: Code,
-      path: paths.adminDashboard.apiKeys,
-      title: 'API Keys',
-    },
-    {
-      icon: HelpCircle,
-      path: 'https://docs.keenthemes.com/metronic-vite',
-      title: 'Docs',
-    },
+      icon: ImageIcon,
+      path: "#",
+      title: 'Media',
+    }
   ];
 
   const items: Item[] = [
@@ -167,7 +148,10 @@ export function SidebarMenu() {
     ...isTraveler ? TravelerSidebar : [],
     ...isBusiness ? BusinessSidebar : [],
     ...isAdmin ? AdminSidebar : []
-  ];
+  ].map((item) => ({
+    ...item,
+    active: item.path === pathname
+  }));
 
   return (
     <TooltipProvider>

@@ -19,8 +19,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { toast } from 'sonner';
-import { getSigninSchema, SigninSchemaType } from '../forms/signin-schema';
+import { AdminSigninSchemaType, getAdminSigninSchema } from '../forms/signin-schema';
 
 export function AdminSignInPage() {
 
@@ -31,8 +30,6 @@ export function AdminSignInPage() {
   const navigate = useNavigate();
 
   const show = useBoolean();
-
-  const process = useBoolean();
 
   const [login] = useAdminLoginMutation();
 
@@ -84,18 +81,17 @@ export function AdminSignInPage() {
     }
   }, [searchParams]);
 
-  const form = useForm<SigninSchemaType>({
-    resolver: zodResolver(getSigninSchema()),
+  const form = useForm<AdminSigninSchemaType>({
+    resolver: zodResolver(getAdminSigninSchema()),
     defaultValues: {
       email: '',
       password: '',
     },
   });
 
-  async function onSubmit(values: SigninSchemaType) {
+  async function onSubmit(values: AdminSigninSchemaType) {
     try {
       // setIsProcessing(true);
-      process.onTrue();
       setError(null);
 
       console.log('Attempting to sign in with email:', values.email);
@@ -111,7 +107,7 @@ export function AdminSignInPage() {
       const res = await login({ email: values.email, password: values.password, timezone });
       if (!res?.error) {
 
-        toast.success('Signed in successfully!');
+        // toast.success('Signed in successfully!');
 
         dispatch(setUser(res?.data?.data?.user));
 
@@ -129,8 +125,6 @@ export function AdminSignInPage() {
           ? err.message
           : 'An unexpected error occurred. Please try again.',
       );
-    } finally {
-      process.onFalse();
     }
   }
 
@@ -202,7 +196,7 @@ export function AdminSignInPage() {
                   type="button"
                   variant="ghost"
                   mode="icon"
-                  onClick={show.toggle}
+                  onClick={show.onToggle}
                   className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                 >
                   {show.value ? (
@@ -217,8 +211,8 @@ export function AdminSignInPage() {
           )}
         />
 
-        <Button type="submit" className="w-full" disabled={process.value}>
-          {process.value ? (
+        <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+          {form.formState.isSubmitting ? (
             <span className="flex items-center gap-2">
               <LoaderCircleIcon className="h-4 w-4 animate-spin" /> Loading...
             </span>

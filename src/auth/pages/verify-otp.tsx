@@ -1,16 +1,16 @@
+import { paths } from "@/components/layouts/layout-3/components/paths";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useCountdownSeconds } from "@/hooks/use-countdown";
+import { useForgotPasswordMutation, useVerifyOTPMutation } from "@/store/Reducer/auth";
+import { setToken, setUser } from "@/store/slices/userSlice";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { MoveLeft } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useVerifyOTPMutation } from "@/store/Reducer/auth";
-import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { setToken, setUser } from "@/store/slices/userSlice";
-import { paths } from "@/components/layouts/layout-3/components/paths";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { z } from "zod";
 
 const otpSchema = z.object({
   otp: z
@@ -29,6 +29,8 @@ const VerifyOTP = () => {
 
   const { state } = useLocation();
 
+  const { countdown, counting, startCountdown } = useCountdownSeconds(60);
+
   const email = (state as { email: string })?.email || "";
 
   const otp = (state as { otp: string })?.otp || "";
@@ -38,6 +40,9 @@ const VerifyOTP = () => {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const [verifyOTP] = useVerifyOTPMutation();
+
+  const [forgotPassword] = useForgotPasswordMutation();
+
 
 
   const methods = useForm<OtpFormValues>({
@@ -76,22 +81,22 @@ const VerifyOTP = () => {
     let response = await verifyOTP({ email, otp: data.otp });
 
     if (!response.error) {
-      toast.success("OTP verified successfully!");
+      // toast.success("OTP verified successfully!");
 
-        dispatch(setUser(response?.data?.data?.user));
+      dispatch(setUser(response?.data?.data?.user));
 
-        dispatch(setToken(response?.data?.data?.token));
+      dispatch(setToken(response?.data?.data?.token));
 
-        const isTraveler = response?.data?.data?.user?.role === 'traveler';
+      const isTraveler = response?.data?.data?.user?.role === 'traveler';
 
-        const isBuiness = response?.data?.data?.user?.role === 'business';
+      const isBuiness = response?.data?.data?.user?.role === 'business';
 
-        if (isTraveler) {
-          navigate(paths.travelerDashboard.root);
-        }
-        else if (isBuiness) {
-          navigate(paths.businessDashboard.root);
-        }
+      if (isTraveler) {
+        navigate(paths.travelerDashboard.root);
+      }
+      else if (isBuiness) {
+        navigate(paths.businessDashboard.root);
+      }
 
 
     }
@@ -110,6 +115,19 @@ const VerifyOTP = () => {
       setValue("otp", otp);
     }
   }, [otp, setValue]);
+
+  const handleResendClick = async () => {
+
+    let response = await forgotPassword({ email });
+    if (!response?.error) {
+      startCountdown();
+      const otp = response?.data?.data?.otp;
+      const otpArray = otp.split("");
+      setCodeInputs(otpArray);
+      methods.setValue("otp", otp);
+    }
+
+  };
 
   return (
     <form className="flex flex-col gap-5 p-10" onSubmit={handleSubmit(onSubmit)}>
@@ -146,11 +164,11 @@ const VerifyOTP = () => {
 
       <div className="flex items-center justify-center mb-2">
         <span className="text-sm text-secondary-foreground me-1.5">
-          Didn’t receive a code?
+          Didn’t receive a code? {counting ? `${countdown}s` : ``}
         </span>
-        <Link to="/auth/verify-otp" className="font-semibold text-foreground hover:text-primary">
+        <span className={`font-semibold text-foreground hover:text-primary ${counting ? "cursor-not-allowed" : "cursor-pointer"}`} onClick={handleResendClick}>
           Resend
-        </Link>
+        </span>
       </div>
 
       <Button className="grow" type="submit">Continue</Button>

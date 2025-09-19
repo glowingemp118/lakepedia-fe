@@ -38,8 +38,9 @@ export const customFetchBaseQuery = (): BaseQueryFn<
 
     if ('error' in result && result.error) {
       const errorData = (result.error as FetchBaseQueryError)?.data;
-      const errorMessage =
-        errorData && typeof errorData === 'object' && 'message' in errorData
+      const errorMessage = typeof errorData === 'string'
+        ? errorData
+        : errorData && typeof errorData === 'object' && 'message' in errorData
           ? (errorData as { message?: string }).message
           : 'Something went wrong';
       toast.error(errorMessage);

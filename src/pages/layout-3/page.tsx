@@ -1,9 +1,9 @@
-import { Skeleton } from "@/components/ui/skeleton";
+import ComingSoonPage from "@/components/common/coming-soon";
 
 export function Layout3Page() {
   return (
-    <div className="container">
-      <Skeleton className="rounded-lg grow h-screen"></Skeleton>
+    <div >
+      <ComingSoonPage/>
     </div>
   );
 }

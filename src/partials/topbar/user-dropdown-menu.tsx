@@ -1,25 +1,4 @@
-import { ReactNode } from 'react';
 import { useAuth } from '@/auth/context/auth-context';
-import { I18N_LANGUAGES } from '@/i18n/config';
-import { Language } from '@/i18n/types';
-import {
-  BetweenHorizontalStart,
-  Coffee,
-  CreditCard,
-  FileText,
-  Globe,
-  IdCard,
-  Moon,
-  Settings,
-  Shield,
-  SquareCode,
-  UserCircle,
-  Users,
-} from 'lucide-react';
-import { useTheme } from 'next-themes';
-import { Link } from 'react-router';
-import { toAbsoluteUrl } from '@/lib/helpers';
-import { useLanguage } from '@/providers/i18n-provider';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -35,6 +14,27 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Switch } from '@/components/ui/switch';
+import { I18N_LANGUAGES } from '@/i18n/config';
+import { Language } from '@/i18n/types';
+import { toAbsoluteUrl } from '@/lib/helpers';
+import { useLanguage } from '@/providers/i18n-provider';
+import {
+  BetweenHorizontalStart,
+  Coffee,
+  CreditCard,
+  FileText,
+  Globe,
+  IdCard,
+  Moon,
+  Settings,
+  Shield,
+  SquareCode,
+  UserCircle,
+  Users,
+} from 'lucide-react';
+import { useTheme } from 'next-themes';
+import { ReactNode } from 'react';
+import { Link } from 'react-router';
 
 export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
   const { logout, user } = useAuth();
