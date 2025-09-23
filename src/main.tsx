@@ -12,9 +12,9 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={store}>
       <ToastContainer autoClose={30000} />
-      {/* <Auth0Provider  clientId={import.meta.env.VITE_AUTH0_CLIENT_ID!} domain={import.meta.env.VITE_AUTH0_DOMAIN!} authorizationParams={{redirect_uri: "http://localhost:5173/auth/signin"}}> */}
+      <Auth0Provider  clientId={import.meta.env.VITE_AUTH0_CLIENT_ID!} domain={import.meta.env.VITE_AUTH0_DOMAIN!} authorizationParams={{redirect_uri: "http://localhost:5173/auth/signin"}}>
       <App />
-      {/* </Auth0Provider> */}
+      </Auth0Provider>
     </Provider>
   </StrictMode>,
 );
