@@ -108,29 +108,29 @@ const VerifyOTP = () => {
     }
   }, [errors.otp, methods, methods.watch("otp")?.length]);
 
-  useEffect(() => {
-    if (otp) {
-      const otpArray = otp.split("");
-      setCodeInputs(otpArray);
-      setValue("otp", otp);
-    }
-  }, [otp, setValue]);
+  // useEffect(() => {
+  //   if (otp) {
+  //     const otpArray = otp.split("");
+  //     setCodeInputs(otpArray);
+  //     setValue("otp", otp);
+  //   }
+  // }, [otp, setValue]);
 
   const handleResendClick = async () => {
 
     let response = await forgotPassword({ email });
     if (!response?.error) {
       startCountdown();
-      const otp = response?.data?.data?.otp;
-      const otpArray = otp.split("");
-      setCodeInputs(otpArray);
-      methods.setValue("otp", otp);
+      // const otp = response?.data?.data?.otp;
+      // const otpArray = otp.split("");
+      // setCodeInputs(otpArray);
+      // methods.setValue("otp", otp);
     }
 
   };
 
   return (
-    <form className="flex flex-col gap-5 p-10" onSubmit={handleSubmit(onSubmit)}>
+    <form className="flex flex-col gap-5  md:p-10" onSubmit={handleSubmit(onSubmit)}>
       <div className="text-center mb-2">
         <h3 className="text-lg font-medium text-mono mb-5">Please check your email!</h3>
         <span className="text-sm text-secondary-foreground mb-1.5">

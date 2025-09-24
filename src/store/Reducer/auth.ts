@@ -54,7 +54,13 @@ export const authApi = createApi({
         body: data,
       }),
     }),
-  
+    socailLogin: builder.mutation({
+      query: (data) => ({
+        url: `auth/social`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 
 });
@@ -67,4 +73,5 @@ export const {
   useAdminLoginMutation,
   useForgotPasswordMutation,
   useResetPasswordMutation,
+  useSocailLoginMutation,
 } = authApi;

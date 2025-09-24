@@ -34,7 +34,6 @@ export function SignUpPage() {
 
   const [currentTab, setCurrentTab] = useState("traveler");
 
-  const [timeRemaining, setTimeRemaining] = useState(0);
 
   const form = useForm<SignupSchemaType>({
     resolver: zodResolver(getSignupSchema()),

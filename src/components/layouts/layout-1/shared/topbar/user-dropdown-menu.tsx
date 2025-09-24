@@ -81,6 +81,8 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
 
   const { theme, setTheme } = useTheme();
 
+  console.log('user from dropdown', user);
+
   const handleThemeToggle = (checked: boolean) => {
     setTheme(checked ? 'dark' : 'light');
   };

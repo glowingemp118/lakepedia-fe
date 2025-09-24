@@ -51,7 +51,7 @@ export function ResetPasswordPage() {
 
  const email = (state as { email: string })?.email || "";
 
-  const otp = (state as { otp: string })?.otp || "";
+  // const otp = (state as { otp: string })?.otp || "";
 
 
   const handleInputChange = (index: number, value: string) => {
@@ -82,20 +82,20 @@ export function ResetPasswordPage() {
     }
   }, [errors.otp, form, form.watch("otp")?.length]);
 
-  useEffect(() => {
-    if (otp) {
-      const otpArray = otp.split("");
-      setCodeInputs(otpArray);
-      form.setValue("otp", otp);
-    }
-  }, [otp, form.setValue]);
+  // useEffect(() => {
+  //   if (otp) {
+  //     const otpArray = otp.split("");
+  //     setCodeInputs(otpArray);
+  //     form.setValue("otp", otp);
+  //   }
+  // }, [otp, form.setValue]);
 
   async function onSubmit(values: NewPasswordSchemaType) {
     try {
       setError(null);
 
       let response = await resetPassword({
-        otp,
+        otp: codeInputs.join(""),
         email,
         password: values.password,
       });

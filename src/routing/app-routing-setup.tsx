@@ -22,12 +22,14 @@ import { ProfileView } from '@/pages/business-dashboard/profile/view/profile-vie
 import { ProfileView as TravelerProfileView } from '@/pages/traveler-dashboard/profile/view/profile-view';
 
 import { ProfileView as AdminProfileView } from '@/pages/admin-dasbhoard/profile/view/profile-view';
+import HomeView from '@/pages/home/view/home-view';
 
 
 
 export function AppRoutingSetup() {
   return (
     <Routes>
+       <Route path='/' element={<HomeView />} />
       <Route element={<Layout3 />}>
 
         <Route element={<RequireAuth role={"traveler"} />}>

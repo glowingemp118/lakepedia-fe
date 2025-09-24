@@ -13,9 +13,8 @@ import {
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useBoolean } from '@/hooks/use-boolean';
-import { useLoginMutation } from '@/store/Reducer/auth';
+import { useLoginMutation, useSocailLoginMutation } from '@/store/Reducer/auth';
 import { setToken, setUser } from '@/store/slices/userSlice';
-import { persistor } from '@/store/store';
 import { useAuth0 } from "@auth0/auth0-react";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AlertCircle, Check, Eye, EyeOff, LoaderCircleIcon } from 'lucide-react';
@@ -37,13 +36,80 @@ export function SignInPage() {
 
   const [login] = useLoginMutation();
 
+  let [socailLogin] = useSocailLoginMutation();
+
   const [error, setError] = useState<string | null>(null);
 
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const [currentTab, setCurrentTab] = useState("traveler");
 
-  const { loginWithRedirect } = useAuth0();
+  const { loginWithRedirect, user, isAuthenticated } = useAuth0();
+
+  console.log('Auth0 user:', user);
+
+  useEffect(() => {
+    if (!user || !isAuthenticated) return;
+
+    const currentSocialTab = localStorage.getItem("currentSocialTab");
+
+    const savedRole = localStorage.getItem("currentTab");
+
+    if (!currentSocialTab || !savedRole) return;
+
+    let userData: any = null;
+
+    if (currentSocialTab === "google") {
+      userData = {
+        first_name: user.name,
+        last_name: user.family_name,
+        email: user.email,
+        image: user.picture,
+        role: savedRole === "traveler" ? "traveler" : "business",
+        provider: user?.sub?.split("|")?.[0]?.split("-")?.[0],
+        socialId: user?.sub?.split("|")?.[1],
+      };
+    }
+
+    if (currentSocialTab === "facebook") {
+     
+      userData = {
+        first_name: user.name,
+        last_name: user.nickname,
+        email: user.email,
+        image: user?.picture,
+        role: savedRole === "traveler" ? "traveler" : "business",
+        provider: user?.sub?.split("|")?.[0],
+        socialId: user?.sub?.split("|")?.[1],
+      };
+    }
+
+    if (!userData) return;
+
+    let isMounted = true;
+    socailLogin(userData).then((res: any) => {
+      if (!isMounted) return;
+      if (!res.error) {
+        dispatch(setUser(res?.data?.data?.user));
+        dispatch(setToken(res?.data?.data?.token));
+
+        localStorage.removeItem("currentSocialTab");
+        localStorage.removeItem("currentTab");
+
+        if (userData.role === "business") {
+          navigate(paths.businessDashboard.root);
+        } else {
+          navigate(paths.travelerDashboard.root);
+        }
+      }
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [user, isAuthenticated, dispatch, navigate]);
+
+
 
 
 
@@ -120,7 +186,7 @@ export function SignInPage() {
 
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-      const response = await login({ email: values.email, password: values.password, timezone });
+      const response = await login({ email: values.email, password: values.password, timezone, role: currentTab });
 
       if (!response.error) {
 
@@ -147,7 +213,7 @@ export function SignInPage() {
           ? err.message
           : 'An unexpected error occurred. Please try again.',
       );
-    } 
+    }
   }
 
   const handleChangeTab = (value: string) => {
@@ -192,44 +258,21 @@ export function SignInPage() {
         )}
       </div>
       <div className="flex items-center justify-center gap-4">
-        <Button
-          variant="outline"
-          className="py-3 cursor-pointer h-[60px] w-[60px] rounded-full"
-          onClick={() => loginWithRedirect({
-            authorizationParams: {
-              connection: "apple",
-              redirect_uri: "http://localhost:5173/auth/signin",
-            }
-          })}
-        >
-          <span className="w-6 h-6 flex items-center justify-center">
-            <img
-              src="/media/images/social/appleIcon.png"
-              alt="Apple"
-              className="w-[25px] h-[25px] dark:hidden block"
-              width={25}
-              height={25}
-            />
 
-            <img
-              src="/media/images/social/macIconDark.png"
-              alt="Apple"
-              className="w-[25px] h-[25px] dark:block hidden"
-              width={25}
-              height={25}
-            />
-          </span>
-        </Button>
 
         <Button
           variant="outline"
           className=" cursor-pointer h-[60px] w-[60px] rounded-full"
-          onClick={() => loginWithRedirect({
-            authorizationParams: {
-              connection: "google-oauth2",
-              redirect_uri: "http://localhost:5173/auth/signin",
-            }
-          })}
+          onClick={() => {
+            localStorage.setItem("currentTab", currentTab);
+            localStorage.setItem("currentSocialTab", "google");
+            loginWithRedirect({
+              authorizationParams: {
+                connection: "google-oauth2",
+                redirect_uri: "http://localhost:5173/auth/signin",
+              }
+            })
+          }}
         >
           <span className="w-6 h-6 flex items-center justify-center">
 
@@ -246,12 +289,16 @@ export function SignInPage() {
         <Button
           variant="outline"
           className=" cursor-pointer h-[60px] w-[60px] rounded-full"
-          onClick={() => loginWithRedirect({
-            authorizationParams: {
-              connection: "facebook",
-              redirect_uri: "http://localhost:5173/auth/signin",
-            }
-          })}
+          onClick={() => {
+            localStorage.setItem("currentTab", currentTab);
+            localStorage.setItem("currentSocialTab", "facebook");
+            loginWithRedirect({
+              authorizationParams: {
+                connection: "facebook",
+                redirect_uri: "http://localhost:5173/auth/signin",
+              }
+            })
+          }}
         >
           <span className="w-6 h-6 flex items-center justify-center">
             <img

@@ -16,15 +16,15 @@ export function BrandedLayout() {
         `}
       </style>
       <div className="grid lg:grid-cols-2 grow">
-        <div className="flex justify-center items-center p-8 lg:p-10 order-2 lg:order-1">
+        <div className="flex justify-center items-center md:p-8 p-3 lg:p-10 order-2 lg:order-1">
           <Card className="w-full max-w-[400px]">
-            <CardContent className="p-6">
+            <CardContent className="md:p-6">
               <Outlet />
             </CardContent>
           </Card>
         </div>
 
-        <div className="lg:rounded-xl lg:border lg:border-border lg:m-5 order-1 lg:order-2 bg-top xxl:bg-center xl:bg-cover bg-no-repeat branded-bg">
+        <div className="lg:rounded-xl lg:border lg:border-border lg:m-5 order-1 lg:order-2 bg-center xxl:bg-center xl:bg-cover bg-no-repeat branded-bg ">
           <div className="flex flex-col p-8 lg:p-16 gap-4">
             <Link to="/">
               <img
@@ -39,10 +39,8 @@ export function BrandedLayout() {
                 Lakepedia
               </h3>
               <div className="text-base font-medium text-secondary-foreground">
-               
-                Lakepedia is the number one online encyclopedia of lakes. Explore beautiful lakes and lake regions and  plan your  <br /> next amazing vacation.
 
-                Let's Connect
+                Lakepedia is the number one online encyclopedia of lakes. Explore beautiful lakes and lake regions and  plan your next amazing vacation. Let's Connect
 
               </div>
             </div>
