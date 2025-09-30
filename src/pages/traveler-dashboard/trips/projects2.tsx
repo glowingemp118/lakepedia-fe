@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { CardProject, CardProjectRow } from '@/partials/cards';
-import { LayoutGrid, List } from 'lucide-react';
+import { LayoutGrid, List, Plus } from 'lucide-react';
 import { Link } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
@@ -379,7 +379,7 @@ const Projects2 = () => {
         <h3 className="text-lg text-mono font-semibold">
           {projects.length} Trips
         </h3>
-        <ToggleGroup
+        {/* <ToggleGroup
           type="single"
           variant="outline"
           value={activeView}
@@ -393,7 +393,8 @@ const Projects2 = () => {
           <ToggleGroupItem value="list">
             <List size={16} />
           </ToggleGroupItem>
-        </ToggleGroup>
+        </ToggleGroup> */}
+        <Button><Plus /> Add Trip</Button>
       </div>
       {activeView === 'cards' && (
         <div id="projects_cards">
@@ -404,7 +405,7 @@ const Projects2 = () => {
           </div>
           <div className="flex grow justify-center pt-5 lg:pt-7.5">
             <Button mode="link" underlined="dashed" asChild>
-              <Link to="#">Show more projects</Link>
+              <Link to="#">Show more Trips</Link>
             </Button>
           </div>
         </div>
@@ -418,7 +419,7 @@ const Projects2 = () => {
           </div>
           <div className="flex grow justify-center pt-5 lg:pt-7.5">
             <Button mode="link" underlined="dashed" asChild>
-              <Link to="#">Show more projects</Link>
+              <Link to="#">Show more Trips</Link>
             </Button>
           </div>
         </div>

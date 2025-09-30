@@ -1,11 +1,11 @@
 import { Container } from '@/components/common/container'
+import { Navbar } from '@/components/layouts/layout-3/components/navbar'
 import { toAbsoluteUrl } from '@/lib/helpers'
-import { UserHero } from '@/partials/common/user-hero'
+import { UserHero } from '../../profile/profile-hero'
 import { selectUser } from '@/store/slices/userSlice'
 import { CircleUser, Mail, MapPin } from 'lucide-react'
 import { useSelector } from 'react-redux'
-import { ProfileActivityContent } from '../profile-basic-content'
-import { Navbar } from '@/components/layouts/layout-3/components/navbar'
+import ProfileBasicPage from '../profile-basic-page'
 
 const ActivityView = () => {
 
@@ -34,13 +34,13 @@ const ActivityView = () => {
                 ]}
             />
             <Container>
-              <Navbar/>
+                <Navbar />
             </Container>
             <Container>
                 <div className="flex flex-wrap items-center gap-5 justify-between mb-7.5">
                     <h3 className="text-lg text-mono font-semibold">Activity</h3>
                 </div>
-                <ProfileActivityContent />
+                <ProfileBasicPage />
             </Container>
         </div>
     )

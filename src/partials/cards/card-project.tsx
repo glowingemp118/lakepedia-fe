@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { toAbsoluteUrl } from '@/lib/helpers';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
@@ -47,8 +47,10 @@ const CardProject = ({
   progress,
   team,
 }: IProjectProps) => {
+  const navigate = useNavigate();
   return (
-    <Card className="p-7.5">
+    <Card className="p-7.5 hover:border-blue-400 border transition-all duration-300 cursor-pointer"
+     onClick={() => {    navigate(`/traveler-dashboard/trips/${"1"}`) }}>
       <div className="flex items-center justify-between mb-3 lg:mb-6">
         <div className="flex items-center justify-center size-[50px] rounded-lg bg-accent/60">
           <img

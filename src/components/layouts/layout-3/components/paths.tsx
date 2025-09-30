@@ -11,34 +11,31 @@ export const paths = {
         activity: `${TRAVELER_DASHBOARD}/activity`,
         trips: `${TRAVELER_DASHBOARD}/trips`,
         saved: `${TRAVELER_DASHBOARD}/saved`,
-        // photos: `${TRAVELER_DASHBOARD}/photos`,
-        // reviews: `${TRAVELER_DASHBOARD}/reviews`,
-        // favorites: `${TRAVELER_DASHBOARD}/favorites`,
-        // recommendations: `${TRAVELER_DASHBOARD}/recommendations`,
+        editProfile: `${TRAVELER_DASHBOARD}/edit-profile`,
         todo: `${TRAVELER_DASHBOARD}/to-do`,
         profile: `${TRAVELER_DASHBOARD}/profile`,
     },
 
-businessDashboard: {
-    root: BUSINESS_DASHBOARD,
+    businessDashboard: {
+        root: BUSINESS_DASHBOARD,
         profile: `${BUSINESS_DASHBOARD}/profile`,
-          activity: `${BUSINESS_DASHBOARD}/activity`,
-          lakes: `${BUSINESS_DASHBOARD}/lakes`,
-          editBusiness: `${BUSINESS_DASHBOARD}/edit-business`,
-          stats: `${BUSINESS_DASHBOARD}/stats`,
-          subscription: `${BUSINESS_DASHBOARD}/subscription`,
-      
+        activity: `${BUSINESS_DASHBOARD}/activity`,
+        lakes: `${BUSINESS_DASHBOARD}/lakes`,
+        editBusiness: `${BUSINESS_DASHBOARD}/edit-business`,
+        stats: `${BUSINESS_DASHBOARD}/stats`,
+        subscription: `${BUSINESS_DASHBOARD}/subscription`,
+
     },
-adminDashboard: {
-    root: ADMIN_DASHBOARD,
+    adminDashboard: {
+        root: ADMIN_DASHBOARD,
         profile: `${ADMIN_DASHBOARD}/profile`,
-            account: `${ADMIN_DASHBOARD}/account`,
-                network: `${ADMIN_DASHBOARD}/network`,
-                    plans: `${ADMIN_DASHBOARD}/plans`,
-                        securityLogs: `${ADMIN_DASHBOARD}/security-logs`,
-                            notifications: `${ADMIN_DASHBOARD}/notifications`,
-                                acl: `${ADMIN_DASHBOARD}/acl`,
-                                    apiKeys: `${ADMIN_DASHBOARD}/api-keys`,
-                                        docs: 'https://docs.keenthemes.com/metronic-vite'
-}
+        account: `${ADMIN_DASHBOARD}/account`,
+        network: `${ADMIN_DASHBOARD}/network`,
+        plans: `${ADMIN_DASHBOARD}/plans`,
+        securityLogs: `${ADMIN_DASHBOARD}/security-logs`,
+        notifications: `${ADMIN_DASHBOARD}/notifications`,
+        acl: `${ADMIN_DASHBOARD}/acl`,
+        apiKeys: `${ADMIN_DASHBOARD}/api-keys`,
+        docs: 'https://docs.keenthemes.com/metronic-vite'
+    }
 }

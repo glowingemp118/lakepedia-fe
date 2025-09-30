@@ -1,12 +1,11 @@
+import { Container } from '@/components/common/container'
+import { Navbar } from '@/components/layouts/layout-3/components/navbar'
 import { toAbsoluteUrl } from '@/lib/helpers'
 import { UserHero } from '@/partials/common/user-hero'
 import { selectUser } from '@/store/slices/userSlice'
 import { CircleUser, Mail, MapPin } from 'lucide-react'
 import { useSelector } from 'react-redux'
 import { ProjectColumn3Page } from '../project-column3-page'
-import { Container } from '@/components/common/container'
-import { NavbarMenu } from '@/components/layouts/layout-3/components/navbar-menu'
-import { Navbar } from '@/components/layouts/layout-3/components/navbar'
 
 const TripsView = () => {
 
@@ -35,12 +34,9 @@ const TripsView = () => {
                 ]}
             />
             <Container>
-              
                 <Navbar/>
             </Container>
-            <Container>
                 <ProjectColumn3Page />
-            </Container>
         </div>
     )
 }

@@ -1,5 +1,5 @@
 import { EllipsisVertical } from 'lucide-react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { toAbsoluteUrl } from '@/lib/helpers';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -46,8 +46,11 @@ const CardProjectRow = ({
   progress,
   team,
 }: IProjectRowProps) => {
+  const navigate = useNavigate();
   return (
-    <Card className="p-7">
+    <Card className="p-7  hover:border-blue-400 border transition-all duration-300 cursor-pointer"
+     onClick={() => {    navigate(`/traveler-dashboard/trips/${"1"}`) }}
+    >
       <div className="flex items-center flex-wrap justify-between gap-5">
         <div className="flex items-center gap-3.5">
           <div className="flex items-center justify-center size-14 shrink-0 rounded-lg bg-accent/60">

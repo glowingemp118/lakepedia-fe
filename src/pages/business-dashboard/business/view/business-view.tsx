@@ -1,5 +1,8 @@
+import { Container } from '@/components/common/container'
+import { Navbar } from '@/components/layouts/layout-3/components/navbar'
 import { toAbsoluteUrl } from '@/lib/helpers'
-import { UserHero } from '@/partials/common/user-hero'
+import { ProfileCRMContent } from '../../profile/profile-basic-content'
+import { UserHero } from '../../profile/profile-hero'
 import { selectUser } from '@/store/slices/userSlice'
 import { CircleUser, Mail, MapPin } from 'lucide-react'
 import { useSelector } from 'react-redux'
@@ -14,8 +17,8 @@ const BusinessView = () => {
             alt="image"
         />
     );
-    
-    const CapitalizeRole=(role:string)=>{
+
+    const CapitalizeRole = (role: string) => {
         return role.charAt(0).toUpperCase() + role.slice(1);
     }
 
@@ -25,11 +28,17 @@ const BusinessView = () => {
                 name={user?.name as string || "Jenny Klabber"}
                 image={image}
                 info={[
-                    { label: CapitalizeRole(user?.role as string || "Traveler"), icon: CircleUser  },
+                    { label: CapitalizeRole(user?.role as string || "Traveler"), icon: CircleUser },
                     { label: 'SF, Bay Area', icon: MapPin },
-                    { email: user?.email  as string || "jenny@kteam.com", icon: Mail },
+                    { email: user?.email as string || "jenny@kteam.com", icon: Mail },
                 ]}
             />
+            <Container>
+                <Navbar />
+            </Container>
+            <Container>
+                <ProfileCRMContent />
+            </Container>
         </div>
     )
 }

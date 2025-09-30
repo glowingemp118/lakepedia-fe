@@ -54,11 +54,11 @@ export const TravelerSidebar = [
     title: 'To-Do'
 
   },
-  {
-    icon: Users,
-    path: paths.travelerDashboard.profile,
-    title: 'Profile'
-  }
+  // {
+  //   icon: Users,
+  //   path: paths.travelerDashboard.editProfile,
+  //   title: 'Edit Profile'
+  // }
 ]
 
 export const BusinessSidebar = [
@@ -77,11 +77,11 @@ export const BusinessSidebar = [
     path: paths.businessDashboard.lakes,
     title: 'Lakes'
   },
-  {
-    icon: Settings,
-    path: paths.businessDashboard.editBusiness,
-    title: 'Edit Business'
-  },
+  // {
+  //   icon: Settings,
+  //   path: paths.businessDashboard.editBusiness,
+  //   title: 'Edit Business'
+  // },
   {
     icon: BarChart3,
     path: paths.businessDashboard.stats,

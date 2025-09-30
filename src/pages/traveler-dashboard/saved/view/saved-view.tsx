@@ -1,11 +1,11 @@
 import { Container } from '@/components/common/container'
+import { Navbar } from '@/components/layouts/layout-3/components/navbar'
 import { toAbsoluteUrl } from '@/lib/helpers'
 import { UserHero } from '@/partials/common/user-hero'
 import { selectUser } from '@/store/slices/userSlice'
 import { CircleUser, Mail, MapPin } from 'lucide-react'
 import { useSelector } from 'react-redux'
-import { CampaignsContent } from '../campaigns-basic-content'
-import { Navbar } from '@/components/layouts/layout-3/components/navbar'
+import CampaignBasicPage from '../compaing-basic-page'
 
 const SavedView = () => {
 
@@ -37,7 +37,7 @@ const SavedView = () => {
                 <Navbar />
             </Container>
             <Container className=''>
-                <CampaignsContent mode="cards" />
+                <CampaignBasicPage />
             </Container>
         </div>
     )

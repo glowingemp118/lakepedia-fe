@@ -15,17 +15,22 @@ import { ProfileView } from '@/pages/business-dashboard/profile/view/profile-vie
 import { ProfileView as TravelerProfileView } from '@/pages/traveler-dashboard/profile/view/profile-view';
 
 import { ProfileView as AdminProfileView } from '@/pages/admin-dasbhoard/profile/view/profile-view';
+
 import HomeView from '@/pages/home/view/home-view';
 import ActivityView from '@/pages/traveler-dashboard/activity/view/activity-view';
 
 import BusinessActivityView from '@/pages/business-dashboard/activity/view/activity-view';
-import BusinessView from '@/pages/business-dashboard/business/view/business-view';
 import LakesView from '@/pages/business-dashboard/lakes/view/lakes-view';
 import StatsView from '@/pages/business-dashboard/stats/view/stats-view';
 import SubscriptionView from '@/pages/business-dashboard/subscription/view/subscription-view';
 import SavedView from '@/pages/traveler-dashboard/saved/view/saved-view';
 import TodoView from '@/pages/traveler-dashboard/to-do/view/to-do-view';
 import TripsView from '@/pages/traveler-dashboard/trips/view/trips-view';
+import TripsDetailView from '@/pages/traveler-dashboard/trips/view/trip-detail-view';
+import UpgradeSubscriptionView from '@/pages/business-dashboard/subscription/view/upgrade-subscription-view';
+import UserProfileView from '@/pages/traveler-dashboard/user-profile/view/user-profile-view';
+
+import { AccountUserProfilePage as BusinessAccountProfilePage } from '@/pages/business-dashboard/profile/account-basic-page';
 
 
 
@@ -37,10 +42,11 @@ export function AppRoutingSetup() {
 
         <Route element={<RequireAuth role={"traveler"} />}>
 
-          <Route path="/traveler-dashboard" element={<MainView />} />
+          <Route path="/traveler-dashboard" element={<UserProfileView />} />
 
           <Route path="/traveler-dashboard/trips" element={<TripsView />} />
 
+          <Route path="/traveler-dashboard/trips/:id" element={<TripsDetailView />} />
           {/* saved */}
           <Route path="/traveler-dashboard/saved" element={<SavedView />} />
 
@@ -51,16 +57,14 @@ export function AppRoutingSetup() {
           <Route path="/traveler-dashboard/activity" element={<ActivityView />} />
 
           {/* Favorites */}
-          {/* <Route path="/traveler-dashboard/favorites" element={<FavoritesView />} /> */}
+          {/* <Route path="/traveler-dashboard/edit-profile" element={<UserProfileView />} /> */}
 
           <Route path="/traveler-dashboard/profile" element={<TravelerProfileView />} />
         </Route>
 
-
-
         <Route element={<RequireAuth role={"business"} />}>
 
-          <Route path="/business-dashboard" element={<BusinessMainView />} />
+          <Route path="/business-dashboard" element={<BusinessAccountProfilePage />} />
 
           <Route path="/business-dashboard/activity" element={<BusinessActivityView />} />
 
@@ -70,7 +74,9 @@ export function AppRoutingSetup() {
           {/* Reviews */}
           <Route path="/business-dashboard/subscription" element={<SubscriptionView />} />
 
-          <Route path="/business-dashboard/edit-business" element={<BusinessView />} />
+          <Route path="/business-dashboard/upgrade-subscription" element={<UpgradeSubscriptionView />} />
+
+          {/* <Route path="/business-dashboard/edit-business" element={<BusinessAccountProfilePage />} /> */}
 
           <Route path="/business-dashboard/stats" element={<StatsView />} />
 

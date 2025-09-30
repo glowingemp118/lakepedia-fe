@@ -46,6 +46,8 @@ export function SignInPage() {
 
   const { loginWithRedirect, user, isAuthenticated } = useAuth0();
 
+  console.log("user", user);
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const userType = params.get('user');
