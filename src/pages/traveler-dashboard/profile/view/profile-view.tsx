@@ -17,7 +17,7 @@ export function ProfileView() {
 
     return (
         <div className="grid grid-cols-1  gap-5 lg:gap-7.5">
-            <div className="col-span-1 md:mx-30 mx-2">
+            <div className="col-span-1 md:mx-10 mx-2">
                 <ProfileInfo
                     profileData={travelerProfile}
                 />

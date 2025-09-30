@@ -22,13 +22,13 @@ export function Main() {
   `);
 
   return (
-    <div className="flex grow">
+    <div className="flex grow ">
       <Header />
 
-      <div className="flex flex-col lg:flex-row grow pt-(--header-height)">
+      <div className="flex flex-col lg:flex-row grow ">
         {!isMobileMode && <Sidebar />}
 
-        <Navbar />
+        {/* <Navbar /> */}
 
         <div className="flex grow rounded-b-xl bg-background border-x border-b border-border lg:mt-(--navbar-height) mx-5 lg:ms-(--sidebar-width) mb-5">
           <div className="flex flex-col grow kt-scrollable-y lg:[scrollbar-width:auto] pt-7 lg:[&_[data-slot=container]]:pe-2">

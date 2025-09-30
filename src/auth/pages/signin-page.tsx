@@ -46,7 +46,27 @@ export function SignInPage() {
 
   const { loginWithRedirect, user, isAuthenticated } = useAuth0();
 
-  console.log('Auth0 user:', user);
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const userType = params.get('user');
+    if (userType === 'traveler' || userType === 'business') {
+      setCurrentTab(userType);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (currentTab) {
+      const params = new URLSearchParams(window.location.search);
+      const userType = params.get("user");
+
+      if (userType !== currentTab) {
+        navigate(`${window.location.pathname}?user=${currentTab}`, {
+          replace: true,
+        });
+      }
+    }
+  }, [currentTab, navigate]);
+
 
   useEffect(() => {
     if (!user || !isAuthenticated) return;
@@ -72,7 +92,7 @@ export function SignInPage() {
     }
 
     if (currentSocialTab === "facebook") {
-     
+
       userData = {
         first_name: user.name,
         last_name: user.nickname,

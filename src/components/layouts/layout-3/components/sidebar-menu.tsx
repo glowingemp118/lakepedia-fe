@@ -12,22 +12,119 @@ import {
   Bell,
   Building2,
   CheckSquare,
-  Code,
+  ClipboardCheck,
   CreditCard,
   Heart,
-  HelpCircle,
   ImageIcon,
-  MessageSquare,
   Plane,
+  Podcast,
   Settings,
-  Shield,
   Star,
-  UserCircle,
   Users
 } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import { paths } from './paths';
+
+export const TravelerSidebar = [
+
+  {
+    icon: BarChart3,
+    path: paths.travelerDashboard.root,
+    title: 'Dashboard',
+  },
+  {
+    icon: Bell,
+    path: paths.travelerDashboard.activity,
+    title: 'Activity'
+  },
+  {
+    icon: Plane,
+    path: paths.travelerDashboard.trips,
+    title: 'Trips'
+  },
+  {
+    icon: CheckSquare,
+    path: paths.travelerDashboard.saved,
+    title: 'Saved'
+  },
+  {
+    icon: ClipboardCheck,
+    path: paths.travelerDashboard.todo,
+    title: 'To-Do'
+
+  },
+  {
+    icon: Users,
+    path: paths.travelerDashboard.profile,
+    title: 'Profile'
+  }
+]
+
+export const BusinessSidebar = [
+  {
+    icon: BarChart3,
+    path: paths.businessDashboard.root,
+    title: "Dashboard",
+  },
+  {
+    icon: Bell,
+    path: paths.businessDashboard.activity,
+    title: 'Activity'
+  },
+  {
+    icon: Building2,
+    path: paths.businessDashboard.lakes,
+    title: 'Lakes'
+  },
+  {
+    icon: Settings,
+    path: paths.businessDashboard.editBusiness,
+    title: 'Edit Business'
+  },
+  {
+    icon: BarChart3,
+    path: paths.businessDashboard.stats,
+    title: 'Stats'
+  },
+  {
+    icon: Podcast,
+    path: paths.businessDashboard.subscription,
+    title: 'Subscription'
+  }
+];
+export const AdminSidebar = [
+  {
+    icon: BarChart3,
+    path: paths.adminDashboard.root,
+    title: 'Dashboard',
+  },
+  {
+    icon: Plane,
+    path: "#",
+    title: 'Trips',
+  },
+  {
+    icon: ImageIcon,
+    path: "#",
+    title: 'Photos',
+  },
+  {
+    icon: Star,
+    path: "#",
+    title: 'Reviews',
+  },
+  {
+    icon: Heart,
+    path: "#",
+    title: 'Favorites',
+  },
+  {
+    icon: ImageIcon,
+    path: "#",
+    title: 'Media',
+  }
+];
 
 export interface Item {
   icon: React.ComponentType<{ className?: string }>;
@@ -49,99 +146,6 @@ export function SidebarMenu() {
 
   const isBusiness = user?.role === "business";
 
-
-  const TravelerSidebar = [
-
-    {
-      icon: BarChart3,
-      path: paths.travelerDashboard.root,
-      title: 'Dashboard',
-    },
-    {
-      icon: Plane,
-      path: paths.travelerDashboard.trips,
-      title: 'Trips'
-    },
-    {
-      icon: ImageIcon,
-      path: paths.travelerDashboard.photos,
-      title: 'Photos'
-    },
-    {
-      icon: Star,
-      path: paths.travelerDashboard.reviews,
-      title: 'Reviews'
-    },
-    {
-      icon: Heart,
-      path: paths.travelerDashboard.favorites,
-      title: 'Favorites'
-    }
-  ]
-  const BusinessSidebar = [
-    {
-      icon: BarChart3,
-      path: paths.businessDashboard.root,
-      title: "Dashboard",
-    },
-    {
-      icon: Building2,
-      path: paths.businessDashboard.profile,
-      title: "Profile",
-    },
-    {
-      icon: ImageIcon,
-      path: paths.businessDashboard.media,
-      title: "Media",
-    },
-    {
-      icon: BarChart3,
-      path: paths.businessDashboard.performance,
-      title: "Performance",
-    },
-    {
-      icon: CreditCard,
-      path: paths.businessDashboard.subscriptions,
-      title: "Subscriptions",
-    },
-    {
-      icon: MessageSquare,
-      path: paths.businessDashboard.chat,
-      title: "Chat",
-    },
-  ];
-  const AdminSidebar = [
-    {
-      icon: BarChart3,
-      path: paths.adminDashboard.root,
-      title: 'Dashboard',
-    },
-    {
-      icon: Plane,
-      path: "#",
-      title: 'Trips',
-    },
-    {
-      icon: ImageIcon,
-      path: "#",
-      title: 'Photos',
-    },
-    {
-      icon: Star,
-      path: "#",
-      title: 'Reviews',
-    },
-    {
-      icon: Heart,
-      path: "#",
-      title: 'Favorites',
-    },
-    {
-      icon: ImageIcon,
-      path: "#",
-      title: 'Media',
-    }
-  ];
 
   const items: Item[] = [
 

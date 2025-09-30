@@ -13,7 +13,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useRegisterMutation } from '@/store/Reducer/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AlertCircle, Check, Eye, EyeOff, LoaderCircleIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { getSignupSchema, SignupSchemaType } from '../forms/signup-schema';
@@ -32,7 +32,7 @@ export function SignUpPage() {
 
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  const [currentTab, setCurrentTab] = useState("traveler");
+  const [currentTab, setCurrentTab] = useState(window.location.search || "traveler");
 
 
   const form = useForm<SignupSchemaType>({
@@ -45,6 +45,28 @@ export function SignUpPage() {
       lastName: '',
     },
   });
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const userType = params.get('user');
+    if (userType === 'traveler' || userType === 'business') {
+      setCurrentTab(userType);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (currentTab) {
+      const params = new URLSearchParams(window.location.search);
+      const userType = params.get("user");
+
+      if (userType !== currentTab) {
+        navigate(`${window.location.pathname}?user=${currentTab}`, {
+          replace: true,
+        });
+      }
+    }
+  }, [currentTab, navigate]);
+
 
   async function onSubmit(values: SignupSchemaType) {
     try {
@@ -82,7 +104,7 @@ export function SignUpPage() {
           ? err.message
           : 'An unexpected error occurred during registration. Please try again.',
       );
-    } 
+    }
   }
 
   const handleChangeTab = (value: string) => {

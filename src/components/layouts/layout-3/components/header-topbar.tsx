@@ -1,19 +1,18 @@
-import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { toAbsoluteUrl } from '@/lib/helpers';
+import { selectUser } from '@/store/slices/userSlice';
 import {
   LayoutGrid,
   MessageCircleMore,
   MessageSquareDot,
   Search,
 } from 'lucide-react';
-import { toAbsoluteUrl } from '@/lib/helpers';
-import { Button } from '@/components/ui/button';
-import { ChatSheet } from '../../layout-1/shared/topbar/chat-sheet';
-import { SearchDialog } from '../../layout-1/shared/dialogs/search/search-dialog';
-import { UserDropdownMenu } from '../../layout-1/shared/topbar/user-dropdown-menu';
-import { AppsDropdownMenu } from '../../layout-1/shared/topbar/apps-dropdown-menu';
-import { NotificationsSheet } from '../../layout-1/shared/topbar/notifications-sheet';
-import { selectUser } from '@/store/slices/userSlice';
 import { useSelector } from 'react-redux';
+import { SearchDialog } from '../../layout-1/shared/dialogs/search/search-dialog';
+import { AppsDropdownMenu } from '../../layout-1/shared/topbar/apps-dropdown-menu';
+import { ChatSheet } from '../../layout-1/shared/topbar/chat-sheet';
+import { NotificationsSheet } from '../../layout-1/shared/topbar/notifications-sheet';
+import { UserDropdownMenu } from '../../layout-1/shared/topbar/user-dropdown-menu';
 
 export function HeaderTopbar() {
  

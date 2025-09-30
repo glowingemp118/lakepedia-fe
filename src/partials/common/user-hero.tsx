@@ -18,7 +18,9 @@ export interface UserHeroProps {
 }
 
 export function UserHero({ image, name, info }: UserHeroProps) {
+  
   const { theme } = useTheme();
+
   const buildInfo = (info: UserHeroInfo[]) => {
     return info.map((item, index) => {
       return (

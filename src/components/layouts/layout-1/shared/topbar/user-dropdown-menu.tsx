@@ -1,21 +1,4 @@
-import { ReactNode } from 'react';
-import {
-  BetweenHorizontalStart,
-  Coffee,
-  CreditCard,
-  FileText,
-  Globe,
-  IdCard,
-  Moon,
-  Settings,
-  Shield,
-  SquareCode,
-  UserCircle,
-  Users,
-} from 'lucide-react';
-import { useTheme } from 'next-themes';
-import { Link, useNavigate } from 'react-router';
-import { toAbsoluteUrl } from '@/lib/helpers';
+import { paths } from '@/components/layouts/layout-3/components/paths';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -31,10 +14,20 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Switch } from '@/components/ui/switch';
-import { useDispatch } from 'react-redux';
+import { toAbsoluteUrl } from '@/lib/helpers';
 import { logout, selectUser } from '@/store/slices/userSlice';
-import { useSelector } from 'react-redux';
-import { paths } from '@/components/layouts/layout-3/components/paths';
+import {
+  Globe,
+  Moon,
+  Plane,
+  Podcast,
+  Star,
+  UserCircle
+} from 'lucide-react';
+import { useTheme } from 'next-themes';
+import { ReactNode } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router';
 
 const I18N_LANGUAGES = [
   {
@@ -81,7 +74,6 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
 
   const { theme, setTheme } = useTheme();
 
-  console.log('user from dropdown', user);
 
   const handleThemeToggle = (checked: boolean) => {
     setTheme(checked ? 'dark' : 'light');
@@ -113,7 +105,7 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
                 to="#"
                 className="text-sm text-mono hover:text-primary font-semibold"
               >
-                 {user?.first_name as string} {user?.last_name as string}
+                {user?.first_name as string} {user?.last_name as string}
               </Link>
               <a
                 href={`mailto:${user?.email as string}`}
@@ -129,26 +121,56 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
         </div>
 
         <DropdownMenuSeparator />
+        {/* User photo, that if you click on has the following items:
+        ○ Go to profile overview;
+        ○ Profile settings;
+        ○ My trips;
+        ○ My reviews;
+        ○ For businesses, an extra button called "My subscription";
+        ○ Sign out. */}
 
-        {/* Menu Items */}
-        {/* <DropdownMenuItem asChild>
-          <div
-            onClick={handleGoToProfile}
-            className="flex items-center gap-2"
-          >
-            <IdCard />
-            Public Profile
-          </div>
-        </DropdownMenuItem> */}
-        <DropdownMenuItem asChild>
-          <div
-            onClick={handleGoToProfile}
-            className="flex items-center gap-2"
-          >
-            <UserCircle />
-            My Profile
-          </div>
-        </DropdownMenuItem>
+        {(isTraveler || isBusiness) && <>
+          <DropdownMenuItem asChild>
+            <div
+              onClick={handleGoToProfile}
+              className="flex items-center gap-2"
+            >
+              <UserCircle />
+              My Profile
+            </div>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link
+              to={paths.travelerDashboard.trips}
+              className="flex items-center gap-2"
+            >
+              <Plane />
+              My Trips
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link
+              to={paths.travelerDashboard.reviews}
+              className="flex items-center gap-2"
+            >
+              <Star />
+              My Reviews
+            </Link>
+          </DropdownMenuItem>
+          {
+            isBusiness && <DropdownMenuItem asChild>
+              <Link
+                to={paths.businessDashboard.subscription}
+                className="flex items-center gap-2"
+              >
+                <Podcast />
+                My Subscription
+              </Link>
+            </DropdownMenuItem>
+          }
+
+        </>
+        }
 
         {/* My Account Submenu */}
         {/* <DropdownMenuSub>
@@ -225,7 +247,7 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
         </DropdownMenuItem> */}
 
         {/* Language Submenu with Radio Group */}
-        <DropdownMenuSub>
+        {/* <DropdownMenuSub>
           <DropdownMenuSubTrigger className="flex items-center gap-2 [&_[data-slot=dropdown-menu-sub-trigger-indicator]]:hidden hover:[&_[data-slot=badge]]:border-input data-[state=open]:[&_[data-slot=badge]]:border-input">
             <Globe />
             <span className="flex items-center justify-between gap-2 grow relative">
@@ -261,7 +283,7 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
               ))}
             </DropdownMenuRadioGroup>
           </DropdownMenuSubContent>
-        </DropdownMenuSub>
+        </DropdownMenuSub> */}
 
         <DropdownMenuSeparator />
 

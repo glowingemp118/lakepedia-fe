@@ -87,7 +87,7 @@ const ProfileInfo: FC<PageProps> = ({ profileData }) => {
                                     <span>-</span>
                                 </TableCell>
                             </TableRow>
-                            {/* <TableRow>
+                            <TableRow>
                                 <TableCell className="py-3 text-secondary-foreground font-normal">
                                     UsState
                                 </TableCell>
@@ -131,7 +131,7 @@ const ProfileInfo: FC<PageProps> = ({ profileData }) => {
                                 <TableCell className="py-3 text-center">
                                     <span>-</span>
                                 </TableCell>
-                            </TableRow> */}
+                            </TableRow>
                             <TableRow>
                                 <TableCell className="py-3 text-secondary-foreground font-normal">
                                     Deactivate Account

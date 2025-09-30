@@ -17,11 +17,11 @@ interface PageProps {
         // firstName: string;
         // lastName: string;
         // email: string;
-        // country: string;
-        // usState: string;
-        // favoriteActivities: string[];
-        // privacy: string;
-        // notifications: boolean;
+        country: string;
+        usState: string;
+        favoriteActivities: string[];
+        privacy: string;
+        notifications: boolean;
         photo: string;
         first_name: string;
         last_name: string;
@@ -36,14 +36,14 @@ const ProfileQuickEditForm: FC<PageProps> = ({ profileData, open, onClose }) => 
 
 
     const defaultValues = useMemo(() => ({
-        photo: profileData?.photo as string|| null,
+        photo: profileData?.photo as string || null,
         firstName: profileData?.first_name as string || '',
-        lastName: profileData?.last_name  as string|| '',
+        lastName: profileData?.last_name as string || '',
         email: profileData?.email as string || '',
-        // country: profileData.country || '',
-        // usState: profileData.usState || '',
-        // privacy: profileData.privacy || '',
-        // notification: profileData.notifications || false,
+        country: profileData.country || '',
+        usState: profileData.usState || '',
+        privacy: profileData.privacy || '',
+        notification: profileData.notifications || false,
 
     }), [profileData])
 
@@ -52,10 +52,10 @@ const ProfileQuickEditForm: FC<PageProps> = ({ profileData, open, onClose }) => 
         firstName: z.string().min(3, 'First name is required'),
         lastName: z.string().min(3, 'Last name is required'),
         email: z.email('Invalid email address'),
-        // country: z.string().min(2, 'Country is required'),
-        // usState: z.string().min(2, 'State is required'),
-        // privacy: z.string().min(2, 'Privacy setting is required'),
-        // notification: z.boolean().optional(),
+        country: z.string().min(2, 'Country is required'),
+        usState: z.string().min(2, 'State is required'),
+        privacy: z.string().min(2, 'Privacy setting is required'),
+        notification: z.boolean().optional(),
     })
 
     const methods = useForm({
@@ -84,13 +84,13 @@ const ProfileQuickEditForm: FC<PageProps> = ({ profileData, open, onClose }) => 
                         onSubmit={methods.handleSubmit(onSubmit)}
                         className="block w-full space-y-5"
                     >
-                        {/* <div className='flex justify-end items-center'>
+                        <div className='flex justify-end items-center'>
                             <RHFSwitch name='notification' label='Notifications' className='flex flex-row' />
-                        </div> */}
+                        </div>
                         <div className='flex justify-center items-center'>
                             <AvatarInput name='photo' />
                         </div>
-                        <div className='grid md:grid-cols-1 gap-5 grid-cols-1'>
+                        <div className='grid md:grid-cols-2 gap-5 grid-cols-1'>
 
                             <RHFTextField name='firstName' label='First Name' placeholder='Your first name' />
 
@@ -98,7 +98,7 @@ const ProfileQuickEditForm: FC<PageProps> = ({ profileData, open, onClose }) => 
 
                             <RHFTextField name='email' label='Email' placeholder='Your email' />
 
-                            {/* <RHFTextField name='country' label='Country' placeholder='Your country' />
+                            <RHFTextField name='country' label='Country' placeholder='Your country' />
 
                             <RHFTextField name='usState' label='US State' placeholder='Your US state' />
 
@@ -111,7 +111,7 @@ const ProfileQuickEditForm: FC<PageProps> = ({ profileData, open, onClose }) => 
                                     <SelectItem value="public">Public</SelectItem>
                                     <SelectItem value="private">Private</SelectItem>
                                 </SelectContent>
-                            </RHFSelect> */}
+                            </RHFSelect>
 
                         </div>
                         <DialogFooter>

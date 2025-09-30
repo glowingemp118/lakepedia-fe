@@ -1,9 +1,3 @@
-import { BarChart3, Building2, ChevronDown, CreditCard, Heart, ImageIcon, MessageSquare, Plane, Star } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
-import { MENU_SIDEBAR, MENU_SIDEBAR_CUSTOM } from '@/config/layout-3.config';
-import { MenuConfig } from '@/config/types';
-import { cn } from '@/lib/utils';
-import { useMenu } from '@/hooks/use-menu';
 import {
   Menubar,
   MenubarContent,
@@ -14,9 +8,15 @@ import {
   MenubarSubTrigger,
   MenubarTrigger,
 } from '@/components/ui/menubar';
+import { MENU_SIDEBAR, MENU_SIDEBAR_CUSTOM } from '@/config/layout-3.config';
+import { MenuConfig } from '@/config/types';
+import { useMenu } from '@/hooks/use-menu';
+import { cn } from '@/lib/utils';
 import { selectUser } from '@/store/slices/userSlice';
+import { ChevronDown } from 'lucide-react';
 import { useSelector } from 'react-redux';
-import { paths } from './paths';
+import { Link, useLocation } from 'react-router-dom';
+import { TravelerSidebar as TravelerMemu, BusinessSidebar as BusinessMemu, AdminSidebar as AdminMemu } from './sidebar-menu';
 
 export function NavbarMenu() {
 
@@ -31,92 +31,20 @@ export function NavbarMenu() {
 
   const isBusiness = user?.role === "business";
 
+  const TravelerSidebar = TravelerMemu.map((item) => item.title === "Dashboard" ? {
+    ...item,
+    title: "Overview"
+  } :
+    item);
 
-  const TravelerSidebar = [
+  const BusinessSidebar = BusinessMemu.map((item) => item.title === "Dashboard" ? {
+    ...item,
+    title: "Overview"
+  } :
+    item);
 
-    {
-      icon: Plane,
-      path: paths.travelerDashboard.trips,
-      title: 'Trips'
-    },
-    {
-      icon: ImageIcon,
-      path: paths.travelerDashboard.photos,
-      title: 'Photos'
-    },
-    {
-      icon: Star,
-      path: paths.travelerDashboard.reviews,
-      title: 'Reviews'
-    },
-    {
-      icon: Heart,
-      path: paths.travelerDashboard.favorites,
-      title: 'Favorites'
-    }
-  ]
+  const AdminSidebar = AdminMemu.filter((item) => item.title !== "Dashboard");
 
-  const BusinessSidebar = [
-
-    {
-      icon: Building2,
-      path: paths.businessDashboard.profile,
-      title: "Profile",
-    },
-    {
-      icon: ImageIcon,
-      path: paths.businessDashboard.media,
-      title: "Media",
-    },
-    {
-      icon: BarChart3,
-      path: paths.businessDashboard.performance,
-      title: "Performance",
-    },
-    {
-      icon: CreditCard,
-      path: paths.businessDashboard.subscriptions,
-      title: "Subscriptions",
-    },
-    {
-      icon: MessageSquare,
-      path: paths.businessDashboard.chat,
-      title: "Chat",
-    },
-  ];
-
-  const AdminSidebar = [
-    {
-      icon: BarChart3,
-      path: paths.adminDashboard.root,
-      title: 'Dashboard',
-    },
-    {
-      icon: Plane,
-      path: "#",
-      title: 'Trips',
-    },
-    {
-      icon: ImageIcon,
-      path: "#",
-      title: 'Photos',
-    },
-    {
-      icon: Star,
-      path: "#",
-      title: 'Reviews',
-    },
-    {
-      icon: Heart,
-      path: "#",
-      title: 'Favorites',
-    },
-    {
-      icon: ImageIcon,
-      path: "#",
-      title: 'Media',
-    }
-  ];
 
   let navbarMenu;
 
@@ -130,7 +58,7 @@ export function NavbarMenu() {
     navbarMenu = MENU_SIDEBAR?.[5];
   } else {
     // navbarMenu = MENU_SIDEBAR?.[3];
-    navbarMenu= isTraveler ? { ...MENU_SIDEBAR?.[3], children: TravelerSidebar } :
+    navbarMenu = isTraveler ? { ...MENU_SIDEBAR?.[3], children: TravelerSidebar } :
       isBusiness ? { ...MENU_SIDEBAR?.[3], children: BusinessSidebar } :
         isAdmin ? { ...MENU_SIDEBAR?.[3], children: AdminSidebar } : MENU_SIDEBAR?.[3];
   }
