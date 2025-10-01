@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { AvatarGroup } from '../common/avatar-group';
+import { Heart } from 'lucide-react';
 
 interface IProjectProps {
   logo: string;
@@ -13,14 +14,14 @@ interface IProjectProps {
   endDate?: string;
   status: {
     variant?:
-      | 'primary'
-      | 'destructive'
-      | 'secondary'
-      | 'info'
-      | 'success'
-      | 'warning'
-      | null
-      | undefined;
+    | 'primary'
+    | 'destructive'
+    | 'secondary'
+    | 'info'
+    | 'success'
+    | 'warning'
+    | null
+    | undefined;
     label: string;
   };
   progress: {
@@ -50,7 +51,8 @@ const CardProject = ({
   const navigate = useNavigate();
   return (
     <Card className="p-7.5 hover:border-blue-400 border transition-all duration-300 cursor-pointer"
-     onClick={() => {    navigate(`/traveler-dashboard/trips/${"1"}`) }}>
+      onClick={() => { navigate(`/traveler-dashboard/trips/${"1"}`) }}>
+     
       <div className="flex items-center justify-between mb-3 lg:mb-6">
         <div className="flex items-center justify-center size-[50px] rounded-lg bg-accent/60">
           <img
@@ -89,7 +91,12 @@ const CardProject = ({
         indicatorClassName={progress?.variant}
         className="h-1.5 mb-4 lg:mb-8"
       />
-      <AvatarGroup group={team.group} size={team.size} more={team.more} />
+     <div className='flex justify-between items-center'>
+       <AvatarGroup group={team.group} size={team.size} more={team.more} />
+       <div className='flex justify-end'>
+        <Heart size={24} className='hover:text-red-500 hover:size-[28px] transition-all p-1 rounded-full cursor-pointer' />
+      </div>
+     </div>
     </Card>
   );
 };

@@ -1,4 +1,4 @@
-import { EllipsisVertical } from 'lucide-react';
+import { EllipsisVertical, Heart } from 'lucide-react';
 import { Link } from 'react-router';
 import { toAbsoluteUrl } from '@/lib/helpers';
 import { Badge } from '@/components/ui/badge';
@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { DropdownMenu3 } from '../dropdown-menu/dropdown-menu-3';
 import { ICampaignItem, ICampaignProps } from './card-campaign';
+import { useSelector } from 'react-redux';
+import { selectUser } from '@/store/slices/userSlice';
 
 const CardCampaignRow = ({
   logo,
@@ -17,6 +19,9 @@ const CardCampaignRow = ({
   statistics,
   url,
 }: ICampaignProps) => {
+
+  const user=useSelector(selectUser);
+
   const renderItem = (statistic: ICampaignItem, index: number) => {
     return (
       <div
@@ -82,6 +87,9 @@ const CardCampaignRow = ({
               {status.label}
             </Badge>
           </div>
+         {user?.role as string==="traveler" && <div className='flex justify-end pb-2'>
+            <Heart size={24} className='text-red-500  p-1 rounded-full cursor-pointer' />
+          </div>}
           <DropdownMenu3
             trigger={
               <Button variant="ghost" mode="icon">

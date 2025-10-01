@@ -1,4 +1,4 @@
-import { EllipsisVertical } from 'lucide-react';
+import { EllipsisVertical, Heart } from 'lucide-react';
 import { Link } from 'react-router';
 import { toAbsoluteUrl } from '@/lib/helpers';
 import { Badge } from '@/components/ui/badge';
@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { DropdownMenu2 } from '../dropdown-menu/dropdown-menu-2';
+import { useSelector } from 'react-redux';
+import { selectUser } from '@/store/slices/userSlice';
 
 interface ICampaignItem {
   total: string;
@@ -21,14 +23,14 @@ interface ICampaignProps {
   description: string;
   status: {
     variant?:
-      | 'primary'
-      | 'destructive'
-      | 'secondary'
-      | 'info'
-      | 'success'
-      | 'warning'
-      | null
-      | undefined;
+    | 'primary'
+    | 'destructive'
+    | 'secondary'
+    | 'info'
+    | 'success'
+    | 'warning'
+    | null
+    | undefined;
     label: string;
   };
   statistics: ICampaignItem[];
@@ -50,6 +52,9 @@ const CardCampaign = ({
   progress,
   url,
 }: ICampaignProps) => {
+
+  const user=useSelector(selectUser);
+
   const renderItem = (statistic: ICampaignItem, index: number) => {
     return (
       <div
@@ -118,6 +123,10 @@ const CardCampaign = ({
           })}
         </div>
       </div>
+     {user?.role as string==="traveler" && <div className='flex justify-end pb-2 px-5'>
+        <Heart size={24} className='text-red-500  hover:size-[28px]  transition-all hover:text-black hover:dark:text-white  p-1 rounded-full cursor-pointer' />
+      </div>}
+     
       <Progress
         value={progress?.value}
         indicatorClassName={progress?.variant}

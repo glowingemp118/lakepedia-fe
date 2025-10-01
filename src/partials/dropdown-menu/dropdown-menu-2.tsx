@@ -1,12 +1,12 @@
-import { ReactNode } from 'react';
-import { CloudCog, FileInput, Settings, ThumbsDown } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Trash } from 'lucide-react';
+import { ReactNode } from 'react';
+import { Link } from 'react-router-dom';
 
 export function DropdownMenu2({ trigger }: { trigger: ReactNode }) {
   return (
@@ -14,12 +14,12 @@ export function DropdownMenu2({ trigger }: { trigger: ReactNode }) {
       <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
       <DropdownMenuContent className="w-[150px]" side="bottom" align="end">
         <DropdownMenuItem asChild>
-          <Link to="/account/home/settings-enterprise">
-            <Settings />
-            <span>Settings</span>
+          <Link to="#" className='cursor-pointer flex items-center gap-2'>
+           <Trash color='red' size={16} />
+            <span>Delete</span> 
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild>
+        {/* <DropdownMenuItem asChild>
           <Link to="/account/members/import-members">
             <FileInput />
             <span>Import</span>
@@ -36,7 +36,7 @@ export function DropdownMenu2({ trigger }: { trigger: ReactNode }) {
             <ThumbsDown />
             <span>Report</span>
           </Link>
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
       </DropdownMenuContent>
     </DropdownMenu>
   );

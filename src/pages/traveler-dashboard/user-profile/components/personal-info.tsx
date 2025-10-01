@@ -1,16 +1,29 @@
-import { AvatarInput } from '@/partials/common/avatar-input';
-import { SquarePen } from 'lucide-react';
-import { Link } from 'react-router';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
+import { useBoolean } from '@/hooks/use-boolean';
+import { SquarePen } from 'lucide-react';
+import { FC } from 'react';
+import { Link } from 'react-router';
+import ProfileQuickEditForm from '../quick-update-profile';
 
-const PersonalInfo = () => {
+interface PageProps {
+  user: any
+}
+const PersonalInfo: FC<PageProps> = ({ user }) => {
+
+  const open = useBoolean();
+
   return (
     <Card className="min-w-full">
       <CardHeader>
-        <CardTitle>Personal Info</CardTitle>
+        <div className='flex justify-between items-center'>
+          <CardTitle>Personal Info</CardTitle>
+        </div>
+        <Button variant="ghost" mode="icon" onClick={open.onTrue}>
+          <SquarePen size={16} className="text-blue-500" />
+        </Button>
       </CardHeader>
       <CardContent className="kt-scrollable-x-auto pb-3 p-0">
         <Table className="align-middle text-sm text-muted-foreground">
@@ -24,78 +37,81 @@ const PersonalInfo = () => {
               </TableCell>
               <TableCell className="py-2 text-center">
                 <div className="flex justify-center items-center">
-                  {/* <AvatarInput name="photo" /> */}
+
+                  <img
+                    src={user.image || "/media/avatars/300-2.png"}
+                    alt="Avatar"
+                    className="size-16 rounded-full border-2 border-green-500"
+                  />
                 </div>
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell className="py-2 text-secondary-foreground font-normal">
-                Name
+                First Name
               </TableCell>
               <TableCell className="py-2 text-foreground font-normaltext-sm">
-                Jason Tatum
+                {user.first_name || 'Unknown'}
               </TableCell>
               <TableCell className="py-2 text-center">
-                <Button variant="ghost" mode="icon">
-                  <SquarePen size={16} className="text-blue-500" />
-                </Button>
+                -
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="py-2 text-secondary-foreground font-normal">
+                Last Name
+              </TableCell>
+              <TableCell className="py-2 text-foreground font-normaltext-sm">
+                {user.last_name || 'Unknown'}
+              </TableCell>
+              <TableCell className="py-2 text-center">
+                -
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="py-2 min-w-36 text-secondary-foreground font-normal">
+                Email
+              </TableCell>
+              <TableCell className="py-2 min-w-60">
+                <Link
+                  to="#"
+                  className="text-foreground font-normal text-sm hover:text-primary-active"
+                >
+                  jasontt@studio.co
+                </Link>
+              </TableCell>
+              <TableCell className="py-2 max-w-16 text-center">
+                -
+              </TableCell>
+            </TableRow>
+
+            <TableRow>
+              <TableCell className="py-3 text-secondary-foreground font-normal">
+                UsState
+              </TableCell>
+              <TableCell className="py-3 text-secondary-foreground text-sm font-normal">
+                {user?.us_state || ''}
+              </TableCell>
+              <TableCell className="py-3 text-center">
+                -
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell className="py-3 text-secondary-foreground font-normal">
-                Availability
-              </TableCell>
-              <TableCell className="py-3 text-foreground font-normal">
-                <Badge size="md" variant="success" appearance="light">
-                  Available now
-                </Badge>
-              </TableCell>
-              <TableCell className="py-3 text-center">
-                <Button variant="ghost" mode="icon">
-                  <SquarePen size={16} className="text-blue-500" />
-                </Button>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="py-3 text-secondary-foreground font-normal">
-                Birthday
+                Country
               </TableCell>
               <TableCell className="py-3 text-secondary-foreground text-sm font-normal">
-                28 May 1996
+                {user?.country || ''}
               </TableCell>
               <TableCell className="py-3 text-center">
-                <Button variant="ghost" mode="icon">
-                  <SquarePen size={16} className="text-blue-500" />
-                </Button>
+                -
               </TableCell>
             </TableRow>
-            <TableRow>
-              <TableCell className="py-3 text-secondary-foreground font-normal">
-                Gender
-              </TableCell>
-              <TableCell className="py-3 text-secondary-foreground text-sm font-normal">
-                Male
-              </TableCell>
-              <TableCell className="py-3 text-center">
-                <Button variant="ghost" mode="icon">
-                  <SquarePen size={16} className="text-blue-500" />
-                </Button>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="py-3">Address</TableCell>
-              <TableCell className="py-3 text-secondary-foreground text-sm font-normal">
-                You have no an address yet
-              </TableCell>
-              <TableCell className="py-3 text-center">
-                <Button mode="link" underlined="dashed" asChild>
-                  <Link to="#">Add</Link>
-                </Button>
-              </TableCell>
-            </TableRow>
+
           </TableBody>
         </Table>
       </CardContent>
+      <ProfileQuickEditForm open={open.value} onClose={open.onFalse} profileData={user} />
     </Card>
   );
 };

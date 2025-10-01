@@ -1,11 +1,9 @@
-import { Download } from 'lucide-react';
-import { Link, Outlet, useLocation } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 import { useBodyClass } from '@/hooks/use-body-class';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Button } from '@/components/ui/button';
-import { Footer } from './footer';
+import { Download } from 'lucide-react';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import { Header } from './header';
-import { Navbar } from './navbar';
 import { Sidebar } from './sidebar';
 import { Toolbar, ToolbarActions, ToolbarHeading } from './toolbar';
 
@@ -48,7 +46,7 @@ export function Main() {
               )}
               <Outlet />
             </main>
-            <Footer />
+            {/* <Footer /> */}
           </div>
         </div>
       </div>

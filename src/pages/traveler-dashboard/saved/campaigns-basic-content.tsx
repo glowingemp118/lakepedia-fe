@@ -263,9 +263,9 @@ export function CampaignsContent({ mode }: ICampaignsContentProps) {
               <List size={16} />
             </ToggleGroupItem>
           </ToggleGroup>
-          <Button size="md" className="bg-green-500">
+          {/* <Button size="md" className="bg-green-500">
             <SquarePlus /> New Campaign
-          </Button>
+          </Button> */}
         </div>
       </div>
       {currentMode === 'cards' && (
@@ -277,7 +277,7 @@ export function CampaignsContent({ mode }: ICampaignsContentProps) {
           </div>
           <div className="flex grow justify-center pt-5 lg:pt-7.5">
             <Button mode="link" underlined="dashed" asChild>
-              <Link to="/account/integrations">Show more Campaigns</Link>
+              <Link to="/account/integrations">Show more Saved</Link>
             </Button>
           </div>
         </div>
@@ -291,7 +291,7 @@ export function CampaignsContent({ mode }: ICampaignsContentProps) {
           </div>
           <div className="flex grow justify-center pt-5 lg:pt-7.5">
             <Button mode="link" underlined="dashed" asChild>
-              <Link to="/account/integrations">Show more Campaigns</Link>
+              <Link to="/account/integrations">Show more Saved</Link>
             </Button>
           </div>
         </div>

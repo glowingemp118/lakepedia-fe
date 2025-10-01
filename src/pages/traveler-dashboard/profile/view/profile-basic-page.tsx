@@ -1,7 +1,7 @@
 import { Container } from '@/components/common/container';
 import { Navbar } from '@/components/layouts/layout-3/components/navbar';
 import { toAbsoluteUrl } from '@/lib/helpers';
-import { UserHero } from '@/partials/common/user-hero';
+import { UserHero } from '../profile-hero';
 import {
     Mail,
     MapPin,

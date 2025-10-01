@@ -6,6 +6,7 @@ import { useBoolean } from '@/hooks/use-boolean';
 import { SquarePen } from 'lucide-react';
 import { FC } from 'react';
 import ProfileQuickEditForm from './profile-quick-edit-form';
+import ConfirmDialog from '@/components/comfirm-dialog/confirm-dialog';
 
 
 interface PageProps {
@@ -23,6 +24,14 @@ interface PageProps {
 const ProfileInfo: FC<PageProps> = ({ profileData }) => {
 
     const open = useBoolean();
+
+    const show=useBoolean();
+
+    const handleDeactivate = () => {
+        show.onFalse();
+        console.log("Account Deactivated");
+        
+    }
 
     return (
         <>
@@ -140,7 +149,7 @@ const ProfileInfo: FC<PageProps> = ({ profileData }) => {
                                     <span className="text-red-500">Deactivate your account</span>
                                 </TableCell>
                                 <TableCell className="py-3 text-center">
-                                    <Button variant="destructive" size="sm" onClick={() => { }}>
+                                    <Button variant="destructive" size="sm" onClick={show.onTrue}>
                                         Deactivate
                                     </Button>
                                 </TableCell>
@@ -148,6 +157,14 @@ const ProfileInfo: FC<PageProps> = ({ profileData }) => {
                         </TableBody>
                     </Table>
                 </CardContent>
+
+                <ConfirmDialog
+                title='Deactivate Account'
+                content='Are you sure you want to deactivate your account?'
+                open={show.value}
+                onClose={show.onFalse}
+                onConfirm={handleDeactivate}
+                />
 
                 <ProfileQuickEditForm profileData={profileData} open={open.value} onClose={open.onFalse} />
             </Card >

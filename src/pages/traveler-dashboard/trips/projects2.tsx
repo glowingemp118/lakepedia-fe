@@ -1,9 +1,10 @@
-import { useState } from 'react';
-import { CardProject, CardProjectRow } from '@/partials/cards';
-import { LayoutGrid, List, Plus } from 'lucide-react';
-import { Link } from 'react-router';
 import { Button } from '@/components/ui/button';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { useBoolean } from '@/hooks/use-boolean';
+import { CardProject, CardProjectRow } from '@/partials/cards';
+import { Plus } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router';
+import AddTripModal from './create-trip-modal';
 
 interface IProjects2Item {
   logo: string;
@@ -13,14 +14,14 @@ interface IProjects2Item {
   endDate?: string;
   status: {
     variant?:
-      | 'primary'
-      | 'destructive'
-      | 'secondary'
-      | 'info'
-      | 'success'
-      | 'warning'
-      | null
-      | undefined;
+    | 'primary'
+    | 'destructive'
+    | 'secondary'
+    | 'info'
+    | 'success'
+    | 'warning'
+    | null
+    | undefined;
     label: string;
   };
   progress: {
@@ -40,6 +41,13 @@ interface IProjects2Item {
 type IProjects2Items = Array<IProjects2Item>;
 
 const Projects2 = () => {
+
+  const { state } = useLocation();
+
+  const navigate = useNavigate();
+
+  const open = useBoolean();
+
   const [activeView, setActiveView] = useState('cards');
 
   const projects: IProjects2Items = [
@@ -342,6 +350,13 @@ const Projects2 = () => {
       },
     },
   ];
+  useEffect(() => {
+
+    if (state && state.from === 'todo') {
+      open.onTrue();
+      navigate(window.location.pathname, { replace: true });
+    }
+  }, [state])
 
   const renderProject = (project: IProjects2Item, index: number) => {
     return (
@@ -394,7 +409,7 @@ const Projects2 = () => {
             <List size={16} />
           </ToggleGroupItem>
         </ToggleGroup> */}
-        <Button><Plus /> Add Trip</Button>
+        <Button onClick={open.onTrue}><Plus /> Add Trip</Button>
       </div>
       {activeView === 'cards' && (
         <div id="projects_cards">
@@ -424,6 +439,7 @@ const Projects2 = () => {
           </div>
         </div>
       )}
+      <AddTripModal open={open.value} onClose={open.onFalse} />
     </div>
   );
 };

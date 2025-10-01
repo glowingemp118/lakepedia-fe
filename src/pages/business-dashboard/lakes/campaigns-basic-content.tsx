@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { CardCampaign, CardCampaignRow } from '@/partials/cards';
-import { LayoutGrid, List, SquarePlus } from 'lucide-react';
+import { LayoutGrid, List, Plus, SquarePlus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
@@ -263,8 +263,8 @@ export function CampaignsContent({ mode }: ICampaignsContentProps) {
               <List size={16} />
             </ToggleGroupItem>
           </ToggleGroup>
-          <Button size="md" className="bg-green-500">
-            <SquarePlus /> New Campaign
+          <Button size="md" >
+            <Plus /> Add Lake
           </Button>
         </div>
       </div>
