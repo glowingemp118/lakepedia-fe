@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { AvatarGroup } from '../common/avatar-group';
 import { Heart } from 'lucide-react';
+import { paths } from '@/components/layouts/layout-3/components/paths';
 
 interface IProjectProps {
   logo: string;
@@ -48,10 +49,17 @@ const CardProject = ({
   progress,
   team,
 }: IProjectProps) => {
+
   const navigate = useNavigate();
+  
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    // Handle the favorite click logic here
+    console.log('Favorite clicked!');
+  }
   return (
     <Card className="p-7.5 hover:border-blue-400 border transition-all duration-300 cursor-pointer"
-      onClick={() => { navigate(`/traveler-dashboard/trips/${"1"}`) }}>
+      onClick={() => { navigate(paths.travelerDashboard.tripDetail("1")) }}>
      
       <div className="flex items-center justify-between mb-3 lg:mb-6">
         <div className="flex items-center justify-center size-[50px] rounded-lg bg-accent/60">
@@ -93,7 +101,7 @@ const CardProject = ({
       />
      <div className='flex justify-between items-center'>
        <AvatarGroup group={team.group} size={team.size} more={team.more} />
-       <div className='flex justify-end'>
+       <div className='flex justify-end' onClick={handleFavoriteClick}>
         <Heart size={24} className='hover:text-red-500 hover:size-[28px] transition-all p-1 rounded-full cursor-pointer' />
       </div>
      </div>

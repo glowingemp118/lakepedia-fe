@@ -1,16 +1,17 @@
-import { Container } from '@/components/common/container'
-import { Navbar } from '@/components/layouts/layout-3/components/navbar'
-import { toAbsoluteUrl } from '@/lib/helpers'
-import { UserHero } from '../../profile/profile-hero'
-import { selectUser } from '@/store/slices/userSlice'
-import { CircleUser, Mail, MapPin } from 'lucide-react'
-import { useSelector } from 'react-redux'
-import CampaignBasicPage from '../compaing-basic-page'
 
-const SavedView = () => {
+
+import { Container } from "@/components/common/container";
+import { Navbar } from "@/components/layouts/layout-3/components/navbar";
+import { toAbsoluteUrl } from "@/lib/helpers";
+import { selectUser } from "@/store/slices/userSlice";
+import { CircleUser, Mail, MapPin } from "lucide-react";
+import { useSelector } from "react-redux";
+import { UserHero } from "../../profile/profile-hero";
+import CreateLakePage from "../create-lake-page";
+const CreateLakeView = () => {
 
     const user = useSelector(selectUser);
-    
+
     const image = (
         <img
             src={toAbsoluteUrl(user?.image as string || '/media/avatars/300-1.png')}
@@ -38,10 +39,13 @@ const SavedView = () => {
                 <Navbar />
             </Container>
             <Container className=''>
-                <CampaignBasicPage />
+                <CreateLakePage lake={lake} />
             </Container>
-        </div>
+        </div >
     )
 }
 
-export default SavedView
+export default CreateLakeView
+
+
+const lake={}

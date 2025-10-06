@@ -50,9 +50,10 @@ const BasicSettings = ({ title }: IBasicSettingsProps) => {
                 Password last changed 2 months ago
               </TableCell>
               <TableCell className="py-2 text-end">
-                <Button variant="ghost" mode="icon" onClick={open.onTrue}>
+                {/* <Button variant="ghost" mode="icon" onClick={open.onTrue}>
                   <SquarePen size={16} className="text-blue-500"  />
-                </Button>
+                </Button> */}
+                -
               </TableCell>
             </TableRow>
             <TableRow>
@@ -63,9 +64,10 @@ const BasicSettings = ({ title }: IBasicSettingsProps) => {
                 To be set
               </TableCell>
               <TableCell className="py-3 text-end">
-                <Button mode="link" size="sm" underlined="dashed" asChild>
+                {/* <Button mode="link" size="sm" underlined="dashed" asChild>
                   <Link to="#">Setup</Link>
-                </Button>
+                </Button> */}
+                -
               </TableCell>
             </TableRow>
             <TableRow>
@@ -97,9 +99,10 @@ const BasicSettings = ({ title }: IBasicSettingsProps) => {
                 </div>
               </TableCell>
               <TableCell className="py-2 text-end">
-                <Button variant="ghost" mode="icon">
+                {/* <Button variant="ghost" mode="icon">
                   <SquarePen size={16} className="text-blue-500" />
-                </Button>
+                </Button> */}
+                -
               </TableCell>
             </TableRow>
             <TableRow>
@@ -110,9 +113,10 @@ const BasicSettings = ({ title }: IBasicSettingsProps) => {
                 Public
               </TableCell>
               <TableCell className="py-2 text-end">
-                <Button variant="ghost" mode="icon">
+                {/* <Button variant="ghost" mode="icon">
                   <SquarePen size={16} className="text-blue-500" />
-                </Button>
+                </Button> */}
+                -
               </TableCell>
             </TableRow>
 
@@ -128,9 +132,10 @@ const BasicSettings = ({ title }: IBasicSettingsProps) => {
                 </div>
               </TableCell>
               <TableCell className="py-2 text-end">
-                <Button variant="ghost" mode="icon">
+                {/* <Button variant="ghost" mode="icon">
                   <SquarePen size={16} className="text-blue-500" />
-                </Button>
+                </Button> */}
+                -
               </TableCell>
             </TableRow>
           </TableBody>

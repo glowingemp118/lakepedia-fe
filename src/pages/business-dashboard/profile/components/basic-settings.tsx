@@ -16,12 +16,12 @@ const BasicSettings = ({ title }: IBasicSettingsProps) => {
     <Card className="min-w-full">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
-        <div className="flex items-center gap-2">
+        {/* <div className="flex items-center gap-2">
           <Label htmlFor="auto-update" className="text-sm">
             Public Profile
           </Label>
           <Switch defaultChecked size="sm" />
-        </div>
+        </div> */}
       </CardHeader>
       <CardContent className="kt-scrollable-x-auto pb-3 p-0">
         <Table className="align-middle text-sm text-muted-foreground">
@@ -39,9 +39,10 @@ const BasicSettings = ({ title }: IBasicSettingsProps) => {
                 </Link>
               </TableCell>
               <TableCell className="py-2 max-w-16 text-end">
-                <Button variant="ghost" mode="icon">
+                {/* <Button variant="ghost" mode="icon">
                   <SquarePen size={16} className="text-blue-500" />
-                </Button>
+                </Button> */}
+                -
               </TableCell>
             </TableRow>
             <TableRow>
@@ -52,9 +53,10 @@ const BasicSettings = ({ title }: IBasicSettingsProps) => {
                 Password last changed 2 months ago
               </TableCell>
               <TableCell className="py-2 text-end">
-                <Button variant="ghost" mode="icon">
+                {/* <Button variant="ghost" mode="icon">
                   <SquarePen size={16} className="text-blue-500" />
-                </Button>
+                </Button> */}
+                -
               </TableCell>
             </TableRow>
             <TableRow>
@@ -65,9 +67,10 @@ const BasicSettings = ({ title }: IBasicSettingsProps) => {
                 To be set
               </TableCell>
               <TableCell className="py-3 text-end">
-                <Button mode="link" size="sm" underlined="dashed" asChild>
+                {/* <Button mode="link" size="sm" underlined="dashed" asChild>
                   <Link to="#">Setup</Link>
-                </Button>
+                </Button> */}
+                -
               </TableCell>
             </TableRow>
             <TableRow>
@@ -114,9 +117,10 @@ const BasicSettings = ({ title }: IBasicSettingsProps) => {
                 </div>
               </TableCell>
               <TableCell className="py-2 text-end">
-                <Button variant="ghost" mode="icon">
+                {/* <Button variant="ghost" mode="icon">
                   <SquarePen size={16} className="text-blue-500" />
-                </Button>
+                </Button> */}
+                -
               </TableCell>
             </TableRow>
             <TableRow>
@@ -127,9 +131,10 @@ const BasicSettings = ({ title }: IBasicSettingsProps) => {
                 To be set
               </TableCell>
               <TableCell className="py-3 text-end">
-                <Button mode="link" size="sm" underlined="dashed" asChild>
+                {/* <Button mode="link" size="sm" underlined="dashed" asChild>
                   <Link to="#">Setup</Link>
-                </Button>
+                </Button> */}
+                -
               </TableCell>
             </TableRow>
             <TableRow>
@@ -188,9 +193,10 @@ const BasicSettings = ({ title }: IBasicSettingsProps) => {
                 </div>
               </TableCell>
               <TableCell className="py-2 text-end">
-                <Button variant="ghost" mode="icon">
+                {/* <Button variant="ghost" mode="icon">
                   <SquarePen size={16} className="text-blue-500" />
-                </Button>
+                </Button> */}
+                -
               </TableCell>
             </TableRow>
             <TableRow>
@@ -211,9 +217,10 @@ const BasicSettings = ({ title }: IBasicSettingsProps) => {
                 </div>
               </TableCell>
               <TableCell className="py-3 text-end">
-                <Button mode="link" underlined="dashed" asChild>
+                {/* <Button mode="link" underlined="dashed" asChild>
                   <Link to="#">Re-create</Link>
-                </Button>
+                </Button> */}
+                -
               </TableCell>
             </TableRow>
           </TableBody>

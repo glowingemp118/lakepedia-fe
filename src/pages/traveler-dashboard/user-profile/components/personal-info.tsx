@@ -21,9 +21,9 @@ const PersonalInfo: FC<PageProps> = ({ user }) => {
         <div className='flex justify-between items-center'>
           <CardTitle>Personal Info</CardTitle>
         </div>
-        <Button variant="ghost" mode="icon" onClick={open.onTrue}>
+        {/* <Button variant="ghost" mode="icon" onClick={open.onTrue}>
           <SquarePen size={16} className="text-blue-500" />
-        </Button>
+        </Button> */}
       </CardHeader>
       <CardContent className="kt-scrollable-x-auto pb-3 p-0">
         <Table className="align-middle text-sm text-muted-foreground">

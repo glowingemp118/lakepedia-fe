@@ -36,6 +36,7 @@ export interface ICampaignsContentProps {
 }
 
 export function CampaignsContent({ mode }: ICampaignsContentProps) {
+  
   const [currentMode, setCurrentMode] = useState(mode);
 
   const items: ICampaignsContentItems = [

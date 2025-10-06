@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { CardCampaign, CardCampaignRow } from '@/partials/cards';
 import { LayoutGrid, List, Plus, SquarePlus } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { paths } from '@/components/layouts/layout-3/components/paths';
 
 export interface ICampaignsContentItem {
   logo: string;
@@ -13,14 +14,14 @@ export interface ICampaignsContentItem {
   description: string;
   status: {
     variant?:
-      | 'primary'
-      | 'destructive'
-      | 'secondary'
-      | 'info'
-      | 'success'
-      | 'warning'
-      | null
-      | undefined;
+    | 'primary'
+    | 'destructive'
+    | 'secondary'
+    | 'info'
+    | 'success'
+    | 'warning'
+    | null
+    | undefined;
     label: string;
   };
   statistics: Array<{ total: string; description: string }>;
@@ -36,7 +37,10 @@ export interface ICampaignsContentProps {
 }
 
 export function CampaignsContent({ mode }: ICampaignsContentProps) {
+
   const [currentMode, setCurrentMode] = useState(mode);
+
+  const navigate = useNavigate();
 
   const items: ICampaignsContentItems = [
     {
@@ -240,6 +244,9 @@ export function CampaignsContent({ mode }: ICampaignsContentProps) {
       />
     );
   };
+  const handleCreateLake = () => {
+    navigate(paths.businessDashboard.createLake);
+  }
 
   return (
     <div className="flex flex-col items-stretch gap-5 lg:gap-7.5">
@@ -263,7 +270,7 @@ export function CampaignsContent({ mode }: ICampaignsContentProps) {
               <List size={16} />
             </ToggleGroupItem>
           </ToggleGroup>
-          <Button size="md" >
+          <Button size="md" onClick={handleCreateLake} className="whitespace-nowrap" >
             <Plus /> Add Lake
           </Button>
         </div>

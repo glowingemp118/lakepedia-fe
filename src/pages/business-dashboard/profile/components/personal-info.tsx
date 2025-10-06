@@ -1,8 +1,4 @@
-import { AvatarInput } from '@/partials/common/avatar-input';
-import { SquarePen } from 'lucide-react';
-import { Link } from 'react-router';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 
@@ -36,9 +32,10 @@ const PersonalInfo = () => {
                 Jason Tatum
               </TableCell>
               <TableCell className="py-2 text-center">
-                <Button variant="ghost" mode="icon">
+                {/* <Button variant="ghost" mode="icon">
                   <SquarePen size={16} className="text-blue-500" />
-                </Button>
+                </Button> */}
+                -
               </TableCell>
             </TableRow>
             <TableRow>
@@ -51,9 +48,10 @@ const PersonalInfo = () => {
                 </Badge>
               </TableCell>
               <TableCell className="py-3 text-center">
-                <Button variant="ghost" mode="icon">
+                {/* <Button variant="ghost" mode="icon">
                   <SquarePen size={16} className="text-blue-500" />
-                </Button>
+                </Button> */}
+                -
               </TableCell>
             </TableRow>
             <TableRow>
@@ -64,9 +62,10 @@ const PersonalInfo = () => {
                 28 May 1996
               </TableCell>
               <TableCell className="py-3 text-center">
-                <Button variant="ghost" mode="icon">
+                {/* <Button variant="ghost" mode="icon">
                   <SquarePen size={16} className="text-blue-500" />
-                </Button>
+                </Button> */}
+                -
               </TableCell>
             </TableRow>
             <TableRow>
@@ -77,9 +76,10 @@ const PersonalInfo = () => {
                 Male
               </TableCell>
               <TableCell className="py-3 text-center">
-                <Button variant="ghost" mode="icon">
+                {/* <Button variant="ghost" mode="icon">
                   <SquarePen size={16} className="text-blue-500" />
-                </Button>
+                </Button> */}
+                -
               </TableCell>
             </TableRow>
             <TableRow>
@@ -88,9 +88,10 @@ const PersonalInfo = () => {
                 You have no an address yet
               </TableCell>
               <TableCell className="py-3 text-center">
-                <Button mode="link" underlined="dashed" asChild>
+                {/* <Button mode="link" underlined="dashed" asChild>
                   <Link to="#">Add</Link>
-                </Button>
+                </Button> */}
+                -
               </TableCell>
             </TableRow>
           </TableBody>

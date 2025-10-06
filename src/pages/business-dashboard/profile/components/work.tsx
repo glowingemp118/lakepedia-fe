@@ -1,22 +1,20 @@
-import { SquarePen } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
+import { SquarePen } from 'lucide-react';
 
 const Work = () => {
   return (
     <Card className="min-w-full">
       <CardHeader>
         <CardTitle>Work</CardTitle>
-        <div className="flex items-center gap-2">
+        {/* <div className="flex items-center gap-2">
           <Label htmlFor="auto-update" className="text-sm">
             Available now
           </Label>
           <Switch defaultChecked size="sm" />
-        </div>
+        </div> */}
       </CardHeader>
       <CardContent className="kt-scrollable-x-auto pb-3 p-0">
         <Table className="align-middle text-sm text-muted-foreground">
@@ -32,9 +30,10 @@ const Work = () => {
                 </span>
               </TableCell>
               <TableCell className="py-2 text-end min-w-24">
-                <Button variant="ghost" mode="icon">
+                {/* <Button variant="ghost" mode="icon">
                   <SquarePen size={16} className="text-blue-500" />
-                </Button>
+                </Button> */}
+                -
               </TableCell>
             </TableRow>
             <TableRow>
@@ -45,9 +44,10 @@ const Work = () => {
                 $28 / hour
               </TableCell>
               <TableCell className="py-2 text-end">
-                <Button variant="ghost" mode="icon">
+                {/* <Button variant="ghost" mode="icon">
                   <SquarePen size={16} className="text-blue-500" />
-                </Button>
+                </Button> 
+                */}-
               </TableCell>
             </TableRow>
             <TableRow>
@@ -58,9 +58,10 @@ const Work = () => {
                 32 hours a week
               </TableCell>
               <TableCell className="py-2 text-end">
-                <Button variant="ghost" mode="icon">
+                {/* <Button variant="ghost" mode="icon">
                   <SquarePen size={16} className="text-blue-500" />
-                </Button>
+                </Button> */}
+                -
               </TableCell>
             </TableRow>
             <TableRow>
@@ -80,9 +81,10 @@ const Work = () => {
                 </div>
               </TableCell>
               <TableCell className="py-3 text-end">
-                <Button variant="ghost" mode="icon">
+                {/* <Button variant="ghost" mode="icon">
                   <SquarePen size={16} className="text-blue-500" />
-                </Button>
+                </Button> */}
+                -
               </TableCell>
             </TableRow>
             <TableRow>
@@ -95,9 +97,10 @@ const Work = () => {
                 your audience.
               </TableCell>
               <TableCell className="py-4 text-end">
-                <Button variant="ghost" mode="icon">
+                {/* <Button variant="ghost" mode="icon">
                   <SquarePen size={16} className="text-blue-500" />
-                </Button>
+                </Button> */}
+                -
               </TableCell>
             </TableRow>
           </TableBody>

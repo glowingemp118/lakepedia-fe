@@ -5,10 +5,8 @@ import { ErrorRouting } from '@/errors/error-routing';
 import { Layout3Page } from '@/pages/layout-3/page';
 import { Navigate, Route, Routes } from 'react-router';
 
-import MainView from '@/pages/traveler-dashboard/main/view/main-view';
 
 
-import BusinessMainView from '@/pages/business-dashboard/main/view/main-view';
 
 import { ProfileView } from '@/pages/business-dashboard/profile/view/profile-view';
 
@@ -23,12 +21,14 @@ import BusinessActivityView from '@/pages/business-dashboard/activity/view/activ
 import LakesView from '@/pages/business-dashboard/lakes/view/lakes-view';
 import StatsView from '@/pages/business-dashboard/stats/view/stats-view';
 import SubscriptionView from '@/pages/business-dashboard/subscription/view/subscription-view';
+import UpgradeSubscriptionView from '@/pages/business-dashboard/subscription/view/upgrade-subscription-view';
 import SavedView from '@/pages/traveler-dashboard/saved/view/saved-view';
 import TodoView from '@/pages/traveler-dashboard/to-do/view/to-do-view';
-import TripsView from '@/pages/traveler-dashboard/trips/view/trips-view';
 import TripsDetailView from '@/pages/traveler-dashboard/trips/view/trip-detail-view';
-import UpgradeSubscriptionView from '@/pages/business-dashboard/subscription/view/upgrade-subscription-view';
+import TripsView from '@/pages/traveler-dashboard/trips/view/trips-view';
 import UserProfileView from '@/pages/traveler-dashboard/user-profile/view/user-profile-view';
+import LakeDetailView from '@/pages/business-dashboard/lakes/view/lake-detail-view';
+import CreateLakePage from '@/pages/business-dashboard/lakes/view/create-lake-view';
 
 import { AccountUserProfilePage as BusinessAccountProfilePage } from '@/pages/business-dashboard/profile/account-basic-page';
 
@@ -62,7 +62,7 @@ export function AppRoutingSetup() {
           <Route path="/traveler-dashboard/profile" element={<TravelerProfileView />} />
         </Route>
 
-        <Route element={<RequireAuth role={"business"} />}>
+        {/* <Route element={<RequireAuth role={"business"} />}> */}
 
           <Route path="/business-dashboard" element={<BusinessAccountProfilePage />} />
 
@@ -70,6 +70,10 @@ export function AppRoutingSetup() {
 
           {/* Photos */}
           <Route path="/business-dashboard/lakes" element={<LakesView />} />
+
+          <Route path='/business-dashboard/lakes/create' element={<CreateLakePage />} />
+          
+          <Route path="/business-dashboard/lakes/:id" element={<LakeDetailView />} />
 
           {/* Reviews */}
           <Route path="/business-dashboard/subscription" element={<SubscriptionView />} />
@@ -81,7 +85,7 @@ export function AppRoutingSetup() {
           <Route path="/business-dashboard/stats" element={<StatsView />} />
 
           <Route path="/business-dashboard/profile" element={<ProfileView />} />
-        </Route>
+        {/* </Route> */}
 
         <Route element={<RequireAuth role={"admin"} />}>
 

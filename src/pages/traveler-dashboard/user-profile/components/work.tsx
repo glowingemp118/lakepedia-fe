@@ -12,10 +12,10 @@ const Work = () => {
       <CardHeader>
         <CardTitle>Work</CardTitle>
         <div className="flex items-center gap-2">
-          <Label htmlFor="auto-update" className="text-sm">
+          {/* <Label htmlFor="auto-update" className="text-sm">
             Available now
-          </Label>
-          <Switch defaultChecked size="sm" />
+          </Label> */}
+          {/* <Switch defaultChecked size="sm" /> */}
         </div>
       </CardHeader>
       <CardContent className="kt-scrollable-x-auto pb-3 p-0">
@@ -32,9 +32,10 @@ const Work = () => {
                 </span>
               </TableCell>
               <TableCell className="py-2 text-end min-w-24">
-                <Button variant="ghost" mode="icon">
+                {/* <Button variant="ghost" mode="icon">
                   <SquarePen size={16} className="text-blue-500" />
-                </Button>
+                </Button> */}
+                -
               </TableCell>
             </TableRow>
             <TableRow>
@@ -45,9 +46,10 @@ const Work = () => {
                 $28 / hour
               </TableCell>
               <TableCell className="py-2 text-end">
-                <Button variant="ghost" mode="icon">
+                {/* <Button variant="ghost" mode="icon">
                   <SquarePen size={16} className="text-blue-500" />
-                </Button>
+                </Button> */}
+                -
               </TableCell>
             </TableRow>
             <TableRow>
@@ -58,9 +60,10 @@ const Work = () => {
                 32 hours a week
               </TableCell>
               <TableCell className="py-2 text-end">
-                <Button variant="ghost" mode="icon">
+                {/* <Button variant="ghost" mode="icon">
                   <SquarePen size={16} className="text-blue-500" />
-                </Button>
+                </Button> */}
+                -
               </TableCell>
             </TableRow>
             <TableRow>
@@ -80,9 +83,10 @@ const Work = () => {
                 </div>
               </TableCell>
               <TableCell className="py-3 text-end">
-                <Button variant="ghost" mode="icon">
+                {/* <Button variant="ghost" mode="icon">
                   <SquarePen size={16} className="text-blue-500" />
-                </Button>
+                </Button> */}
+                -
               </TableCell>
             </TableRow>
             <TableRow>
@@ -95,9 +99,10 @@ const Work = () => {
                 your audience.
               </TableCell>
               <TableCell className="py-4 text-end">
-                <Button variant="ghost" mode="icon">
+                {/* <Button variant="ghost" mode="icon">
                   <SquarePen size={16} className="text-blue-500" />
-                </Button>
+                </Button> */}
+                -
               </TableCell>
             </TableRow>
           </TableBody>

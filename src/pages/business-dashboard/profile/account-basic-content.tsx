@@ -1,12 +1,8 @@
-import { RecentUploads } from '@/pages/public-profile/profiles/default';
 import {
   BasicSettings,
-  CalendarAccounts,
-  CommunityBadges,
-  Connections,
   PersonalInfo,
   StartNow,
-  Work,
+  Work
 } from './components';
 
 export function AccountUserProfileContent() {

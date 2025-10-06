@@ -1,5 +1,5 @@
 import { EllipsisVertical, Heart } from 'lucide-react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { toAbsoluteUrl } from '@/lib/helpers';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -8,6 +8,7 @@ import { Progress } from '@/components/ui/progress';
 import { DropdownMenu2 } from '../dropdown-menu/dropdown-menu-2';
 import { useSelector } from 'react-redux';
 import { selectUser } from '@/store/slices/userSlice';
+import { paths } from '@/components/layouts/layout-3/components/paths';
 
 interface ICampaignItem {
   total: string;
@@ -55,11 +56,28 @@ const CardCampaign = ({
 
   const user=useSelector(selectUser);
 
+  const navigate=useNavigate();
+
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    console.log('Favorite clicked!');
+  }
+
+  const handleClick = () => {
+    console.log('Card clicked!');
+    if(user?.role as string==="traveler"){
+
+      navigate(paths.travelerDashboard.tripDetail('1'));
+    }else{
+      navigate(paths.businessDashboard.lakeDetail('1'));
+    }
+  }
+
   const renderItem = (statistic: ICampaignItem, index: number) => {
     return (
       <div
         key={index}
-        className="flex flex-col gap-1.5 border border-dashed border-input rounded-md px-2.5 py-2"
+        className="flex flex-col gap-1.5 border border-dashed border-input rounded-md px-2.5 py-2 "
       >
         <span className="text-mono text-sm leading-none font-medium">
           {statistic.total}
@@ -72,7 +90,7 @@ const CardCampaign = ({
   };
 
   return (
-    <Card className="overflow-hidden grow justify-between">
+    <Card className="overflow-hidden grow justify-between  hover:border-blue-400 border transition-all duration-300 cursor-pointer" onClick={handleClick}>
       <div className="p-5 mb-5">
         <div className="flex items-center justify-between mb-5">
           <Badge size="lg" variant={status.variant} appearance="light">
@@ -123,7 +141,7 @@ const CardCampaign = ({
           })}
         </div>
       </div>
-     {user?.role as string==="traveler" && <div className='flex justify-end pb-2 px-5'>
+     {user?.role as string==="traveler" && <div className='flex justify-end pb-2 px-5' onClick={handleFavoriteClick}>
         <Heart size={24} className='text-red-500  hover:size-[28px]  transition-all hover:text-black hover:dark:text-white  p-1 rounded-full cursor-pointer' />
       </div>}
      

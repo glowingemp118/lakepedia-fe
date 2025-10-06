@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
-import { Select, SelectContent } from '../ui/select';
+import { Select } from '../ui/select';
 
 interface RHFSelectProps {
     name: string;

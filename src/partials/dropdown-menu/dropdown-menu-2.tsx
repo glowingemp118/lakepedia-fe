@@ -12,7 +12,7 @@ export function DropdownMenu2({ trigger }: { trigger: ReactNode }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
-      <DropdownMenuContent className="w-[150px]" side="bottom" align="end">
+      <DropdownMenuContent className="w-[150px]" side="bottom" align="end" onClick={(e) => e.stopPropagation()}>
         <DropdownMenuItem asChild>
           <Link to="#" className='cursor-pointer flex items-center gap-2'>
            <Trash color='red' size={16} />
