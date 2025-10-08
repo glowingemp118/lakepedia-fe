@@ -66,8 +66,11 @@ export function NavbarMenu() {
 
   const { isActive, hasActiveChild } = useMenu(pathname);
 
+
+
   const buildMenu = (items: MenuConfig) => {
     return items.map((item, index) => {
+
       if (item.children) {
         return (
           <MenubarMenu key={index}>
@@ -97,17 +100,18 @@ export function NavbarMenu() {
             <MenubarTrigger
               asChild
               className={cn(
-                'flex items-center py-3.5 text-sm text-secondary-foreground px-3 text-nowrap',
+                'flex items-center py-3.5 text-sm text-secondary-foreground px-3 text-nowrap border border-red-500',
                 'rounded-none border-b-2 border-transparent bg-transparent!',
                 'hover:text-mono hover:bg-transparent',
                 'focus:text-mono focus:bg-transparent',
-                'data-[active=true]:text-mono data-[active=true]:border-mono',
+                'data-[active=true]:text-mono data-[active=true]:border-mono transition-all',
               )}
             >
               <Link
                 to={item.path || ''}
                 data-active={isActive(item.path) || undefined}
                 data-here={hasActiveChild(item.children) || undefined}
+                className={`${isActive(item.path) ? "!border-b-3 !border-b-primary font-bold text-primary text-[16px] transition-all " : ''}`}
               >
                 {item.title}
               </Link>

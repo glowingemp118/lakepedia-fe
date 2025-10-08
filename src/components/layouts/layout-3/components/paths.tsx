@@ -9,6 +9,7 @@ export const paths = {
     travelerDashboard: {
         root: TRAVELER_DASHBOARD,
         activity: `${TRAVELER_DASHBOARD}/activity`,
+        settings: `${TRAVELER_DASHBOARD}/settings`,
         trips: `${TRAVELER_DASHBOARD}/trips`,
         tripDetail: (id: string) => `${TRAVELER_DASHBOARD}/trips/${id}`,
         saved: `${TRAVELER_DASHBOARD}/saved`,
@@ -20,6 +21,7 @@ export const paths = {
     businessDashboard: {
         root: BUSINESS_DASHBOARD,
         profile: `${BUSINESS_DASHBOARD}/profile`,
+        settings: `${BUSINESS_DASHBOARD}/settings`,
         activity: `${BUSINESS_DASHBOARD}/activity`,
         lakes: `${BUSINESS_DASHBOARD}/lakes`,
         createLake: `${BUSINESS_DASHBOARD}/lakes/create`,

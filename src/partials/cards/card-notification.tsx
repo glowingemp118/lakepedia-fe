@@ -5,9 +5,9 @@ import { CardContent } from '@/components/ui/card';
 import { HexagonBadge } from '../common/hexagon-badge';
 
 interface INotificationProps {
-  icon: LucideIcon;
+  icon: LucideIcon | string;
   title: string;
-  description: string;
+  description?: string;
   button?: boolean;
   actions: ReactNode;
 }
@@ -24,7 +24,7 @@ const CardNotification = ({
       <div className="flex items-center gap-3.5">
         <HexagonBadge
           size="size-[50px]"
-          badge={<Icon size={16} className="text-xl text-muted-foreground" />}
+          badge={typeof Icon === "string" ? <img src={Icon} alt={title} /> : <Icon size={16} className="text-xl text-muted-foreground" />}
           stroke="stroke-input"
           fill="fill-muted/30"
         />
@@ -32,9 +32,11 @@ const CardNotification = ({
           <span className="flex items-center gap-1.5 leading-none font-medium text-sm text-mono">
             {title}
           </span>
-          <span className="text-sm text-secondary-foreground">
-            {description}
-          </span>
+          {description && (
+            <span className="text-sm text-secondary-foreground">
+              {description}
+            </span>
+          )}
         </div>
       </div>
       <div className="flex items-center gap-5">

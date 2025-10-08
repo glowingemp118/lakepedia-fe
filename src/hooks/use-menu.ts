@@ -16,7 +16,7 @@ export const useMenu = (pathname: string): UseMenuReturn => {
     if (path && path === '/') {
       return path === pathname;
     } else {
-      return !!path && pathname.startsWith(path);
+      return !!path && pathname.endsWith(path);
     }
   };
 

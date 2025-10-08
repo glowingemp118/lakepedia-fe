@@ -34,6 +34,11 @@ export const TravelerSidebar = [
     title: 'Dashboard',
   },
   {
+    icon: Settings,
+    path: paths.travelerDashboard.settings,
+    title: 'Settings'
+  },
+  {
     icon: Bell,
     path: paths.travelerDashboard.activity,
     title: 'Activity'
@@ -66,6 +71,11 @@ export const BusinessSidebar = [
     icon: BarChart3,
     path: paths.businessDashboard.root,
     title: "Dashboard",
+  },
+  {
+    icon: Settings,
+    path: paths.businessDashboard.settings,
+    title: 'Settings'
   },
   {
     icon: Bell,

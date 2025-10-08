@@ -29,6 +29,8 @@ import TripsView from '@/pages/traveler-dashboard/trips/view/trips-view';
 import UserProfileView from '@/pages/traveler-dashboard/user-profile/view/user-profile-view';
 import LakeDetailView from '@/pages/business-dashboard/lakes/view/lake-detail-view';
 import CreateLakePage from '@/pages/business-dashboard/lakes/view/create-lake-view';
+import SettingsView from '@/pages/traveler-dashboard/settings/view/settings-view';
+import { SettingsView as BusinessSettingsView} from '@/pages/business-dashboard/settings/view/settings-view';
 
 import { AccountUserProfilePage as BusinessAccountProfilePage } from '@/pages/business-dashboard/profile/account-basic-page';
 
@@ -43,6 +45,8 @@ export function AppRoutingSetup() {
         <Route element={<RequireAuth role={"traveler"} />}>
 
           <Route path="/traveler-dashboard" element={<UserProfileView />} />
+
+          <Route path="/traveler-dashboard/settings" element={<SettingsView />} />
 
           <Route path="/traveler-dashboard/trips" element={<TripsView />} />
 
@@ -62,9 +66,11 @@ export function AppRoutingSetup() {
           <Route path="/traveler-dashboard/profile" element={<TravelerProfileView />} />
         </Route>
 
-        {/* <Route element={<RequireAuth role={"business"} />}> */}
+        <Route element={<RequireAuth role={"business"} />}>
 
           <Route path="/business-dashboard" element={<BusinessAccountProfilePage />} />
+
+          <Route path="/business-dashboard/settings" element={<BusinessSettingsView />} />
 
           <Route path="/business-dashboard/activity" element={<BusinessActivityView />} />
 
@@ -85,7 +91,7 @@ export function AppRoutingSetup() {
           <Route path="/business-dashboard/stats" element={<StatsView />} />
 
           <Route path="/business-dashboard/profile" element={<ProfileView />} />
-        {/* </Route> */}
+        </Route>
 
         <Route element={<RequireAuth role={"admin"} />}>
 

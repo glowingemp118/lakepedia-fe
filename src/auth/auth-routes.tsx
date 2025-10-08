@@ -21,7 +21,11 @@ export const authRoutes: RouteObject[] = [
     element: <BrandedLayout />,
     children: [
       {
-        path: 'signin',
+        path: 'signin/traveler',
+        element: <SignInPage />,
+      },
+      {
+        path: 'signin/business',
         element: <SignInPage />,
       },
       {

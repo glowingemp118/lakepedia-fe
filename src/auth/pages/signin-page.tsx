@@ -46,11 +46,13 @@ export function SignInPage() {
 
   const { loginWithRedirect, user, isAuthenticated } = useAuth0();
 
-  console.log("user", user);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const userType = params.get('user');
+
+    const pathname = window.location.pathname;
+
+    const userType = pathname.includes('business') ? 'business' : 'traveler';
+    
     if (userType === 'traveler' || userType === 'business') {
       setCurrentTab(userType);
     }
@@ -58,14 +60,11 @@ export function SignInPage() {
 
   useEffect(() => {
     if (currentTab) {
-      const params = new URLSearchParams(window.location.search);
-      const userType = params.get("user");
+      
+      const pathname = currentTab === "business" ? "/auth/signin/business" : "/auth/signin/traveler";
 
-      if (userType !== currentTab) {
-        navigate(`${window.location.pathname}?user=${currentTab}`, {
-          replace: true,
-        });
-      }
+      navigate(pathname, { replace: true });
+     
     }
   }, [currentTab, navigate]);
 
@@ -291,7 +290,7 @@ export function SignInPage() {
             loginWithRedirect({
               authorizationParams: {
                 connection: "google-oauth2",
-                redirect_uri: "http://localhost:5173/auth/signin",
+                redirect_uri: "http://localhost:5173/auth/signin/traveler",
               }
             })
           }}
@@ -317,7 +316,7 @@ export function SignInPage() {
             loginWithRedirect({
               authorizationParams: {
                 connection: "facebook",
-                redirect_uri: "http://localhost:5173/auth/signin",
+                redirect_uri: "http://localhost:5173/auth/signin/traveler",
               }
             })
           }}

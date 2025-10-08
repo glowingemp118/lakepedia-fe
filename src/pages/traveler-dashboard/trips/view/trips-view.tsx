@@ -1,12 +1,11 @@
 import { Container } from '@/components/common/container'
 import { Navbar } from '@/components/layouts/layout-3/components/navbar'
 import { toAbsoluteUrl } from '@/lib/helpers'
-import { UserHero } from '../../profile/profile-hero'
 import { selectUser } from '@/store/slices/userSlice'
 import { CircleUser, Mail, MapPin } from 'lucide-react'
 import { useSelector } from 'react-redux'
+import { UserHero } from '../../profile/profile-hero'
 import { ProjectColumn3Page } from '../project-column3-page'
-import { useLocation } from 'react-router'
 
 const TripsView = () => {
 
