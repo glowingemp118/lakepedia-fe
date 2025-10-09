@@ -48,14 +48,14 @@ const ConnectAccount = () => {
         <Card>
             <CardHeader className="gap-2">
                 <CardTitle>Connected Account</CardTitle>
-
             </CardHeader>
             <div id="notifications_cards">
                 {items.map((item, index) => {
                     return renderItem(item, index);
                 })}
             </div>
-            <CardFooter className='flex justify-end'>
+            <CardFooter className='flex justify-end gap-2'>
+                <Button variant={"outline"} size="lg">Discard</Button>
                 <Button variant="primary">Save Changes</Button>
             </CardFooter>
         </Card>

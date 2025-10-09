@@ -1,118 +1,190 @@
-import { Fragment, useState } from 'react';
-import { ActivitiesAnniversary } from '@/partials/activities/anniversary';
-import { ActivitiesBloggingConference } from '@/partials/activities/blogging-conference';
-import { ActivitiesDesignerWelcome } from '@/partials/activities/designer-welcome';
-import { ActivitiesInterview } from '@/partials/activities/interview';
-import { ActivitiesFollowersMilestone } from '@/partials/activities/milestone';
-import { ActivitiesNewArticle } from '@/partials/activities/new-article';
-import { ActivitiesNewTeam } from '@/partials/activities/new-team';
-import { ActivitiesPhotographyWorkshop } from '@/partials/activities/photography-workshop';
-import { ActivitiesProductWebinar } from '@/partials/activities/product-webinar';
-import { ActivitiesProjectStatus } from '@/partials/activities/project-status';
-import { ActivitiesUpcomingContent } from '@/partials/activities/upcoming-content';
-import { ActivitiesVirtualTeam } from '@/partials/activities/virtual-team';
-import { Link } from 'react-router';
-import { toAbsoluteUrl } from '@/lib/helpers';
-import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
 
-export function ProfileActivityContent() {
-  const [isSwitchOn, setIsSwitchOn] = useState(false);
-  const [currentYear, setCurrentYear] = useState(2025);
-  const years = Array.from({ length: 8 }, (_, i) => 2025 - i);
 
-  const handleSwitchToggle = () => {
-    setIsSwitchOn(!isSwitchOn);
+import { useState } from "react";
+import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Edit, Star, Trash2 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Rating } from "@/partials/common/rating";
+import { RiStarFill } from "@remixicon/react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+
+function ProfileActivityContent() {
+
+
+  const [editingReview, setEditingReview] = useState<number | null>(null);
+
+  const [reviews, setReviews] = useState([
+    {
+      id: 1,
+      author: "Awais Malik",
+      title: "Beautiful Lake View",
+      content: "I had a wonderful experience visiting this lake. Perfect spot for fishing and boating!",
+      rating: 5,
+      date: "2025-03-25",
+    },
+    {
+      id: 2,
+      author: "Awais Malik",
+      title: "Good but crowded",
+      content: "The view was amazing, but it was a bit too crowded during weekends.",
+      rating: 4,
+      date: "2025-02-10",
+    },
+  ]);
+
+  // Handle edit
+  const handleEdit = (id: number, newContent: string) => {
+    setReviews((prev) =>
+      prev.map((r) => (r.id === id ? { ...r, content: newContent } : r))
+    );
+    setEditingReview(null);
   };
 
+  // Handle delete
+  const handleDelete = (id: number) => {
+    setReviews((prev) => prev.filter((r) => r.id !== id));
+  };
+  const handleShareReview = () => {
+    // Implement share functionality here
+    alert("Share functionality is not implemented yet.");
+  }
+
   return (
-    <div className="flex gap-5 lg:gap-7.5">
-      {years.map((year, index) => (
-        <Card
-          key={index}
-          className={`grow ${year === currentYear ? '' : 'hidden'}`}
-          id={`activity_${year}`}
-        >
-          <CardHeader>
-            <CardTitle>Activity</CardTitle>
-            <div className="flex items-center space-x-2.5">
-              <Label htmlFor="simple-switch" className="text-sm">
-                Auto refresh:
-              </Label>
-              {isSwitchOn ? 'On' : 'Off'}
-              <Switch
-                id="simple-switch"
-                size="sm"
-                className="ms-2"
-                checked={isSwitchOn}
-                onCheckedChange={handleSwitchToggle}
-              />
-            </div>
-          </CardHeader>
-          <CardContent>
-            {(year === 2025 || year === 2023 || year === 2022) && (
-              <ActivitiesNewArticle />
-            )}
-            {(year === 2025 || year === 2022) && <ActivitiesInterview />}
-            {(year === 2025 || year === 2021) && (
-              <ActivitiesPhotographyWorkshop />
-            )}
-            <ActivitiesUpcomingContent />
-            {(year === 2025 || year === 2019) && <ActivitiesProductWebinar />}
-            <ActivitiesFollowersMilestone />
-            {(year === 2025 || year === 2021) && <ActivitiesProjectStatus />}
-            {(year === 2025 || year === 2018) && (
-              <ActivitiesBloggingConference
-                image={
-                  <Fragment>
-                    <img
-                      src={toAbsoluteUrl(`/media/illustrations/3.svg`)}
-                      className="dark:hidden max-h-[160px]"
-                      alt="image"
-                    />
-                    <img
-                      src={toAbsoluteUrl(`/media/illustrations/3-dark.svg`)}
-                      className="light:hidden max-h-[160px]"
-                      alt="image"
-                    />
-                  </Fragment>
-                }
-              />
-            )}
-            <ActivitiesDesignerWelcome />
-            {(year === 2025 || year === 2017) && <ActivitiesNewTeam />}
-            <ActivitiesVirtualTeam />
-            <ActivitiesAnniversary />
-          </CardContent>
-          <CardFooter className="justify-center">
-            <Button mode="link" underlined="dashed" asChild>
-              <Link to="#">All-time Activity</Link>
-            </Button>
-          </CardFooter>
-        </Card>
-      ))}
-      <div className="flex flex-col gap-2.5">
-        {years.map((year, index) => (
-          <Button
-            key={index}
-            variant={year === currentYear ? 'primary' : 'dim'}
-            appearance="ghost"
-            size="sm"
-            className="justify-start gap-1"
-            onClick={() => setCurrentYear(year)}
+    <div className="space-y-6">
+
+      <AnimatePresence>
+
+        {reviews.map((review) => (
+
+          <motion.div
+            key={review.id}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
           >
-            {year}
-          </Button>
+            <Card>
+              <CardHeader className="flex justify-between items-center">
+                <div>
+                  <h3 className="font-semibold text-base">{review.title}</h3>
+
+                  <p className="text-xs text-muted-foreground">{review.date}</p>
+
+                </div>
+
+                <div className="flex gap-2">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+
+                        <Button
+                          size="icon"
+                          variant="outline"
+                          onClick={() => setEditingReview(review.id)}
+                        >
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>   Edit Review </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+
+                        <Button
+                          size="icon"
+                          variant="destructive"
+                          onClick={() => handleDelete(review.id)}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent> Delete Review </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+              </CardHeader>
+
+              <CardContent>
+
+                {editingReview !== review.id && <Rating rating={review.rating} />}
+
+                {editingReview === review.id ? (
+
+                  <div className="mt-3">
+                    {[1, 2, 3, 4, 5].map((num) => (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+
+                            <button
+                              key={num}
+                              type="button"
+                              className={`text-xl cursor-pointer ${num <= review.rating ? 'text-yellow-400' : 'text-gray-300'
+                                }`}
+                              onClick={() => {
+                                setReviews((prev) =>
+                                  prev.map((r) =>
+                                    r.id === review.id ? { ...r, rating: num } : r
+                                  )
+                                );
+                              }}
+                            >
+                              <Star className={`w-5 h-5 ${num <= review.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'} `} />
+
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent> {num} Star{num > 1 ? 's' : ''} </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ))}
+                        <Textarea
+                          defaultValue={review.content}
+                          className="w-full"
+                          rows={3}
+                          autoFocus
+                        />
+                        <div className="mt-3 flex gap-2">
+                          <Button
+                            size="sm"
+                            onClick={(e) =>
+                              handleEdit(
+                                review.id,
+                                e.target?.parentElement.previousSibling.value
+                              )
+                            }
+                          >
+                            Save
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => setEditingReview(null)}
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                    <p className="text-sm text-muted-foreground mt-2">
+                      {review.content}
+                    </p>
+                )}
+                  </CardContent>
+
+            </Card>
+          </motion.div>
         ))}
-      </div>
-    </div>
+      </AnimatePresence>
+
+      {
+        reviews.length === 0 && (
+          <p className="text-sm text-muted-foreground text-center">No reviews yet.</p>
+        )
+      }
+    </div >
   );
 }
+export { ProfileActivityContent };

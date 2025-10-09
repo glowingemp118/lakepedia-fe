@@ -6,13 +6,19 @@ import { CircleUser, Mail, MapPinPen } from "lucide-react";
 import { useSelector } from "react-redux";
 import { UserHero } from "../../profile/profile-hero";
 import BasicDetails from "../basic-details";
-import DeactiveCard from "../deactive-card";
-import SignInMethod from "../signin-method";
-import { Settings } from "../settings";
 import { ConnectAccount } from "../connect-account";
+import DeactiveCard from "../deactive-card";
+import EmailPreference from "../email-preference";
+import { Settings } from "../notification-settings";
+import SignInMethod from "../signin-method";
+import ContactInformation from "../contact-information";
+import Operations from "../operations";
+import MediaInformation from "../media";
+import TrustAndEngagement from "../trust-and-engement";
+import Promotions from "../promotions";
 
 
-const SettingsView = () => {
+const BusinessSettingsView = () => {
 
 
     const user = useSelector(selectUser);
@@ -29,6 +35,7 @@ const SettingsView = () => {
     const CapitalizeRole = (role: string) => {
         return role.charAt(0).toUpperCase() + role.slice(1).toLowerCase();
     }
+
     return (
         <div className='md:mx-10 mx-2 my-4 flex flex-col gap-6'>
             <UserHero
@@ -45,8 +52,14 @@ const SettingsView = () => {
             </Container>
             <Container className='flex flex-col gap-6'>
                 <BasicDetails profileData={user} />
+                <ContactInformation profileData={user} />
+                <Operations profileData={user} />
+                <MediaInformation profileData={user} />
+                <TrustAndEngagement profileData={user} />
+                <Promotions profileData={user} />
                 <SignInMethod email={user?.email as string || "jenny@kteam.com"} />
                 <ConnectAccount />
+                <EmailPreference />
                 <Settings />
                 <DeactiveCard />
             </Container>
@@ -54,4 +67,4 @@ const SettingsView = () => {
     )
 }
 
-export { SettingsView }
+export { BusinessSettingsView };

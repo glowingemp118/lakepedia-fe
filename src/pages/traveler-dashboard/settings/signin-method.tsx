@@ -3,12 +3,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { FC } from 'react'
 import QuickUpdatePassword from '../user-profile/quick-update-password';
 import { useBoolean } from '@/hooks/use-boolean';
+import QuickUpdateEmail from '../user-profile/quick-update-email';
 
 interface PageProps {
     email?: string;
 }
 const SignInMethod: FC<PageProps> = ({ email }) => {
+    
     const open = useBoolean();
+
+    const emailModal= useBoolean();
+    
     return (
         <Card>
             <CardHeader>
@@ -20,7 +25,7 @@ const SignInMethod: FC<PageProps> = ({ email }) => {
                         <p className=' font-medium '>Email Address</p>
                         <p className='text-sm text-muted-foreground font-[400]'>{email}</p>
                     </div>
-                    <Button variant={"outline"}>Change Email</Button>
+                    <Button variant={"outline"} onClick={emailModal.onTrue}>Change Email</Button>
                 </div>
                 <div className='flex justify-between md:flex-row flex-col items-center'>
                     <div className='flex flex-col '>
@@ -30,7 +35,11 @@ const SignInMethod: FC<PageProps> = ({ email }) => {
                     <Button variant={"outline"} onClick={open.onTrue}>Change Password</Button>
                 </div>
             </CardContent>
+
+            <QuickUpdateEmail open={emailModal.value} onClose={emailModal.onFalse} />
+            
             <QuickUpdatePassword open={open.value} onClose={open.onFalse} />
+        
         </Card>
     )
 }

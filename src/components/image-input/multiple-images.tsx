@@ -6,10 +6,11 @@ import { CloseButton } from 'react-toastify';
 interface PageProps {
     value?: File[];
     onChange: (files: File[]) => void;
+    className?: string;
     onDrop: (acceptedFiles: File[]) => void;
 }
 
-export const MultiImageUpload: FC<PageProps> = ({ value = [], onChange, onDrop }) => {
+export const MultiImageUpload: FC<PageProps> = ({ value = [], onChange, onDrop,className ,...other}) => {
     const ref = useRef<HTMLInputElement | null>(null);
 
     const { getRootProps, getInputProps } = useDropzone({
@@ -30,10 +31,10 @@ export const MultiImageUpload: FC<PageProps> = ({ value = [], onChange, onDrop }
         <>
             <div
                 {...getRootProps()}
-                className="border-2 border-dashed border-gray-300 p-5 rounded-md text-center cursor-pointer"
+                className={`border border-dashed border-gray-300 bg-gray-100 md:p-10 p-5 rounded-md text-center cursor-pointer ${className}`}
                 onClick={() => ref.current?.click()}
             >
-                <input {...getInputProps()} ref={ref} />
+                <input {...getInputProps()} ref={ref} {...other} />
                 <div className='flex justify-center mb-2'>
                      <CloudUploadIcon size={50} className=''/>
                 </div>

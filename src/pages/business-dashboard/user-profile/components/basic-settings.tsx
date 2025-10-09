@@ -1,9 +1,11 @@
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
-import { useBoolean } from '@/hooks/use-boolean';
 import { toAbsoluteUrl } from '@/lib/helpers';
+import { Copy, SquarePen } from 'lucide-react';
 import { Link } from 'react-router';
 import QuickUpdatePassword from '../quick-update-password';
+import { useBoolean } from '@/hooks/use-boolean';
 
 interface IBasicSettingsProps {
   title: string;
@@ -22,7 +24,24 @@ const BasicSettings = ({ title }: IBasicSettingsProps) => {
       <CardContent className="kt-scrollable-x-auto pb-3 p-0">
         <Table className="align-middle text-sm text-muted-foreground">
           <TableBody>
-           
+            {/* <TableRow>
+              <TableCell className="py-2 min-w-36 text-secondary-foreground font-normal">
+                Email
+              </TableCell>
+              <TableCell className="py-2 min-w-60">
+                <Link
+                  to="#"
+                  className="text-foreground font-normal text-sm hover:text-primary-active"
+                >
+                  jasontt@studio.co
+                </Link>
+              </TableCell>
+              <TableCell className="py-2 max-w-16 text-end">
+                <Button variant="ghost" mode="icon">
+                  <SquarePen size={16} className="text-blue-500" />
+                </Button>
+              </TableCell>
+            </TableRow> */}
             <TableRow>
               <TableCell className="py-2 text-secondary-foreground font-normal">
                 Password
@@ -31,7 +50,9 @@ const BasicSettings = ({ title }: IBasicSettingsProps) => {
                 Password last changed 2 months ago
               </TableCell>
               <TableCell className="py-2 text-end">
-               
+                {/* <Button variant="ghost" mode="icon" onClick={open.onTrue}>
+                  <SquarePen size={16} className="text-blue-500"  />
+                </Button> */}
                 -
               </TableCell>
             </TableRow>
@@ -43,7 +64,9 @@ const BasicSettings = ({ title }: IBasicSettingsProps) => {
                 To be set
               </TableCell>
               <TableCell className="py-3 text-end">
-                
+                {/* <Button mode="link" size="sm" underlined="dashed" asChild>
+                  <Link to="#">Setup</Link>
+                </Button> */}
                 -
               </TableCell>
             </TableRow>
@@ -76,7 +99,9 @@ const BasicSettings = ({ title }: IBasicSettingsProps) => {
                 </div>
               </TableCell>
               <TableCell className="py-2 text-end">
-              
+                {/* <Button variant="ghost" mode="icon">
+                  <SquarePen size={16} className="text-blue-500" />
+                </Button> */}
                 -
               </TableCell>
             </TableRow>
@@ -88,7 +113,9 @@ const BasicSettings = ({ title }: IBasicSettingsProps) => {
                 Public
               </TableCell>
               <TableCell className="py-2 text-end">
-             
+                {/* <Button variant="ghost" mode="icon">
+                  <SquarePen size={16} className="text-blue-500" />
+                </Button> */}
                 -
               </TableCell>
             </TableRow>
@@ -105,7 +132,9 @@ const BasicSettings = ({ title }: IBasicSettingsProps) => {
                 </div>
               </TableCell>
               <TableCell className="py-2 text-end">
-              
+                {/* <Button variant="ghost" mode="icon">
+                  <SquarePen size={16} className="text-blue-500" />
+                </Button> */}
                 -
               </TableCell>
             </TableRow>

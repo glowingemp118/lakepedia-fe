@@ -78,21 +78,21 @@ const CreateLakePage = ({ lake }: PageProps) => {
 
                         <RhfMultipleImages name="images" label="Upload Lake Images" onDrop={onDrop} />
 
-                        <RHFTextField name="name" label="Lake Name" placeholder="Enter lake name" />
+                        <RHFTextField name="name" label="Lake Name" placeholder="Enter lake name" className="h-10 py-2" />
 
-                        <RHFTextField name="location" label="Location" placeholder="Enter lake location" />
+                        <RHFTextField name="location" label="Location" placeholder="Enter lake location" className="h-10 py-2" />
 
-                        <RHFTextField name="country" label="Country" placeholder="Enter lake country" />
+                        <RHFTextField name="country" label="Country" placeholder="Enter lake country"  className="h-10 py-2"/>
 
-                        <RHFTextField name="area" label="Area (in sq km)" placeholder="Enter lake area" type="number" />
+                        <RHFTextField name="area" label="Area (in sq km)" placeholder="Enter lake area" type="number" className="h-10 py-2" />
 
-                        <RHFTextField name="formedYear" label="Formed Year" placeholder="Enter year when lake was formed" type="number" />
+                        <RHFTextField name="formedYear" label="Formed Year" placeholder="Enter year when lake was formed" type="number" className="h-10 py-2" />
 
                         <RHFTextArea name="description" label="Description" placeholder="Enter lake description" textarea rows={4} />
                         <CardFooter>
                             <div className="flex justify-end items-center w-full gap-2">
-                                <Button >Cancel</Button>
-                                <Button type="submit" >Create Lake</Button>
+                                <Button variant={"outline"} size="lg">Cancel</Button>
+                                <Button type="submit" variant={"primary"} size="lg">Create Lake</Button>
                             </div>
                         </CardFooter>
                     </form>

@@ -15,24 +15,25 @@ import { ProfileView as TravelerProfileView } from '@/pages/traveler-dashboard/p
 import { ProfileView as AdminProfileView } from '@/pages/admin-dasbhoard/profile/view/profile-view';
 
 import HomeView from '@/pages/home/view/home-view';
+
 import ActivityView from '@/pages/traveler-dashboard/activity/view/activity-view';
 
 import BusinessActivityView from '@/pages/business-dashboard/activity/view/activity-view';
+import CreateLakePage from '@/pages/business-dashboard/lakes/view/create-lake-view';
+import LakeDetailView from '@/pages/business-dashboard/lakes/view/lake-detail-view';
 import LakesView from '@/pages/business-dashboard/lakes/view/lakes-view';
 import StatsView from '@/pages/business-dashboard/stats/view/stats-view';
 import SubscriptionView from '@/pages/business-dashboard/subscription/view/subscription-view';
 import UpgradeSubscriptionView from '@/pages/business-dashboard/subscription/view/upgrade-subscription-view';
 import SavedView from '@/pages/traveler-dashboard/saved/view/saved-view';
+import SettingsView from '@/pages/traveler-dashboard/settings/view/settings-view';
 import TodoView from '@/pages/traveler-dashboard/to-do/view/to-do-view';
 import TripsDetailView from '@/pages/traveler-dashboard/trips/view/trip-detail-view';
 import TripsView from '@/pages/traveler-dashboard/trips/view/trips-view';
 import UserProfileView from '@/pages/traveler-dashboard/user-profile/view/user-profile-view';
-import LakeDetailView from '@/pages/business-dashboard/lakes/view/lake-detail-view';
-import CreateLakePage from '@/pages/business-dashboard/lakes/view/create-lake-view';
-import SettingsView from '@/pages/traveler-dashboard/settings/view/settings-view';
-import { SettingsView as BusinessSettingsView} from '@/pages/business-dashboard/settings/view/settings-view';
 
-import { AccountUserProfilePage as BusinessAccountProfilePage } from '@/pages/business-dashboard/profile/account-basic-page';
+import { BusinessProfileView } from '@/pages/business-dashboard/user-profile/view/user-profile-view';
+import {BusinessSettingsView} from '@/pages/business-dashboard/settings/view/settings-view';
 
 
 
@@ -68,7 +69,7 @@ export function AppRoutingSetup() {
 
         <Route element={<RequireAuth role={"business"} />}>
 
-          <Route path="/business-dashboard" element={<BusinessAccountProfilePage />} />
+          <Route path="/business-dashboard" element={<BusinessProfileView />} />
 
           <Route path="/business-dashboard/settings" element={<BusinessSettingsView />} />
 

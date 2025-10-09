@@ -1,19 +1,16 @@
-import { toAbsoluteUrl } from '@/lib/helpers'
-import { UserHero } from '../../profile/profile-hero'
-import { selectUser } from '@/store/slices/userSlice'
-import { CircleUser, Mail, MapPin, CheckCircle2, Clock } from 'lucide-react'
-import { useSelector } from 'react-redux'
-import React, { useState } from 'react'
 import { Container } from '@/components/common/container'
 import { Navbar } from '@/components/layouts/layout-3/components/navbar'
-import clsx from 'clsx'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Progress } from '@/components/ui/progress'
-import { Button } from '@/components/ui/button'
+import { toAbsoluteUrl } from '@/lib/helpers'
+import { selectUser } from '@/store/slices/userSlice'
+import { CircleUser, Mail, MapPin } from 'lucide-react'
+import { useState } from 'react'
+import { useSelector } from 'react-redux'
+import { UserHero } from '../../profile/profile-hero'
 import GeneralActions from '../general-actions'
 import TodoSection from '../to-do-section'
 
 const TodoView = () => {
+
     const user = useSelector(selectUser)
 
     const image = (
@@ -70,11 +67,6 @@ const TodoView = () => {
         )
     }
 
-    const generalActions = [
-        { id: 1, label: 'Submit your first lake review', done: false },
-        { id: 2, label: 'Upload lake photos', done: false },
-        { id: 3, label: 'Create your first trip', done: true },
-    ]
 
     return (
         <div className="space-y-6">

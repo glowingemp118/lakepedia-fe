@@ -6,9 +6,10 @@ interface PageProps {
   name: string;
   label?: string;
   onDrop: (acceptedFiles: File[]) => void;
+  [key: string]: any;
 }
 
-const RhfMultipleImages: FC<PageProps> = ({ name, label, onDrop }) => {
+const RhfMultipleImages: FC<PageProps> = ({ name, label, onDrop ,...other}) => {
   const { control } = useFormContext();
 
   return (
@@ -18,7 +19,7 @@ const RhfMultipleImages: FC<PageProps> = ({ name, label, onDrop }) => {
       render={({ field }) => (
         <div className="flex flex-col gap-2">
           {label && <label className="font-medium">{label}</label>}
-          <MultiImageUpload {...field} onDrop={onDrop} />
+          <MultiImageUpload {...field} onDrop={onDrop} {...other} />
         </div>
       )}
     />

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { FC, useState } from 'react';
 import { X } from 'lucide-react';
 import { toAbsoluteUrl } from '@/lib/helpers';
 import { Button } from '@/components/ui/button';
@@ -11,7 +11,12 @@ import {
 import { ImageInput, ImageInputFile } from '@/components/image-input';
 import { useFormContext } from 'react-hook-form';
 
-export function AvatarInput({ name }: { name: string }) {
+interface AvatarInputProps {
+  name: string;
+  className?: string;
+  [key: string]: any;
+}
+export const AvatarInput: FC<AvatarInputProps> = ({ name,className,...other }) => {
 
   const { setValue, getValues } = useFormContext();
 
@@ -28,7 +33,8 @@ export function AvatarInput({ name }: { name: string }) {
     >
       {({ onImageUpload }) => (
         <div
-          className="size-16 relative cursor-pointer"
+          className={`relative cursor-pointer inline-block ${className}`}
+          {...other}
           onClick={onImageUpload}
         >
           <TooltipProvider>

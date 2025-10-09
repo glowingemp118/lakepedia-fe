@@ -13,7 +13,7 @@ const RhfCheckbox: FC<PageProps> = ({ name, label, ...other }) => {
     return (
         <FormField
             control={control}
-            name="confirm"
+            name={name}
             render={({ field }) => (
                 <FormItem className="flex flex-row items-start space-x-0.5 space-y-0 rounded-md">
                     <FormControl>

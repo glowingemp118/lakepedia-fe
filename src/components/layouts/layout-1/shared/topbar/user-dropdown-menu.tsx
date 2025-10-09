@@ -79,7 +79,7 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
   };
 
   const handleGoToProfile = () => {
-    navigage(isAdmin && paths.adminDashboard.profile || isTraveler && paths.travelerDashboard.profile || isBusiness && paths.businessDashboard.profile || '/auth/signin');
+    navigage(isAdmin && paths.adminDashboard.profile || isTraveler && paths.travelerDashboard.settings || isBusiness && paths.businessDashboard.settings || '/auth/signin');
   }
 
   return (
