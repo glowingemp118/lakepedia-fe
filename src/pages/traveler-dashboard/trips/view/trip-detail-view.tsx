@@ -6,14 +6,18 @@ import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { toAbsoluteUrl } from '@/lib/helpers';
 import { selectUser } from '@/store/slices/userSlice';
-import { m, motion } from 'framer-motion';
-import { Calendar, CircleUser, Clock, FileText, LayoutGrid, List, Mail, Map, MapPin, Users } from 'lucide-react';
-import { Fragment, useState } from 'react';
+import { Calendar, CircleUser, Clock, FileText, Mail, Map, MapPin } from 'lucide-react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { UserHero } from '../../profile/profile-hero';
-import { CardWork, CardWorkRow } from '@/partials/cards';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import TripActivity from '../trip-activity';
+import TripGroupMember from '../trip-group-member';
+import Itinerary from '../trip-itinerary';
+import TripOverView from '../trip-overview';
+import TripRecommendations from '../trip-recommendations';
+import TripSummary from '../trip-summary';
+import Files from './trip-files';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
 
@@ -21,13 +25,11 @@ export const TripDetailView = () => {
 
     const { id } = useParams();
 
-    const [activeView, setActiveView] = useState('cards');
-
     const user = useSelector(selectUser);
 
     const trip = sampleTripData;
 
-    const [activeTab, setActiveTab] = useState<'overview' | 'itinerary' | 'files' | 'activity'>('overview');
+    const [activeTab, setActiveTab] = useState<'overview' | 'itinerary' | 'files' | 'activity' | "recommendations">('overview');
 
     const image = (
         <img
@@ -58,216 +60,78 @@ export const TripDetailView = () => {
             </Container>
 
             {/* Trip Header */}
-          <Container className='flex flex-col gap-6'>
-               <Card className="p-6 shadow-lg border rounded-2xl">
-                <div className="flex flex-col md:flex-row justify-between gap-4">
-                    <div>
-                        <h1 className="text-xl font-bold">{trip.title}</h1>
-                        <p className="text-gray-500 mt-2">{trip.description}</p>
-                    </div>
-                    <div className="flex gap-3">
-                        <Badge>{trip.tripType === 'adult' ? 'Adult Trip' : 'Family Trip'}</Badge>
-                        <Badge appearance={"light"}
-                        variant={trip.status === 'Completed' ? 'success' : trip.status === 'In Progress' ? 'success' : 'warning'}
-                        >
-                            {trip.status}
-                        </Badge>
-                    </div>
-                </div>
-            </Card>
-
-            {/* Main Layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Sidebar Summary */}
-                <div className="col-span-1 space-y-6">
-                    <Card className="p-6 border rounded-2xl shadow-sm">
-                        <h3 className="text-lg font-semibold mb-4">Trip Summary</h3>
-                        <ul className="text-sm text-gray-600 space-y-3">
-                            <li className="flex justify-between"><span>Trip ID:</span> <span className="font-medium">{trip.tripId}</span></li>
-                            <li className="flex justify-between"><span>Start Date:</span> <span>{trip.startDate}</span></li>
-                            <li className="flex justify-between"><span>End Date:</span> <span>{trip.endDate}</span></li>
-                            <li className="flex justify-between"><span>Duration:</span> <span>{trip.durationDays} Days</span></li>
-                            <li className="flex justify-between"><span>Budget:</span> <span>PKR {trip.costBudget.toLocaleString()}</span></li>
-                            <li className="flex justify-between"><span>Spent:</span> <span>PKR {trip.costSpent.toLocaleString()}</span></li>
-                        </ul>
-                    </Card>
-
-                    {/* Participants */}
-                    <Card className="p-6 border rounded-2xl shadow-sm">
-                        <div className='flex justify-between items-center mb-4'>
-                            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><Users size={18} /> Group Members</h3>
-                            <span className="text-sm text-gray-500">{trip.participants.length} Members</span>
+            <Container className='flex flex-col gap-6'>
+                <Card className="p-6 shadow-lg border rounded-2xl">
+                    <div className="flex flex-col md:flex-row justify-between gap-4">
+                        <div>
+                            <h1 className="text-xl font-bold">{trip.title}</h1>
+                            <p className="text-gray-500 mt-2">{trip.description}</p>
                         </div>
-                        <div className="space-y-3">
-                            {trip.participants.map((p) => (
-                                <div key={p.id} className="flex items-center gap-3">
-                                    <img src={toAbsoluteUrl(p.avatarUrl)} alt={p.name} className="w-10 h-10 rounded-full" />
-                                    <div>
-                                        <p className="font-medium">{p.name}</p>
-                                        <p className="text-xs text-gray-500">{p.role}</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </Card>
-                </div>
-
-                {/* Main Content Tabs */}
-                <div className="col-span-2">
-                    {/* Tabs */}
-                    <div className="flex border-b mb-4">
-                        {[
-                            { key: 'overview', label: 'Overview', icon: Map },
-                            { key: 'itinerary', label: 'Itinerary', icon: Clock },
-                            { key: 'files', label: 'Files', icon: FileText },
-                            { key: 'activity', label: 'Activity Log', icon: Calendar },
-                        ].map((tab) => (
-                            <button
-                                key={tab.key}
-                                onClick={() => setActiveTab(tab.key as any)}
-                                className={`flex items-center gap-2 px-4 py-2 border-b-2 transition-all cursor-pointer ${activeTab === tab.key
-                                    ? 'border-primary text-primary font-medium'
-                                    : 'border-transparent text-gray-500 hover:text-primary'
-                                    }`}
+                        <div className="flex gap-3">
+                            <Badge>{trip.tripType === 'adult' ? 'Adult Trip' : 'Family Trip'}</Badge>
+                            <Badge appearance={"light"}
+                                variant={trip.status === 'Completed' ? 'success' : trip.status === 'In Progress' ? 'success' : 'warning'}
                             >
-                                <tab.icon size={16} /> {tab.label}
-                            </button>
-                        ))}
+                                {trip.status}
+                            </Badge>
+                        </div>
+                    </div>
+                </Card>
+
+                {/* Main Layout */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div className="col-span-1 space-y-6">
+
+                        <TripSummary trip={trip} />
+
+                        <TripGroupMember trip={trip} />
                     </div>
 
-                    {/* Tab Content */}
-                    <div className="p-4  rounded-xl border shadow-sm">
-                        {activeTab === 'overview' && (
-                            <>
-                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                                    <h3 className="text-lg font-semibold mb-3 flex items-center gap-1"><Map size={16} /> Destinations</h3>
-                                    <p className="text-gray-700">{trip.destinations.join(', ')}</p>
-                                </motion.div>
-                                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-8">
-                                    <h3 className="text-lg font-semibold mb-3 flex items-center gap-1"><MapPin size={16} /> Notable Lakes</h3>
-                                    <LakesSection lakes={lakes} />
-                                </motion.div>
-                            </>
-                        )}
+                    {/* Main Content Tabs */}
+                    <div className="col-span-2">
+                        {/* Tabs */}
+                        <ScrollArea>
 
-                        {activeTab === 'itinerary' && (
-                            <div className="space-y-8">
-                                {trip.itinerary.map((day, i) => (
-                                    <Fragment key={i}>
-                                        <div className={`border-l-2
-                                             ${i === 0 && 'border-green-500'}
-                                             ${i === 1 && 'border-red-400'}
-                                                ${i === 2 && 'border-yellow-400'}
-                                                ${i === 3 && 'border-blue-400'}
-                                                ${i === 4 && 'border-purple-400'}
-                                                ${i === 5 && 'border-pink-400'}
-                                                ${i === 6 && 'border-indigo-400'}
-                                                ${i === 7 && 'border-teal-400'}
-                                              pl-5`}>
-                                            <div className="text-primary font-bold mb-2">
-                                                Day {day.day} — {new Date(day.date).toDateString()}
-                                            </div>
-                                            {day.activities.map((activity, j) => (
-                                                <motion.div
-                                                    key={j}
-                                                    initial={{ opacity: 0, x: -10 }}
-                                                    animate={{ opacity: 1, x: 0 }}
-                                                    transition={{ delay: j * 0.1 }}
-                                                    className="mb-3"
-                                                >
-                                                    <div className="flex items-center gap-3">
-                                                        <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                                                        <div>
-                                                            <p className="font-medium">
-                                                                {activity.time} — {activity.title}
-                                                            </p>
-                                                            {activity.notes && <p className="text-gray-500 text-sm">{activity.notes}</p>}
-                                                        </div>
-                                                    </div>
-                                                </motion.div>
-                                            ))}
-                                        </div>
-                                    </Fragment>
-                                ))}
-                            </div>
-                        )}
-
-                        {activeTab === 'files' && (
-                            <div >
-                                <div className="flex items-center justify-end mb-4">
-                                    <ToggleGroup
-                                        type="single"
-                                        variant="outline"
-                                        value={activeView}
-                                        onValueChange={(value) => {
-                                            if (value) setActiveView(value);
-                                        }}
+                            <div className="flex border-b mb-4">
+                                {[
+                                    { key: 'overview', label: 'Overview', icon: Map },
+                                    { key: 'itinerary', label: 'Itinerary', icon: Clock },
+                                    { key: 'files', label: 'Files', icon: FileText },
+                                    { key: 'activity', label: 'Activity Log', icon: Calendar },
+                                    { key: "recommendations", label: "Recommendations", icon: MapPin }
+                                ].map((tab) => (
+                                    <button
+                                        key={tab.key}
+                                        onClick={() => setActiveTab(tab.key as any)}
+                                        className={`flex items-center gap-2 px-4 py-2 border-b-2 transition-all cursor-pointer ${activeTab === tab.key
+                                            ? 'border-primary text-primary font-medium'
+                                            : 'border-transparent text-gray-500 hover:text-primary'
+                                            }`}
                                     >
-                                        <ToggleGroupItem value="cards">
-                                            <LayoutGrid size={16} />
-                                        </ToggleGroupItem>
-                                        <ToggleGroupItem value="list">
-                                            <List size={16} />
-                                        </ToggleGroupItem>
-                                    </ToggleGroup>
-
-
-                                </div>
-                                {activeView === 'cards' &&
-                                    <div id="works_cards">
-                                        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5 lg:gap-7.5">
-
-                                            {trip.attachments.map((file: any) => (
-                                                <CardWork
-                                                    title={file.title}
-                                                    image={file.image}
-                                                    authorName={file.authorName}
-                                                    authorAvatar={file.authorAvatar}
-                                                    likes={file.likes}
-                                                    comments={file.comments}
-                                                    key={file.title}
-                                                />
-                                            ))}
-                                        </div>
-                                    </div>
-                                }
-                                {activeView === 'list' &&
-                                    <div id="works_list">
-                                        <div className="flex flex-col gap-5 lg:gap-7.5">
-                                            {trip.attachments.map((file: any) => {
-                                                return (
-                                                    <CardWorkRow
-                                                        description={file.description}
-                                                        title={file.title}
-                                                        image={file.image}
-                                                        authorName={file.authorName}
-                                                        authorAvatar={file.authorAvatar}
-                                                        likes={file.likes}
-                                                        comments={file.comments}
-                                                        key={file.title}
-                                                    />
-                                                );
-                                            })}
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                        )}
-
-                        {activeTab === 'activity' && (
-                            <ul className="space-y-2">
-                                {trip.activityLogs.map((log) => (
-                                    <li key={log.id} className="text-sm text-gray-700 border-l-2 border-green-500 pl-3 py-2">
-                                        <span className="font-medium">{log.time}</span> — {log.description}{' '}
-                                        <span className="italic">by {log.by}</span>
-                                    </li>
+                                        <tab.icon size={16} /> {tab.label}
+                                    </button>
                                 ))}
-                            </ul>
-                        )}
+                            </div>
+                            <ScrollBar orientation="horizontal" />
+                        </ScrollArea>
+
+                        {/* Tab Content */}
+                        <div className="p-4  rounded-xl border shadow-sm">
+
+                            {activeTab === 'overview' && <TripOverView trip={trip} />}
+
+                            {activeTab === 'itinerary' && <Itinerary trip={trip} />}
+
+                            {activeTab === 'files' && <Files trip={trip} />}
+
+                            {activeTab === 'activity' && <TripActivity trip={trip} />}
+
+                            {activeTab === "recommendations" && <TripRecommendations trip={trip} />}
+
+                        </div>
                     </div>
                 </div>
-            </div>
-          </Container>
+            </Container>
         </div >
     );
 };
@@ -401,76 +265,3 @@ const sampleTripData = {
 
 
 
-export const LakesSection = ({ lakes }: { lakes: any[] }) => {
-    if (!lakes || lakes.length === 0) return null;
-
-    return (
-        <>
-            <ScrollArea className="w-full">
-                <div className="flex gap-6 min-w-max">
-                    {lakes.map((lake, i) => (
-                        <motion.div
-                            key={lake.id}
-                            initial={{ opacity: 0, y: 15 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: i * 0.15 }}
-                            className=" rounded-xl overflow-hidden shadow-md hover:shadow-lg bg-white dark:bg-gray-900 transition-all border rounded-t-xl w-[280px] bg-cover bg-center"
-                        >
-                            <img
-                                src={toAbsoluteUrl(`/media/images/600x600/${lake.imageUrl}`)}
-                                alt={lake.name}
-                                className="w-full h-48 object-cover"
-                            />
-                            <div className="p-4">
-                                <h4 className="font-semibold text-lg text-gray-800 dark:text-gray-100">
-                                    {lake.name}
-                                </h4>
-                                <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
-                                    <MapPin size={14} className="text-green-500" />
-                                    <span>{lake.location}</span>
-                                </div>
-                                <p className="text-sm text-gray-600 dark:text-gray-300 mt-2 leading-relaxed">
-                                    {lake.description}
-                                </p>
-                            </div>
-                        </motion.div>
-                    ))}
-                </div>
-
-                <ScrollBar orientation="horizontal" />
-            </ScrollArea>
-
-        </>
-    );
-};
-
-
-const lakes = [
-    {
-        id: 'L001',
-        name: 'Attabad Lake',
-        location: 'Hunza Valley, Gilgit-Baltistan',
-        imageUrl: 'lake1.jpg',
-        description: 'A stunning turquoise lake formed after a landslide in 2010, known for boating and scenic beauty.'
-    },
-    {
-        id: 'L002',
-        name: 'Satpara Lake',
-        location: 'Skardu, Gilgit-Baltistan',
-        imageUrl: 'lake2.jpg',
-        description: 'A natural lake providing water to Skardu city, surrounded by mountains and ideal for fishing.'
-    },
-    {
-        id: 'L003',
-        name: 'Sheosar Lake',
-        location: 'Deosai National Park',
-        imageUrl: 'lake3.jpeg',
-        description: 'Located in the Deosai Plains, one of the world’s highest lakes offering breathtaking views.'
-    }, {
-        id: 'L004',
-        name: 'Kachura Lakes',
-        location: 'Skardu, Gilgit-Baltistan',
-        imageUrl: 'lake1.jpg',
-        description: 'Comprising Upper and Lower Kachura Lakes, known for their clear waters and surrounding greenery.'
-    }
-]
