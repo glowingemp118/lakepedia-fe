@@ -1,4 +1,4 @@
-import { CampaignsContent } from './campaigns-basic-content'
+import {CampaignsContent} from './campaigns-basic-content'
 
 const CampaignBasicPage = () => {
   return (

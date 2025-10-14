@@ -7,9 +7,10 @@ interface RHFSwitchProps {
     name: string;
     label: string;
     className?: string;
+    description?: string;
     [x: string]: any;
 }
-const RHFSwitch: FC<RHFSwitchProps> = ({ name, label, className, ...other }) => {
+const RHFSwitch: FC<RHFSwitchProps> = ({ name, label, description, className, ...other }) => {
 
     const { control } = useFormContext();
 
@@ -19,7 +20,10 @@ const RHFSwitch: FC<RHFSwitchProps> = ({ name, label, className, ...other }) => 
             name={name}
             render={({ field }) => (
                 <FormItem className={`${className}`} >
-                    <FormLabel className="text-base font-medium">{label}</FormLabel>
+                    <div className='flex flex-col'>
+                         <FormLabel className="text-base font-medium">{label}</FormLabel>
+                    {description && <p className="text-sm text-muted-foreground mb-2">{description}</p>}
+                    </div>
                     <FormControl>
                         <Switch checked={field.value} onCheckedChange={field.onChange} {...other} />
                     </FormControl>

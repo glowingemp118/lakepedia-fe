@@ -1,44 +1,48 @@
+
+import { paths } from '@/components/layouts/layout-3/components/paths';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useBoolean } from '@/hooks/use-boolean';
-import { CardProject, CardProjectRow } from '@/partials/cards';
-import { Plus } from 'lucide-react';
+import { AvatarGroup } from '@/partials/common/avatar-group';
+import { Heart, LayoutGrid, List, Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
 import AddTripModal from './create-trip-modal';
 
-interface IProjects2Item {
-  logo: string;
+
+interface TripItem {
+  id: string;
   name: string;
+  type: string;
+  lake: string;
+  groupSize: number;
+  startDate: string;
+  endDate: string;
   description: string;
-  startDate?: string;
-  endDate?: string;
-  status: {
-    variant?:
-    | 'primary'
-    | 'destructive'
-    | 'secondary'
-    | 'info'
-    | 'success'
-    | 'warning'
-    | null
-    | undefined;
-    label: string;
-  };
+  isPrivate: boolean;
   progress: {
     variant: string;
     value: number;
   };
   team: {
     size?: string;
-    group: Array<{ filename?: string; variant?: string; fallback?: string }>;
+    group: Array<{ path?: string; variant?: string; fallback?: string }>;
+
     more?: {
       variant?: string;
       number?: number;
     };
   };
+  status: {
+    label: string;
+    variant: 'primary' | 'secondary' | 'success' | 'warning' | 'info';
+  };
 }
 
-type IProjects2Items = Array<IProjects2Item>;
+type ITrips2Items = Array<TripItem>;
 
 const Projects2 = () => {
 
@@ -48,245 +52,21 @@ const Projects2 = () => {
 
   const open = useBoolean();
 
-  const [activeView, setActiveView] = useState('cards');
+  const [activeView, setActiveView] = useState<'cards' | 'list'>('cards');
 
-  const projects: IProjects2Items = [
+
+  const trips: TripItem[] = [
     {
-      logo: 'plurk.svg',
-      name: 'Phoenix SaaS',
-      description: 'Real-time photo sharing app',
-      startDate: 'Mar 06',
-      endDate: 'Dec 21',
-      status: {
-        label: 'In Progress',
-        variant: 'primary',
-      },
-      progress: {
-        variant: 'bg-primary',
-        value: 55,
-      },
-      team: {
-        size: 'size-[30px]',
-        group: [
-          { filename: '300-4.png' },
-          { filename: '300-2.png' },
-          {
-            fallback: 'S',
-            variant: 'text-primary-foreground ring-background bg-primary',
-          },
-        ],
-      },
-    },
-    {
-      logo: 'telegram.svg',
-      name: 'Radiant Wave',
-      description: 'Short-term accommodation marketplace',
-      startDate: 'Mar 09',
-      endDate: 'Dec 23',
-      status: {
-        label: 'Completed',
-        variant: 'success',
-      },
-      progress: {
-        variant: 'bg-green-500',
-        value: 100,
-      },
-      team: {
-        size: 'size-[30px]',
-        group: [{ filename: '300-24.png' }, { filename: '300-7.png' }],
-      },
-    },
-    {
-      logo: 'kickstarter.svg',
-      name: 'Dreamweaver',
-      description: 'Social media photo sharing',
-      startDate: 'Mar 05',
-      endDate: 'Dec 12',
-      status: {
-        label: 'Upcoming',
-        variant: 'secondary',
-      },
-      progress: {
-        variant: 'bg-input',
-        value: 100,
-      },
-      team: {
-        size: 'size-[30px]',
-        group: [
-          { filename: '300-21.png' },
-          { filename: '300-1.png' },
-          { filename: '300-2.png' },
-        ],
-        more: {
-          number: 10,
-          variant: 'text-white ring-background bg-green-500',
-        },
-      },
-    },
-    {
-      logo: 'quickbooks.svg',
-      name: 'Horizon Quest',
-      description: 'Team communication and collaboration',
-      startDate: 'Mar 03',
-      endDate: 'Dec 11',
-      status: {
-        label: 'In Progress',
-        variant: 'primary',
-      },
-      progress: {
-        variant: 'bg-primary',
-        value: 19,
-      },
-      team: {
-        size: 'size-[30px]',
-        group: [
-          { filename: '300-1.png' },
-          { filename: '300-2.png' },
-          {
-            fallback: 'M',
-            variant:
-              'text-destructive-foreground ring-background bg-destructive',
-          },
-        ],
-      },
-    },
-    {
-      logo: 'google-analytics.svg',
-      name: 'Golden Gate Analytics',
-      description: 'Note-taking and organization app',
-      startDate: 'Mar 22',
-      endDate: 'Dec 14',
-      status: {
-        label: 'Upcoming',
-        variant: 'secondary',
-      },
-      progress: {
-        variant: 'bg-input',
-        value: 100,
-      },
-      team: {
-        size: 'size-[30px]',
-        group: [
-          { filename: '300-5.png' },
-          { filename: '300-17.png' },
-          { filename: '300-16.png' },
-        ],
-      },
-    },
-    {
-      logo: 'google-webdev.svg',
-      name: 'Celestial SaaS',
-      description: 'CRM App application to HR efficienty',
-      startDate: 'Mar 14',
-      endDate: 'Dec 25',
-      status: {
-        label: 'Completed',
-        variant: 'success',
-      },
-      progress: {
-        variant: 'bg-green-500',
-        value: 100,
-      },
-      team: {
-        size: 'size-[30px]',
-        group: [
-          { filename: '300-6.png' },
-          { filename: '300-23.png' },
-          { filename: '300-12.png' },
-        ],
-        more: {
-          number: 10,
-          variant: 'text-primary-foreground ring-background bg-primary',
-        },
-      },
-    },
-    {
-      logo: 'figma.svg',
-      name: 'Nexus Design System',
-      description: 'Online discussion and forum platform',
-      startDate: 'Mar 17',
-      endDate: 'Dec 08',
-      status: {
-        label: 'Upcoming',
-        variant: 'secondary',
-      },
-      progress: {
-        variant: 'bg-input',
-        value: 100,
-      },
-      team: {
-        size: 'size-[30px]',
-        group: [
-          { filename: '300-14.png' },
-          { filename: '300-3.png' },
-          { filename: '300-19.png' },
-          { filename: '300-9.png' },
-        ],
-      },
-    },
-    {
-      logo: 'btcchina.svg',
-      name: 'Neptune App',
-      description: 'Team messaging and collaboration',
-      startDate: 'Mar 09',
-      endDate: 'Dec 23',
-      status: {
-        label: 'In Progress',
-        variant: 'primary',
-      },
-      progress: {
-        variant: 'bg-primary',
-        value: 35,
-      },
-      team: {
-        size: 'size-[30px]',
-        group: [
-          { filename: '300-21.png' },
-          { filename: '300-32.png' },
-          { filename: '300-2.png' },
-        ],
-        more: {
-          number: 1,
-          variant: 'text-white ring-background bg-green-500',
-        },
-      },
-    },
-    {
-      logo: 'patientory.svg',
-      name: 'SparkleTech',
-      description: 'Meditation and relaxation app',
-      startDate: 'Mar 14',
-      endDate: 'Dec 21',
-      status: {
-        label: 'Upcoming',
-        variant: 'secondary',
-      },
-      progress: {
-        variant: 'bg-input',
-        value: 100,
-      },
-      team: {
-        size: 'size-[30px]',
-        group: [
-          { filename: '300-4.png' },
-          { filename: '300-2.png' },
-          {
-            fallback: 'K',
-            variant: 'text-white ring-background bg-green-500',
-          },
-        ],
-      },
-    },
-    {
-      logo: 'jira.svg',
-      name: 'EmberX CRM',
-      description: 'Commission-free stock trading',
-      startDate: 'Mar 01',
-      endDate: 'Dec 13',
-      status: {
-        label: 'Completed',
-        variant: 'success',
-      },
+      id: 'trip-001',
+      name: 'Hunza Valley Adventure',
+      type: 'Adult',
+      lake: 'Attabad Lake',
+      groupSize: 4,
+      startDate: '2025-04-12',
+      endDate: '2025-04-20',
+      description:
+        'A scenic road trip exploring the breathtaking beauty of Hunza, including boating at Attabad Lake and visits to local forts.',
+      isPrivate: false,
       progress: {
         variant: 'bg-green-500',
         value: 100,
@@ -303,145 +83,332 @@ const Projects2 = () => {
           variant: 'text-white ring-background bg-green-500',
         },
       },
-    },
-    {
-      logo: 'plastic-scm.svg',
-      name: 'LunaLink',
-      description: 'Meditation and relaxation app',
-      startDate: 'Mar 14',
-      endDate: 'Dec 21',
-      status: {
-        label: 'Upcoming',
-        variant: 'secondary',
-      },
-      progress: {
-        variant: 'bg-input',
-        value: 100,
-      },
-      team: {
-        size: 'size-[30px]',
-        group: [{ filename: '300-16.png' }],
-      },
-    },
-    {
-      logo: 'perrier.svg',
-      name: 'TerraCrest App',
-      description: 'Video conferencing software',
-      startDate: 'Mar 22',
-      endDate: 'Dec 28',
+
       status: {
         label: 'In Progress',
         variant: 'primary',
       },
+    },
+    {
+      id: 'trip-002',
+      name: 'Fairy Meadows Camping',
+      type: 'Family',
+      lake: 'Raikot Lake',
+      groupSize: 6,
+      startDate: '2025-05-10',
+      endDate: '2025-05-15',
+      description:
+        'An unforgettable camping experience under the stars at Fairy Meadows, with hiking to Nanga Parbat base camp.',
+      isPrivate: true,
       progress: {
-        variant: 'bg-primary',
-        value: 55,
+        variant: 'bg-yellow-500',
+        value: 45,
+      },
+      team: {
+        size: 'size-[30px]',
+        group: [
+          { filename: '300-9.png' },
+          { filename: '300-5.png' },
+          { filename: '300-25.png' },
+        ],
+        more: {
+          number: 3,
+          variant: 'text-white ring-background bg-yellow-500',
+        },
+      },
+      status: {
+        label: 'Upcoming',
+        variant: 'secondary',
+      },
+    },
+    {
+      id: 'trip-003',
+      name: 'Skardu Cultural Tour',
+      type: 'Couple',
+      lake: 'Upper Kachura Lake',
+      groupSize: 3,
+      startDate: '2025-06-01',
+      endDate: '2025-06-07',
+      description:
+        'A peaceful cultural tour across Skardu including Shigar Fort, Satpara Lake, and local markets.',
+      isPrivate: false,
+      progress: {
+        variant: 'bg-green-500',
+        value: 100,
+      },
+      team: {
+        size: 'size-[30px]',
+        group: [
+          { filename: '300-15.png' },
+          { filename: '300-19.png' },
+          { filename: '300-23.png' },
+        ],
+        more: {
+          number: 4,
+          variant: 'text-white ring-background bg-green-500',
+        },
+      },
+      status: {
+        label: 'Completed',
+        variant: 'success',
+      },
+    },
+    {
+      id: 'trip-004',
+      name: 'Naltar Valley Skiing',
+      type: 'Friends',
+      lake: 'Naltar Lake',
+      groupSize: 5,
+      startDate: '2025-12-15',
+      endDate: '2025-12-20',
+      description:
+        'A thrilling winter trip to Naltar Valley for skiing and snowboarding adventures.',
+      isPrivate: true,
+      progress: {
+        variant: 'bg-red-500',
+        value: 10,
+      },
+      team: {
+        size: 'size-[30px]',
+        group: [
+          { filename: '300-7.png' },
+          { filename: '300-14.png' },
+          { filename: '300-30.png' },
+        ],
+        more: {
+          number: 2,
+          variant: 'text-white ring-background bg-red-500',
+        },
+      },
+      status: {
+        label: 'Planned',
+        variant: 'warning',
+      },
+    },
+    {
+      id: 'trip-005',
+      name: 'Deosai National Park',
+      type: 'Family',
+      lake: 'Sheosar Lake',
+      groupSize: 4,
+      startDate: '2025-07-20',
+      endDate: '2025-07-25',
+      description:
+        'A nature-filled trip to Deosai National Park, exploring its rich wildlife and the stunning Sheosar Lake.',
+      isPrivate: false,
+      progress: {
+        variant: 'bg-green-500',
+        value: 100,
+      },
+      team: {
+        size: 'size-[30px]',
+        group: [
+          { filename: '300-11.png' },
+          { filename: '300-6.png' },
+          { filename: '300-29.png' },
+        ],
+        more: {
+          number: 6,
+          variant: 'text-white ring-background bg-green-500',
+        },
+      },
+      status: {
+        label: 'In Progress',
+        variant: 'primary',
+      },
+    },
+    {
+      id: 'trip-006',
+      name: 'Chitral and Kalash Valleys',
+      type: 'Friends',
+      lake: 'Bumburet Lake',
+      groupSize: 5,
+      startDate: '2025-08-15',
+      endDate: '2025-08-22',
+      description:
+        'A cultural and scenic trip to Chitral and the unique Kalash Valleys, including visits to Bumburet Lake.',
+      isPrivate: true,
+      progress: {
+        variant: 'bg-yellow-500',
+        value: 60,
       },
       team: {
         size: 'size-[30px]',
         group: [
           { filename: '300-4.png' },
-          { filename: '300-9.png' },
-          {
-            fallback: 'F',
-            variant: 'text-primary-foreground ring-background bg-primary',
-          },
+          { filename: '300-18.png' },
+          { filename: '300-27.png' },
         ],
+        more: {
+          number: 4,
+          variant: 'text-white ring-background bg-yellow-500',
+        },
       },
-    },
+      status: {
+        label: 'In Progress',
+        variant: 'primary',
+      },
+    }
   ];
-  useEffect(() => {
 
+  useEffect(() => {
     if (state && state.from === 'todo') {
       open.onTrue();
       navigate(window.location.pathname, { replace: true });
     }
-  }, [state])
+  }, [state]);
 
-  const renderProject = (project: IProjects2Item, index: number) => {
-    return (
-      <CardProject
-        logo={project.logo}
-        name={project.name}
-        description={project.description}
-        startDate={project.startDate}
-        endDate={project.endDate}
-        status={project.status}
-        progress={project.progress}
-        team={project.team}
-        key={index}
-      />
-    );
-  };
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    // Handle the favorite click logic here
+    console.log('Favorite clicked!');
+  }
 
-  const renderItem = (item: IProjects2Item, index: number) => {
-    return (
-      <CardProjectRow
-        logo={item.logo}
-        name={item.name}
-        description={item.description}
-        status={item.status}
-        progress={item.progress}
-        team={item.team}
-        key={index}
+  const renderCard = (trip: TripItem,) => (
+    <Card
+      key={trip.id}
+      className="p-7.5 hover:border-blue-400 border transition-all duration-300 cursor-pointer"
+      onClick={() => { navigate(paths.travelerDashboard.tripDetail("1")) }}
+    >
+      <div className="flex flex-col gap-2">
+        <div className="flex justify-between items-center">
+          <h4 className="font-semibold text-lg text-gray-900">{trip.name}</h4>
+          <Badge variant={trip.status.variant}>{trip.status.label}</Badge>
+        </div>
+        <p className="text-sm text-gray-600 line-clamp-2">{trip.description}</p>
+        <div className="text-sm text-gray-500 mt-2 space-y-1">
+          <p><strong>Lake:</strong> {trip.lake}</p>
+          <p><strong>Type:</strong> {trip.type}</p>
+          <p><strong>Dates:</strong> {trip.startDate} → {trip.endDate}</p>
+        </div>
+        {trip.isPrivate && (
+          <p className="text-xs text-red-500 font-medium mt-1">Private Trip</p>
+        )}
+      </div>
+
+      <Progress
+        value={trip.progress.value}
+        indicatorClassName={trip.progress.variant}
+        className="h-1.5 mb-4 mt-4"
       />
-    );
-  };
+      <div className='flex justify-between items-center'>
+        <AvatarGroup
+          group={trip.team.group}
+          size={trip.team.size}
+          more={trip.team.more}
+        />
+        <div className='flex justify-end' onClick={handleFavoriteClick}>
+          <Heart size={24} className='hover:text-red-500 hover:size-[28px] transition-all p-1 rounded-full cursor-pointer' />
+        </div>
+      </div>
+    </Card>
+  );
+
+  const renderRow = (trip: TripItem,) => (
+    <div
+      key={trip.id}
+      className="flex flex-col lg:flex-row lg:items-center justify-between rounded-xl p-5 hover:border-blue-400 border transition-all duration-300 cursor-pointer"
+      onClick={() => navigate(paths.travelerDashboard.tripDetail(trip.id))}
+    >
+      {/* Left Side — Trip Info */}
+      <div className="flex flex-col gap-1 w-full lg:w-2/3">
+        <div className="flex items-center gap-3">
+          <h4 className="font-semibold text-lg text-gray-900">{trip.name}</h4>
+          {trip.isPrivate && (
+            <Badge variant="destructive" className="text-xs">
+              Private
+            </Badge>
+          )}
+          <Badge variant={trip.status.variant}>{trip.status.label}</Badge>
+        </div>
+
+        <p className="text-sm text-gray-600 mt-1 line-clamp-2">{trip.description}</p>
+
+        <div className="text-sm text-gray-500 mt-2 grid grid-cols-1 sm:grid-cols-2 gap-y-1">
+          <p>
+            <strong>Type:</strong> {trip.type}
+          </p>
+          <p>
+            <strong>Lake:</strong> {trip.lake}
+          </p>
+          <p>
+            <strong>Group Size:</strong> {trip.groupSize}
+          </p>
+          <p>
+            <strong>Dates:</strong> {trip.startDate} → {trip.endDate}
+          </p>
+        </div>
+      </div>
+
+      {/* Right Side — Action + Progress */}
+      <div className="flex flex-col items-end mt-4 lg:mt-0 gap-3 min-w-[180px]">
+        {/* Optional Progress (if you want to add like your card layout) */}
+        {trip.status.label === 'In Progress' && (
+          <div className="w-full">
+            <Progress value={60} className="h-1.5 mb-2" />
+          </div>
+        )}
+
+        <div className="flex items-center gap-2">
+
+
+          <Heart
+            onClick={handleFavoriteClick}
+            size={20}
+            className="hover:text-red-500 transition-all  rounded-full cursor-pointer"
+          />
+        </div>
+      </div>
+    </div>
+  );
+
 
   return (
-    <div className="flex flex-col items-stretch gap-5 lg:gap-7.5">
-      <div className="flex flex-wrap items-center gap-5 justify-between">
-        <h3 className="text-lg text-mono font-semibold">
-          {projects.length} Trips
-        </h3>
-        {/* <ToggleGroup
-          type="single"
-          variant="outline"
-          value={activeView}
-          onValueChange={(value) => {
-            if (value) setActiveView(value);
-          }}
-        >
-          <ToggleGroupItem value="cards">
-            <LayoutGrid size={16} />
-          </ToggleGroupItem>
-          <ToggleGroupItem value="list">
-            <List size={16} />
-          </ToggleGroupItem>
-        </ToggleGroup> */}
-        <Button onClick={open.onTrue}><Plus /> Add Trip</Button>
+    <div className="flex flex-col gap-6">
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-semibold">{trips.length} Trips</h3>
+        <div className="flex gap-4">
+          <ToggleGroup
+            type="single"
+            variant="outline"
+            value={activeView}
+            onValueChange={() => {
+              setActiveView(activeView === 'cards' ? 'list' : 'cards');
+            }}
+          >
+            <ToggleGroupItem value="cards">
+              <LayoutGrid size={16} />
+            </ToggleGroupItem>
+            <ToggleGroupItem value="list">
+              <List size={16} />
+            </ToggleGroupItem>
+          </ToggleGroup>
+          <Button onClick={open.onTrue}>
+            <Plus className="w-4 h-4 mr-1" /> Add Trip
+          </Button>
+        </div>
       </div>
-      {activeView === 'cards' && (
-        <div id="projects_cards">
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5 lg:gap-7.5">
-            {projects.map((project, index) => {
-              return renderProject(project, index);
-            })}
-          </div>
-          <div className="flex grow justify-center pt-5 lg:pt-7.5">
-            <Button mode="link" underlined="dashed" asChild>
-              <Link to="#">Show more Trips</Link>
-            </Button>
-          </div>
+
+      {activeView === 'cards' ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+          {trips.map((trip, i) => renderCard(trip))}
+        </div>
+      ) : (
+        <div className="flex flex-col gap-4">
+          {trips.map((trip, i) => renderRow(trip))}
         </div>
       )}
-      {activeView === 'list' && (
-        <div id="projects_list">
-          <div className="flex flex-col gap-5 lg:gap-7.5">
-            {projects.map((item, index) => {
-              return renderItem(item, index);
-            })}
-          </div>
-          <div className="flex grow justify-center pt-5 lg:pt-7.5">
-            <Button mode="link" underlined="dashed" asChild>
-              <Link to="#">Show more Trips</Link>
-            </Button>
-          </div>
-        </div>
-      )}
+
+      <div className="flex justify-center pt-5">
+        <Button variant="dashed" asChild>
+          <Link to="#">Show more Trips</Link>
+        </Button>
+      </div>
+
       <AddTripModal open={open.value} onClose={open.onFalse} />
     </div>
   );
 };
 
-export { Projects2, type IProjects2Item, type IProjects2Items };
+export { Projects2, type ITrips2Items, type TripItem };
+
