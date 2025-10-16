@@ -34,6 +34,8 @@ export const paths = {
     adminDashboard: {
         root: ADMIN_DASHBOARD,
         profile: `${ADMIN_DASHBOARD}/profile`,
+        businessess: `${ADMIN_DASHBOARD}/businesses`,
+        users: `${ADMIN_DASHBOARD}/users`,
         account: `${ADMIN_DASHBOARD}/account`,
         network: `${ADMIN_DASHBOARD}/network`,
         plans: `${ADMIN_DASHBOARD}/plans`,

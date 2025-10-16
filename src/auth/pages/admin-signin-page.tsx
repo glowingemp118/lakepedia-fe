@@ -103,19 +103,27 @@ export function AdminSignInPage() {
       }
 
       // Sign in using the auth context
-      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      const res = await login({ email: values.email, password: values.password, timezone });
-      if (!res?.error) {
+      // const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      // const res = await login({ email: values.email, password: values.password, timezone });
+      // if (!res?.error) {
 
-        // toast.success('Signed in successfully!');
+      // toast.success('Signed in successfully!');
 
-        dispatch(setUser(res?.data?.data?.user));
+      // dispatch(setUser(res?.data?.data?.user));
 
-        dispatch(setToken(res?.data?.data?.token));
-
-        const nextPath = searchParams.get('next') || paths.adminDashboard.root;
-        navigate(nextPath);
+      const data = {
+        email: values.email,
+        pass: values.password,
+        role: "admin",
       }
+
+      dispatch(setUser(data))
+
+      // dispatch(setToken(res?.data?.data?.token));
+
+      const nextPath = searchParams.get('next') || paths.adminDashboard.root;
+      navigate(nextPath);
+      // }
       // Get the 'next' parameter from URL if it exists
 
     } catch (err) {

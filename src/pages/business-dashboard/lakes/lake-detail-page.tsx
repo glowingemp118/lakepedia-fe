@@ -117,19 +117,14 @@ export default function LakeDetailPage() {
                     </div>
                     <div className="flex gap-3">
                         <Badge appearance={"light"} className="w-full" variant={"success"}>{lake.country}</Badge>
-                        <Badge
-                            appearance="light"
-                            className="w-full"
+                        <Badge appearance="light" className="w-full border border-red-400"
                             variant={
                                 lake.status === "In Progress"
                                     ? "success"
                                     : lake.status === "Completed"
                                         ? "success"
-                                        : "warning"
-                            }
-                        >
-                            In Progress
-                            {/* {lake.status} */}
+                                        : "warning"}
+                        >In Progress {/* {lake.status} */}
                         </Badge>
                     </div>
                 </div>

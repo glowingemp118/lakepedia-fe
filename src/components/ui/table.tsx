@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { cn } from '@/lib/utils';
+import { FC } from 'react';
 
 function Table({ className, ...props }: React.HTMLAttributes<HTMLTableElement>) {
   return (
@@ -67,4 +68,49 @@ function TableCaption({ className, ...props }: React.HTMLAttributes<HTMLTableCap
   );
 }
 
-export { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow };
+interface CustomHeaderProps {
+  headLabel: Array<{
+    id: string;
+    label: string;
+    align?: string;
+  }>;
+}
+  
+const TableHeadCustom: FC<CustomHeaderProps> = ({ headLabel }) => {
+
+  const getTextAlignClass = (align?: string) => {
+    switch (align) {
+      case "right":
+        return "text-right";
+      case "center":
+        return "text-center";
+      default:
+        return "text-left";
+    }
+  };
+
+  return (
+    <TableHeader>
+      <TableRow className="">
+        {headLabel.map((header: any) => (
+          <TableHead
+            key={header.id}
+            className={cn(
+              "text-[12px] py-4  ",
+              "text-slate-700 dark:text-white",
+              "bg-[#fbfbfb] dark:bg-slate-800",
+              "border-b border-slate-300 dark:border-slate-700",
+              getTextAlignClass(header.align)
+            )}
+          >
+            {header.label}
+          </TableHead>
+        ))}
+      </TableRow>
+    </TableHeader>
+  );
+};
+
+
+
+export { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow, TableHeadCustom };

@@ -110,30 +110,40 @@ export const AdminSidebar = [
     title: 'Dashboard',
   },
   {
-    icon: Plane,
-    path: "#",
-    title: 'Trips',
+    icon:Building2 ,
+    path: paths.adminDashboard.businessess,
+    title: 'Businesses',
   },
   {
-    icon: ImageIcon,
-    path: "#",
-    title: 'Photos',
+    icon: Users,
+    path: paths.adminDashboard.users,
+    title: 'Users',
   },
-  {
-    icon: Star,
-    path: "#",
-    title: 'Reviews',
-  },
-  {
-    icon: Heart,
-    path: "#",
-    title: 'Favorites',
-  },
-  {
-    icon: ImageIcon,
-    path: "#",
-    title: 'Media',
-  }
+  // {
+  //   icon: Plane,
+  //   path: "#",
+  //   title: 'Trips',
+  // },
+  // {
+  //   icon: ImageIcon,
+  //   path: "#",
+  //   title: 'Photos',
+  // },
+  // {
+  //   icon: Star,
+  //   path: "#",
+  //   title: 'Reviews',
+  // },
+  // {
+  //   icon: Heart,
+  //   path: "#",
+  //   title: 'Favorites',
+  // },
+  // {
+  //   icon: ImageIcon,
+  //   path: "#",
+  //   title: 'Media',
+  // }
 ];
 
 export interface Item {

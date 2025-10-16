@@ -12,7 +12,7 @@ import { ProfileView } from '@/pages/business-dashboard/profile/view/profile-vie
 
 import { ProfileView as TravelerProfileView } from '@/pages/traveler-dashboard/profile/view/profile-view';
 
-import { ProfileView as AdminProfileView } from '@/pages/admin-dasbhoard/profile/view/profile-view';
+// import { ProfileView as AdminProfileView } from '@/pages/admin-dasbhoard/profile/view/profile-view';
 
 import HomeView from '@/pages/home/view/home-view';
 
@@ -33,7 +33,14 @@ import TripsView from '@/pages/traveler-dashboard/trips/view/trips-view';
 import UserProfileView from '@/pages/traveler-dashboard/user-profile/view/user-profile-view';
 
 import { BusinessProfileView } from '@/pages/business-dashboard/user-profile/view/user-profile-view';
+
 import {BusinessSettingsView} from '@/pages/business-dashboard/settings/view/settings-view';
+
+//super-admin
+
+import BusinessessView from '@/pages/admin-dasbhoard/businesse/view/business-view';
+import UsersView from '@/pages/admin-dasbhoard/users/view/users-view';
+import AdminProfileView from '@/pages/admin-dasbhoard/profile/view/user-profile-view';
 
 
 
@@ -96,9 +103,14 @@ export function AppRoutingSetup() {
 
         <Route element={<RequireAuth role={"admin"} />}>
 
-          <Route path="/admin-dashboard" element={<Layout3Page />} />
+          <Route path="/admin-dashboard" element={<AdminProfileView />} />
 
           <Route path="/admin-dashboard/profile" element={<AdminProfileView />} />
+
+          <Route path="/admin-dashboard/businesses" element={<BusinessessView />} />
+
+          <Route path="/admin-dashboard/users" element={<UsersView />} />
+          
         </Route>
 
       </Route>

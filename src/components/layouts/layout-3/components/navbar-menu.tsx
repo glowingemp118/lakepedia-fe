@@ -43,7 +43,12 @@ export function NavbarMenu() {
   } :
     item);
 
-  const AdminSidebar = AdminMemu.filter((item) => item.title !== "Dashboard");
+
+  const AdminSidebar = AdminMemu.map((item) => item.title === "Dashboard" ? {
+    ...item,
+    title: "Overview"
+  } :
+    item);
 
 
   let navbarMenu;

@@ -1,15 +1,15 @@
-import { Container } from "@/components/common/container";
-import { Navbar } from "@/components/layouts/layout-3/components/navbar";
-import { toAbsoluteUrl } from "@/lib/helpers";
-import { selectUser } from "@/store/slices/userSlice";
-import { CircleUser, Mail, MapPin } from "lucide-react";
-import { useSelector } from "react-redux";
-import { UserHero } from "../profile-hero";
+import { Container } from '@/components/common/container';
+import { Navbar } from '@/components/layouts/layout-3/components/navbar';
+import { toAbsoluteUrl } from '@/lib/helpers';
+import { UserHero } from '../profile-hero'
+import { selectUser } from '@/store/slices/userSlice';
+import { CircleUser, Mail, MapPin } from 'lucide-react';
+import { useSelector } from 'react-redux';
+import { AccountUserProfileContent } from '../account-basic-content';
 
-export function ProfileView() {
+const AdminProfileView = () => {
 
     const user = useSelector(selectUser);
-
     const image = (
         <img
             src={toAbsoluteUrl(user?.image as string || '/media/avatars/300-1.png')}
@@ -36,11 +36,11 @@ export function ProfileView() {
             <Container>
                 <Navbar />
             </Container>
-            {/* <Container className=''>
-                <ProfileInfo user={user} />
-            </Container> */}
-        </div >
-            );
+            <Container >
+                <AccountUserProfileContent />
+            </Container>
+        </div>
+    )
 }
 
-
+export default AdminProfileView
