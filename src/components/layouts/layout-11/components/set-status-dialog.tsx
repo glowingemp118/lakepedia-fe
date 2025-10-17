@@ -64,7 +64,7 @@ export function SetStatusDialog({ trigger, open, onOpenChange }: SetStatusDialog
 
   const handleSave = () => {
     // Handle status save logic here
-    console.log('Status saved:', { statusText, selectedStatus });
+    //console.log('Status saved:', { statusText, selectedStatus });
     onOpenChange?.(false);
   };
 

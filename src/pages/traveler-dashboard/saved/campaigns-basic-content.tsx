@@ -43,13 +43,13 @@ export function CampaignsContent({ mode }: ICampaignsContentProps) {
 
 
   return (
-    <div className="flex flex-col items-stretch gap-5 lg:gap-7.5">
-      {/* <div className="flex flex-wrap items-center gap-5 justify-between"> */}
+    <div className="flex flex-col items-stretch gap-5 lg:gap-7.5 ">
 
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
 
-          <ScrollArea className=''>
-            <div className="gap-6 min-w-fit flex  border-b">
+         <div className='grid grid-cols-1'>
+           <ScrollArea className=''>
+            <div className="gap-6 flex  border-b">
               {[
                 { key: 'lakes', label: 'Lakes', icon: Map },
                 { key: 'activities', label: 'Activities', icon: Bell },
@@ -70,6 +70,7 @@ export function CampaignsContent({ mode }: ICampaignsContentProps) {
             </div>
             <ScrollBar orientation="horizontal" />
           </ScrollArea>
+         </div>
         </motion.div>
       
       {/* </div> */}

@@ -56,12 +56,6 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
 
   const user = useSelector(selectUser);
 
-  const isAdmin = user?.role === 'admin';
-
-  const isTraveler = user?.role === 'traveler';
-
-  const isBusiness = user?.role === 'business';
-
   const navigage = useNavigate();
 
   const currenLanguage = I18N_LANGUAGES[0];
@@ -75,11 +69,12 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
   const handleLogout = () => {
 
     dispatch(logout());
-    navigage(isAdmin && paths.adminDashboard.root || isTraveler && paths.travelerDashboard.root || isBusiness && paths.businessDashboard.root || '/auth/signin');
+    navigage(user?.role==="admin" && paths.adminDashboard.root || user?.role==="traveler" && paths.travelerDashboard.root || 
+      user?.role==="business" && paths.businessDashboard.root || '/auth/signin');
   };
 
   const handleGoToProfile = () => {
-    navigage(isAdmin && paths.adminDashboard.profile || isTraveler && paths.travelerDashboard.settings || isBusiness && paths.businessDashboard.settings || '/auth/signin');
+    navigage(user?.role==="admin" && paths.adminDashboard.profile || user?.role==="traveler" && paths.travelerDashboard.settings || user?.role==="business" && paths.businessDashboard.settings || '/auth/signin');
   }
 
   return (
@@ -123,7 +118,7 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
         ○ For businesses, an extra button called "My subscription";
         ○ Sign out. */}
 
-        {(isTraveler || isBusiness) && <>
+        {(user?.role==="traveler" || user?.role==="business") && <>
           <DropdownMenuItem asChild>
             <div
               onClick={handleGoToProfile}
@@ -152,7 +147,7 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
             </Link>
           </DropdownMenuItem>
           {
-            isBusiness && <DropdownMenuItem asChild>
+            user?.role==="business" && <DropdownMenuItem asChild>
               <Link
                 to={paths.businessDashboard.subscription}
                 className="flex items-center gap-2"

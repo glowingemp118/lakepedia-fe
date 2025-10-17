@@ -1,10 +1,10 @@
 import { Container } from '@/components/common/container';
 import { toAbsoluteUrl } from '@/lib/helpers';
+import withProfile from '@/utils/withprofile';
 import { BadgeCheck, LucideIcon } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { ReactNode } from 'react';
 import { Link } from 'react-router';
-// import { Statistics } from './statistics';
 
 export interface UserHeroInfo {
   email?: string;
@@ -17,21 +17,11 @@ export interface UserHeroProps {
   name?: string;
   info: UserHeroInfo[];
 }
-interface IStatisticsItem {
-  number: string;
-  label: string;
-}
-type IStatisticsItems = Array<IStatisticsItem>;
 
 
-export function UserHero({ image, name, info }: UserHeroProps) {
+ function UserHero({ image, name, info }: UserHeroProps) {
 
-  const items: IStatisticsItems = [
-    { number: '624', label: 'Profile Views' },
-    { number: '60.7M', label: 'Profile clicks' },
-    { number: '369M', label: 'Leads generated' },
-  ];
-
+  
  
 
   const { theme } = useTheme();
@@ -88,10 +78,11 @@ export function UserHero({ image, name, info }: UserHeroProps) {
             {buildInfo(info)}
           </div>
         </div>
-        {/* <div className="col-span-1 lg:col-span-3">
-          <Statistics items={items} />
-        </div> */}
+        
       </Container>
     </div>
   );
 }
+
+
+export const AdminHeroWithProfile = withProfile(UserHero);

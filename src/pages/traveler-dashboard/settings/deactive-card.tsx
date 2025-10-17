@@ -27,7 +27,7 @@ const DeactiveCard = () => {
     } = methods;
 
     const onSubmit = (data: any) => {
-        console.log(data);
+        //console.log(data);
         open.onTrue();
     }
 

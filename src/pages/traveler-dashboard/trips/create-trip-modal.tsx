@@ -75,7 +75,6 @@ export default function AddTripModal({ open, onClose }: AddTripModalProps) {
         onClose()
     }
 
-    console.log("tripType", form.getValues('tripType'))
 
     return (
         <Dialog open={open} onOpenChange={onClose}>

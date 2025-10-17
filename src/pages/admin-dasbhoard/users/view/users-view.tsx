@@ -9,12 +9,8 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import { useBoolean } from '@/hooks/use-boolean';
-import { toAbsoluteUrl } from '@/lib/helpers';
-import { selectUser } from '@/store/slices/userSlice';
-import { CircleUser, Mail, MapPin } from 'lucide-react';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { UserHero } from '../../profile/profile-hero';
+import { AdminHeroWithProfile } from '../../profile/profile-hero';
 import { UserStatusModal } from '../user-status-modal';
 import UserTableRow from '../user-table-row';
 
@@ -34,35 +30,12 @@ const UsersView = () => {
 
   const deleteModal = useBoolean();
 
-  const user = useSelector(selectUser);
-
   const [currentUser, setCurrentUser] = useState<IUsers | null>(null);
-
-  const image = (
-    <img
-      src={toAbsoluteUrl(user?.image as string || '/media/avatars/300-1.png')}
-      className="rounded-full border-3 border-green-500 size-[100px] shrink-0"
-      alt="image"
-    />
-  );
-
-  const CapitalizeRole = (role: string) => {
-    return role.charAt(0).toUpperCase() + role.slice(1).toLowerCase();
-  }
-
 
   return (
 
     <div className='md:mx-10 mx-2 my-4 flex flex-col gap-6'>
-      <UserHero
-        name={CapitalizeRole(user?.first_name as string || "Jenny") + " " + CapitalizeRole(user?.last_name as string || "Klabber")}
-        image={image}
-        info={[
-          { label: CapitalizeRole(user?.role as string || "Traveler"), icon: CircleUser },
-          { label: 'SF, Bay Area', icon: MapPin },
-          { email: user?.email as string || "jenny@kteam.com", icon: Mail },
-        ]}
-      />
+      <AdminHeroWithProfile />
       <Container>
         <Navbar />
       </Container>

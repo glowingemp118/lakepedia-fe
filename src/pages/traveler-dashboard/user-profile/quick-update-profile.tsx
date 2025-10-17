@@ -70,7 +70,7 @@ const ProfileQuickEditForm: FC<PageProps> = ({ profileData, open, onClose }) => 
 
 
     const onSubmit = (data: z.infer<typeof schema>) => {
-        console.log(data);
+        //console.log(data);
     }
 
     return (

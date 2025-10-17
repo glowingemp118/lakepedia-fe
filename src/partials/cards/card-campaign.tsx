@@ -60,11 +60,11 @@ const CardCampaign = ({
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    console.log('Favorite clicked!');
+    //console.log('Favorite clicked!');
   }
 
   const handleClick = () => {
-    console.log('Card clicked!');
+    //console.log('Card clicked!');
     if(user?.role as string==="traveler"){
 
       navigate(paths.travelerDashboard.tripDetail('1'));

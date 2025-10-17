@@ -29,7 +29,7 @@ const ProfileInfo: FC<PageProps> = ({ profileData }) => {
 
     const handleDeactivate = () => {
         show.onFalse();
-        console.log("Account Deactivated");
+        //console.log("Account Deactivated");
         
     }
 

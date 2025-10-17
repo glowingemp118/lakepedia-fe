@@ -48,7 +48,7 @@
 //   });
 
 //   const onSubmit = (data: any) => {
-//     console.log(data);
+//     //console.log(data);
 //   }
 
 //   const renderItem = (item: IChannelsItem, index: number) => {
@@ -171,7 +171,7 @@ export function Settings() {
   });
 
   const onSubmit = (data: any) => {
-    console.log("Traveler Settings:", data);
+    //console.log("Traveler Settings:", data);
   };
 
   return (

@@ -39,7 +39,7 @@ const QuickUpdateEmail: FC<PageProps> = ({ open, onClose }) => {
     
         navigate("/auth/change-email");
     
-        console.log(data);
+        //console.log(data);
     };
 
     return (

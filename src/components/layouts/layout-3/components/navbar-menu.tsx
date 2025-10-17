@@ -25,12 +25,6 @@ export function NavbarMenu() {
 
   const user = useSelector(selectUser);
 
-  const isTraveler = user?.role === "traveler";
-
-  const isAdmin = user?.role === "admin";
-
-  const isBusiness = user?.role === "business";
-
   const TravelerSidebar = TravelerMemu.map((item) => item.title === "Dashboard" ? {
     ...item,
     title: "Overview"
@@ -63,9 +57,9 @@ export function NavbarMenu() {
     navbarMenu = MENU_SIDEBAR?.[5];
   } else {
     // navbarMenu = MENU_SIDEBAR?.[3];
-    navbarMenu = isTraveler ? { ...MENU_SIDEBAR?.[3], children: TravelerSidebar } :
-      isBusiness ? { ...MENU_SIDEBAR?.[3], children: BusinessSidebar } :
-        isAdmin ? { ...MENU_SIDEBAR?.[3], children: AdminSidebar } : MENU_SIDEBAR?.[3];
+    navbarMenu = user?.role==="traveler" ? { ...MENU_SIDEBAR?.[3], children: TravelerSidebar } :
+      user?.role==="business" ? { ...MENU_SIDEBAR?.[3], children: BusinessSidebar } :
+        user?.role==="admin" ? { ...MENU_SIDEBAR?.[3], children: AdminSidebar } : MENU_SIDEBAR?.[3];
   }
 
 

@@ -24,7 +24,7 @@ const EmailPreference = () => {
     });
     const { handleSubmit } = methods;
     const onSubmit = (data: any) => {
-        console.log(data);
+        //console.log(data);
     }
     return (
         <Card>

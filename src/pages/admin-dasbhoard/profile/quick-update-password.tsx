@@ -49,7 +49,7 @@ const QuickUpdatePassword: FC<PageProps> = ({ open, onClose }) => {
     }
 
     const onSubmit = (data: any) => {
-        console.log(data);
+        //console.log(data);
     };
     return (
         <Dialog open={open} onOpenChange={handleClose}>

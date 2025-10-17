@@ -9,7 +9,7 @@ export function Main() {
   const isMobile = useIsMobile();
   const { pathname } = useLocation();
 
-  console.log(pathname);
+  //console.log(pathname);
 
   // Using the custom hook to set classes on the body
   useBodyClass(`

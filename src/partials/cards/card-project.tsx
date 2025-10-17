@@ -55,7 +55,7 @@ const CardProject = ({
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     // Handle the favorite click logic here
-    console.log('Favorite clicked!');
+    //console.log('Favorite clicked!');
   }
   return (
     <Card className="p-7.5 hover:border-blue-400 border transition-all duration-300 cursor-pointer"

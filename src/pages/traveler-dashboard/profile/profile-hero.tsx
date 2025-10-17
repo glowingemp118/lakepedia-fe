@@ -4,6 +4,7 @@ import { useTheme } from 'next-themes';
 import { Link } from 'react-router';
 import { toAbsoluteUrl } from '@/lib/helpers';
 import { Container } from '@/components/common/container';
+import withProfile from '@/utils/withprofile';
 
 export interface UserHeroInfo {
   email?: string;
@@ -18,24 +19,26 @@ export interface UserHeroProps {
 }
 
 export function UserHero({ image, name, info }: UserHeroProps) {
-  
+
   const { theme } = useTheme();
 
   const buildInfo = (info: UserHeroInfo[]) => {
     return info.map((item, index) => {
       return (
         <div className="flex gap-1.25 items-center" key={`info-${index}`}>
-          {item.icon && (
-            <item.icon size={16} className="text-muted-foreground text-sm" />
-          )}
           {item.email ? (
             <Link
-              to={item.email}
-              target="_blank"
+              to={`mailto:${item.email}`}
               className="text-secondary-foreground font-medium hover:text-primary"
-              rel="noreferrer"
             >
               {item.email}
+            </Link>
+          ) : item.label?.includes('@') ? (
+            <Link
+              to={`mailto:${item.label}`}
+              className="text-secondary-foreground font-medium hover:text-primary"
+            >
+              {item.label}
             </Link>
           ) : (
             <span className="text-secondary-foreground font-medium">
@@ -64,7 +67,7 @@ export function UserHero({ image, name, info }: UserHeroProps) {
             <div className="text-lg leading-5 font-semibold text-mono">
               {name}
             </div>
-          <BadgeCheck color='blue' size={16} />
+            <BadgeCheck color='blue' size={16} />
           </div>
           <div className="flex flex-wrap justify-center gap-1 lg:gap-4.5 text-sm">
             {buildInfo(info)}
@@ -74,3 +77,7 @@ export function UserHero({ image, name, info }: UserHeroProps) {
     </div>
   );
 }
+
+
+
+export const UserHeroWithProfile = withProfile(UserHero);

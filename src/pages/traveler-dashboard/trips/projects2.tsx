@@ -261,7 +261,7 @@ const Projects2 = () => {
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     // Handle the favorite click logic here
-    console.log('Favorite clicked!');
+    //console.log('Favorite clicked!');
   }
 
   const renderCard = (trip: TripItem,) => (

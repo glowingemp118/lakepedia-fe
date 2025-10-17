@@ -5,6 +5,7 @@ import { useTheme } from 'next-themes';
 import { ReactNode } from 'react';
 import { Link } from 'react-router';
 import { Statistics } from './statistics';
+import withProfile from '@/utils/withprofile';
 
 export interface UserHeroInfo {
   email?: string;
@@ -24,7 +25,7 @@ interface IStatisticsItem {
 type IStatisticsItems = Array<IStatisticsItem>;
 
 
-export function UserHero({ image, name, info }: UserHeroProps) {
+ function UserHero({ image, name, info }: UserHeroProps) {
 
   const items: IStatisticsItems = [
     { number: '624', label: 'Profile Views' },
@@ -95,3 +96,6 @@ export function UserHero({ image, name, info }: UserHeroProps) {
     </div>
   );
 }
+
+
+export const BusinessHeroWithProfile = withProfile(UserHero);

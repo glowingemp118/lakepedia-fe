@@ -160,18 +160,14 @@ export function SidebarMenu() {
 
   const user = useSelector(selectUser);
 
-  const isTraveler = user?.role === "traveler";
-
-  const isAdmin = user?.role === "admin";
-
-  const isBusiness = user?.role === "business";
-
-
   const items: Item[] = [
 
-    ...isTraveler ? TravelerSidebar : [],
-    ...isBusiness ? BusinessSidebar : [],
-    ...isAdmin ? AdminSidebar : []
+    ...user?.role === "traveler" ? TravelerSidebar : [],
+
+    ...user?.role==="business" ? BusinessSidebar : [],
+    
+    ...user?.role==="admin" ? AdminSidebar : []
+  
   ].map((item) => ({
     ...item,
     active: item.path === pathname

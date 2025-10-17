@@ -43,7 +43,7 @@ const SavedPOIs = () => {
 
     const handleFavoriteClick = (e: React.MouseEvent) => {
         e.stopPropagation();
-        console.log("Favorite clicked!");
+        //console.log("Favorite clicked!");
     };
 
     const renderRow = (poi: PoiItem) => (

@@ -24,12 +24,6 @@ export function HeaderLogo() {
 
     const user = useSelector(selectUser);
 
-    const isTraveler = user?.role === 'traveler';
-
-    const isBusiness=user?.role==="business";
-
-    const isAdmin = user?.role === 'admin';
-
 
   useEffect(() => {
     MENU_ROOT.forEach((item) => {
@@ -61,7 +55,7 @@ export function HeaderLogo() {
           </SheetContent>
         </Sheet>
 
-        <Link to={isAdmin ? paths.adminDashboard.root : isBusiness ? paths.businessDashboard.root : isTraveler ? paths.travelerDashboard.root : '/'} className="mx-1">
+        <Link to={user?.role==="admin" ? paths.adminDashboard.root : user?.role==="business" ? paths.businessDashboard.root : user?.role==="traveler" ? paths.travelerDashboard.root : '/'} className="mx-1">
           <img
             src={toAbsoluteUrl('/media/app/mini-logo.png')}
             className="dark:hidden md:min-h-[24px] size-10!"
@@ -78,7 +72,7 @@ export function HeaderLogo() {
       {/* Menu Section */}
       <div className="flex items-center gap-3">
         <h3 className="text-accent-foreground text-lg hidden md:block font-bold">
-          Welcome Back, {isTraveler ? 'Traveler' : isBusiness ? 'Business' : isAdmin ? 'Admin' : 'User'} 👋
+          Welcome Back, {user?.role==="traveler" ? 'Traveler' : user?.role==="business" ? 'Business' : user?.role==="admin" ? 'Admin' : 'User'} 👋
         </h3>
 
         {/* <DropdownMenu>

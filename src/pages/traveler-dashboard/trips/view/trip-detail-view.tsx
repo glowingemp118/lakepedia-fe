@@ -4,13 +4,11 @@ import { Container } from '@/components/common/container';
 import { Navbar } from '@/components/layouts/layout-3/components/navbar';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
-import { toAbsoluteUrl } from '@/lib/helpers';
-import { selectUser } from '@/store/slices/userSlice';
-import { Calendar, CircleUser, Clock, FileText, Mail, Map, MapPin } from 'lucide-react';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { Calendar, Clock, FileText, Map, MapPin } from 'lucide-react';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
-import { UserHero } from '../../profile/profile-hero';
+import { UserHeroWithProfile } from '../../profile/profile-hero';
 import TripActivity from '../trip-activity';
 import TripGroupMember from '../trip-group-member';
 import Itinerary from '../trip-itinerary';
@@ -18,42 +16,21 @@ import TripOverView from '../trip-overview';
 import TripRecommendations from '../trip-recommendations';
 import TripSummary from '../trip-summary';
 import Files from './trip-files';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
 
 export const TripDetailView = () => {
 
     const { id } = useParams();
 
-    const user = useSelector(selectUser);
-
     const trip = sampleTripData;
 
     const [activeTab, setActiveTab] = useState<'overview' | 'itinerary' | 'files' | 'activity' | "recommendations">('overview');
 
-    const image = (
-        <img
-            src={toAbsoluteUrl('/media/avatars/300-1.png')}
-            className="rounded-full border-3 border-green-500 size-[100px] shrink-0"
-            alt="user"
-        />
-    );
-
-    const CapitalizeRole = (role: string) =>
-        role ? role.charAt(0).toUpperCase() + role.slice(1) : 'Traveler';
 
     return (
         <div className="md:mx-10 mx-2 my-4 flex flex-col gap-6">
             {/* Hero Section */}
-            <UserHero
-                name={user?.name as string || 'Jenny Klabber'}
-                image={image}
-                info={[
-                    { label: CapitalizeRole(user?.role as string || 'Traveler'), icon: CircleUser },
-                    { label: 'SF, Bay Area', icon: MapPin },
-                    { label: user?.email as string || 'jenny@kteam.com', icon: Mail },
-                ]}
-            />
+            <UserHeroWithProfile/>
 
             <Container>
                 <Navbar />

@@ -54,7 +54,7 @@ const CreateLakePage = ({ lake }: PageProps) => {
     });
 
     const onSubmit = (data: any) => {
-        console.log(data);
+        //console.log(data);
     }
     const onDrop = useCallback(
         (acceptedFiles: File[]) => {

@@ -27,7 +27,7 @@ const Promotions: FC<PageProps> = () => {
     });
 
     const onSubmit = (data: z.infer<typeof schema>) => {
-        console.log(data);
+        //console.log(data);
     }
     return (
         <Card >

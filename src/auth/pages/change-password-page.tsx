@@ -50,7 +50,7 @@ export function ChangePasswordPage() {
     // const { data: authListener } = supabase.auth.onAuthStateChange((event) => {
     //   if (event === 'PASSWORD_RECOVERY') {
     //     // Token is valid and has been processed by Supabase
-    //     console.log('Password recovery mode activated');
+    //     //console.log('Password recovery mode activated');
     //     setTokenValid(true);
     //     setSuccessMessage('You can now set your new password');
     //   }
@@ -70,7 +70,7 @@ export function ChangePasswordPage() {
       hashParams.get('token_hash');
 
     if (hashToken && !token) {
-      console.log('Found token in URL hash fragment:', hashToken);
+      //console.log('Found token in URL hash fragment:', hashToken);
       // Optionally, you could update the state or reload the page with the token as a query param
     }
   }, [token]);
@@ -87,7 +87,7 @@ export function ChangePasswordPage() {
     try {
       setIsProcessing(true);
       setError(null);
-      console.log('Submitting new password with token:', token,values);
+      //console.log('Submitting new password with token:', token,values);
       
       // Use Supabase's updateUser method directly
       // The token is already processed by the onAuthStateChange handler

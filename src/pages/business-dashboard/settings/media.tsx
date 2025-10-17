@@ -48,7 +48,7 @@ const MediaInformation: FC<PageProps> = ({ profileData }) => {
 
 
     const onSubmit = (data: z.infer<typeof schema>) => {
-        console.log(data);
+        //console.log(data);
     }
 
     const handleDrop = (acceptedFiles: File[]) => {

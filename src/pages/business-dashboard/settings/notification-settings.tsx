@@ -50,7 +50,7 @@ export function Settings() {
   });
 
   const onSubmit = (data: any) => {
-    console.log('Business Settings:', data);
+    //console.log('Business Settings:', data);
   };
 
   return (
