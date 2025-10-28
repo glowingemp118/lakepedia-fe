@@ -46,6 +46,9 @@ export function SignInPage() {
 
   const { loginWithRedirect, user, isAuthenticated } = useAuth0();
 
+  console.log("Auth0 User:", user);
+  console.log("Is Authenticated:", isAuthenticated);
+
 
   useEffect(() => {
 
@@ -58,15 +61,15 @@ export function SignInPage() {
     }
   }, []);
 
-  useEffect(() => {
-    if (currentTab) {
+  // useEffect(() => {
+  //   if (currentTab) {
       
-      const pathname = currentTab === "business" ? "/auth/signin/business" : "/auth/signin/traveler";
+  //     const pathname = currentTab === "business" ? "/auth/signin/business" : "/auth/signin/traveler";
 
-      navigate(pathname, { replace: true });
+  //     navigate(pathname, { replace: true });
      
-    }
-  }, [currentTab, navigate]);
+  //   }
+  // }, [currentTab, navigate]);
 
 
   useEffect(() => {
@@ -290,7 +293,7 @@ export function SignInPage() {
             loginWithRedirect({
               authorizationParams: {
                 connection: "google-oauth2",
-                redirect_uri: "http://localhost:5173/auth/signin/traveler",
+                redirect_uri: "http://localhost:5173/auth/signin",
               }
             })
           }}
@@ -316,7 +319,7 @@ export function SignInPage() {
             loginWithRedirect({
               authorizationParams: {
                 connection: "facebook",
-                redirect_uri: "http://localhost:5173/auth/signin/traveler",
+                redirect_uri: "http://localhost:5173/auth/signin",
               }
             })
           }}

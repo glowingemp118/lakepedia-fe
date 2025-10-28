@@ -3,26 +3,41 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { FC, useEffect, useMemo } from 'react';
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-const defaultValues = {
-    accountActivity: true,
-    forgotPassword: false,
-    changePassword: true,
-}
 
-const EmailPreference = () => {
+
+interface PageProps {
+    emailPreferences: {
+        activities_email: boolean;
+        password_email: boolean;
+    }
+}
+const EmailPreference: FC<PageProps> = ({ emailPreferences }) => {
+
+    const defaultValues = useMemo(() => ({
+        activities_email: emailPreferences?.activities_email || false,
+        password_email: emailPreferences?.password_email || false,
+    }), [emailPreferences]);
+
     const schema = z.object({
-        accountActivity: z.boolean(),
-        forgotPassword: z.boolean(),
-        changePassword: z.boolean(),
+        activities_email: z.boolean(),
+        password_email: z.boolean(),
     });
+
     const methods = useForm({
         resolver: zodResolver(schema),
         defaultValues
     });
+
     const { handleSubmit } = methods;
+
+    useEffect(() => {
+        methods.reset(defaultValues);
+    }, [defaultValues]);
+
     const onSubmit = (data: any) => {
         //console.log(data);
     }
@@ -35,11 +50,10 @@ const EmailPreference = () => {
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <CardContent className='flex flex-col gap-4'>
 
-                        <RhfCheckbox name="accountActivity" label="Email me about account activity" />
+                        <RhfCheckbox name="activities_email" label="Email me about account activity" />
 
-                        <RhfCheckbox name="forgotPassword" label="Email me if I request a password reset" />
+                        <RhfCheckbox name="password_email" label="Email me if I request a password reset" />
 
-                        <RhfCheckbox name="changePassword" label="Email me when my password is updated" />
                     </CardContent>
                     <CardFooter className="flex justify-end gap-2">
                         <Button variant={"outline"} size="lg">Discard</Button>

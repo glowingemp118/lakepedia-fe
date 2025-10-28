@@ -124,47 +124,88 @@ import { Bell, Shield } from 'lucide-react';
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import RhfSwitch from '@/components/rhf/rhf-switch';
+import { FC, useMemo } from 'react';
 
-// ✅ Schema for validation
 const schema = z.object({
-  profileVisibility: z.boolean(),
-  showLocation: z.boolean(),
-  showPastActivity: z.boolean(),
-  allowMessages: z.boolean(),
-  shareFavoriteLakes: z.boolean(),
-  shareTrips: z.boolean(),
-  displaySocialLinks: z.boolean(),
+  // profileVisibility: z.boolean(),
+  // showLocation: z.boolean(),
+  // showPastActivity: z.boolean(),
+  // allowMessages: z.boolean(),
+  // shareFavoriteLakes: z.boolean(),
+  // shareTrips: z.boolean(),
+  // displaySocialLinks: z.boolean(),
 
-  postReply: z.boolean(),
-  commentReply: z.boolean(),
-  lakeReviewed: z.boolean(),
-  directMessage: z.boolean(),
-  newPhoto: z.boolean(),
-  tripSuggestions: z.boolean(),
-  platformAnnouncements: z.boolean(),
-  mentions: z.boolean(),
+  // postReply: z.boolean(),
+  // commentReply: z.boolean(),
+  // lakeReviewed: z.boolean(),
+  // directMessage: z.boolean(),
+  // newPhoto: z.boolean(),
+  // tripSuggestions: z.boolean(),
+  // platformAnnouncements: z.boolean(),
+  // mentions: z.boolean(),
+  profile_public: z.boolean(),
+  show_location: z.boolean(),
+  share_trips: z.boolean(),
+  notify_announcements: z.boolean(),
+  notify_replies: z.boolean(),
+  notify_messages: z.boolean(),
 });
+//  privacy:{
+//             profile_public:profileData?.user?.privacy?.profile_public,
+//             share_trips:profileData?.user?.privacy?.share_trips,
+//             show_location:profileData?.user?.privacy?.show_location
+//         },
+//         notifications:{
+//             notify_announcements:profileData?.user?.notifications?.notify_announcements,
+//             notify_replies:profileData?.user?.notifications?.notify_replies,
+//             notify_messages:profileData?.user?.notifications?.notify_messages,
+//         }
 
-const defaultValues = {
-  profileVisibility: true,
-  showLocation: true,
-  showPastActivity: true,
-  allowMessages: true,
-  shareFavoriteLakes: false,
-  shareTrips: true,
-  displaySocialLinks: true,
+// const defaultValues = {
+//   profileVisibility: true,
+//   showLocation: true,
+//   showPastActivity: true,
+//   allowMessages: true,
+//   shareFavoriteLakes: false,
+//   shareTrips: true,
+//   displaySocialLinks: true,
 
-  postReply: true,
-  commentReply: true,
-  lakeReviewed: true,
-  directMessage: true,
-  newPhoto: true,
-  tripSuggestions: true,
-  platformAnnouncements: true,
-  mentions: true,
-};
+//   postReply: true,
+//   commentReply: true,
+//   lakeReviewed: true,
+//   directMessage: true,
+//   newPhoto: true,
+//   tripSuggestions: true,
+//   platformAnnouncements: true,
+//   mentions: true,
+// };
 
-export function Settings() {
+interface PageProps {
+  travelerSettings: {
+    privacy: {
+      profile_public: boolean;
+      show_location: boolean;
+      share_trips: boolean;
+    };
+    notifications: {
+      notify_announcements: boolean;
+      notify_replies: boolean;
+      notify_messages: boolean;
+    };
+  };
+}
+
+const Settings: FC<PageProps> = ({ travelerSettings }) => {
+
+
+  const defaultValues = useMemo(() => ({
+    profile_public: travelerSettings?.privacy?.profile_public || false,
+    show_location: travelerSettings?.privacy?.show_location || false,
+    share_trips: travelerSettings?.privacy?.share_trips || false,
+    notify_announcements: travelerSettings?.notifications?.notify_announcements || false,
+    notify_replies: travelerSettings?.notifications?.notify_replies || false,
+    notify_messages: travelerSettings?.notifications?.notify_messages || false,
+  }), [travelerSettings]);
   const methods = useForm({
     resolver: zodResolver(schema),
     defaultValues,
@@ -201,35 +242,35 @@ export function Settings() {
             </div>
 
             <div className="grid grid-cols-1 gap-4 mt-3">
-             
-              <RhfSwitch name="profileVisibility" label="Profile visibility"  className='flex flex-row justify-between'
-               description="Whether the profile is public (can be found and browsed)"
+
+              <RhfSwitch name="profile_public" label="Profile visibility" className='flex flex-row justify-between'
+                description="Whether the profile is public (can be found and browsed)"
               />
-             
-              <RhfSwitch name="showLocation" label="Show location" className='flex flex-row justify-between'
-              description='Whether city/country is visible to others'
+
+              <RhfSwitch name="show_location" label="Show location" className='flex flex-row justify-between'
+                description='Whether city/country is visible to others'
               />
-             
-              <RhfSwitch name="showPastActivity" label="Show past activity" className='flex !flex-row justify-between'
-              description="Whether others can view posts, reviews, photos, etc."
+
+              {/* <RhfSwitch name="show_past_activity" label="Show past activity" className='flex !flex-row justify-between'
+                description="Whether others can view posts, reviews, photos, etc."
+              /> */}
+
+              {/* <RhfSwitch name="allow_messages" label="Allow messages" className='flex flex-row justify-between'
+                description="Can other users contact you?"
+              /> */}
+
+              {/* <RhfSwitch name="share_favorite_lakes" label="Share favorite lakes" className='flex flex-row justify-between'
+                description="Can others see the lakes you liked/saved"
+              /> */}
+
+              <RhfSwitch name="share_trips" label="Share trips" className='flex flex-row justify-between'
+                description='Can others see the trips you created'
               />
-             
-              <RhfSwitch name="allowMessages" label="Allow messages" className='flex flex-row justify-between'
-               description="Can other users contact you?"
-              />
-             
-              <RhfSwitch name="shareFavoriteLakes" label="Share favorite lakes" className='flex flex-row justify-between'
-               description="Can others see the lakes you liked/saved"
-              />
-             
-              <RhfSwitch name="shareTrips" label="Share trips" className='flex flex-row justify-between'
-              description='Can others see the trips you created'
-              />
-             
-              <RhfSwitch name="displaySocialLinks" label="Display social links" className='flex flex-row justify-between'
-              description='Can others see the trips you created'
-              />
-           
+
+              {/* <RhfSwitch name="display_social_links" label="Display social links" className='flex flex-row justify-between'
+                description='Can others see the trips you created'
+              /> */}
+
             </div>
           </CardContent>
 
@@ -252,37 +293,37 @@ export function Settings() {
 
             <div className="grid grid-cols-1 gap-4 mt-3">
 
-              <RhfSwitch name="postReply" label="Post reply"  className='flex flex-row justify-between'
-              description="Someone replies to user's post (review, photos)"
+              <RhfSwitch name="notify_replies" label="Post reply" className='flex flex-row justify-between'
+                description="Someone replies to user's post (review, photos)"
               />
-              
-              <RhfSwitch name="commentReply" label="Comment reply" className='flex flex-row justify-between'
-              description="Someone replies to user's comment"
+
+              {/* <RhfSwitch name="commentReply" label="Comment reply" className='flex flex-row justify-between'
+                description="Someone replies to user's comment"
               />
-              
+
               <RhfSwitch name="lakeReviewed" label="Lake reviewed" className='flex flex-row justify-between'
-              description='A new review is posted for a lake the user follows/liked'
+                description='A new review is posted for a lake the user follows/liked'
+              /> */}
+
+              <RhfSwitch name="notify_messages" label="Direct message received" className='flex flex-row justify-between'
+                description="Another user sends a message"
               />
-              
-              <RhfSwitch name="directMessage" label="Direct message received" className='flex flex-row justify-between'
-              description="Another user sends a message"
+
+              {/* <RhfSwitch name="newPhoto" label="New photo on followed lake" className='flex flex-row justify-between'
+                description="Someone adds a photo to a followed lake"
               />
-              
-              <RhfSwitch name="newPhoto" label="New photo on followed lake" className='flex flex-row justify-between'
-              description="Someone adds a photo to a followed lake"
-              />
-              
+
               <RhfSwitch name="tripSuggestions" label="Trip suggestions near favorite lake" className='flex flex-row justify-between'
-              description='System detects new trip ideas or POIs nearby'
+                description='System detects new trip ideas or POIs nearby'
+              /> */}
+
+              <RhfSwitch name="notify_announcements" label="Platform announcements" className='flex flex-row justify-between'
+                description='Admin-level messages (e.g. new features, policy updates)'
               />
-              
-              <RhfSwitch name="platformAnnouncements" label="Platform announcements" className='flex flex-row justify-between'
-              description='Admin-level messages (e.g. new features, policy updates)'
-              />
-              
-              <RhfSwitch name="mentions" label="Mentions" className='flex flex-row justify-between'
-              description='Someone mentions you in a post/comment'
-              />
+
+              {/* <RhfSwitch name="mentions" label="Mentions" className='flex flex-row justify-between'
+                description='Someone mentions you in a post/comment'
+              /> */}
             </div>
           </CardContent>
 
@@ -295,3 +336,6 @@ export function Settings() {
     </Card>
   );
 }
+
+
+export { Settings };

@@ -77,7 +77,7 @@ const PersonalInfo: FC<PageProps> = ({ user }) => {
                   to="#"
                   className="text-foreground font-normal text-sm hover:text-primary-active"
                 >
-                  jasontt@studio.co
+                  {user.email || 'Unknown'}
                 </Link>
               </TableCell>
               <TableCell className="py-2 max-w-16 text-center">
@@ -90,7 +90,7 @@ const PersonalInfo: FC<PageProps> = ({ user }) => {
                 UsState
               </TableCell>
               <TableCell className="py-3 text-secondary-foreground text-sm font-normal">
-                {user?.us_state || ''}
+                {user?.state || ''}
               </TableCell>
               <TableCell className="py-3 text-center">
                 -

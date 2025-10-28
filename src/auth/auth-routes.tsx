@@ -22,13 +22,13 @@ export const authRoutes: RouteObject[] = [
     element: <BrandedLayout />,
     children: [
       {
-        path: 'signin/traveler',
+        path: 'signin',
         element: <SignInPage />,
       },
-      {
-        path: 'signin/business',
-        element: <SignInPage />,
-      },
+      // {
+      //   path: 'signin/business',
+      //   element: <SignInPage />,
+      // },
       {
         path: 'super-admin/signin',
         element: <AdminSignInPage />,

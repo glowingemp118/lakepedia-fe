@@ -4,14 +4,23 @@ import { useBoolean } from '@/hooks/use-boolean';
 import { toAbsoluteUrl } from '@/lib/helpers';
 import { Link } from 'react-router';
 import QuickUpdatePassword from '../quick-update-password';
+import { Mail } from 'lucide-react';
 
 interface IBasicSettingsProps {
   title: string;
+  basicSettings: {
+    lastEmailLogin: string;
+    signInWith: string;
+    privacySettings: string;
+    notificationSettings: string;
+    last_login_with: string;
+  }
 }
 
-const BasicSettings = ({ title }: IBasicSettingsProps) => {
-   
-  const open=useBoolean();
+const BasicSettings = ({ title, basicSettings }: IBasicSettingsProps) => {
+
+  const open = useBoolean();
+
 
   return (
     <Card className="min-w-full">
@@ -22,20 +31,20 @@ const BasicSettings = ({ title }: IBasicSettingsProps) => {
       <CardContent className="kt-scrollable-x-auto pb-3 p-0">
         <Table className="align-middle text-sm text-muted-foreground">
           <TableBody>
-           
+
             <TableRow>
               <TableCell className="py-2 text-secondary-foreground font-normal">
-                Password
+                Last email login
               </TableCell>
               <TableCell className="py-2 text-secondary-foreground font-normal">
-                Password last changed 2 months ago
+                {basicSettings.lastEmailLogin}
               </TableCell>
               <TableCell className="py-2 text-end">
-               
+
                 -
               </TableCell>
             </TableRow>
-            <TableRow>
+            {/* <TableRow>
               <TableCell className="py-3.5text-secondary-foreground font-normal">
                 2FA
               </TableCell>
@@ -46,14 +55,14 @@ const BasicSettings = ({ title }: IBasicSettingsProps) => {
                 
                 -
               </TableCell>
-            </TableRow>
+            </TableRow> */}
             <TableRow>
               <TableCell className="py-2text-secondary-foreground font-normal">
                 Sign-in with
               </TableCell>
               <TableCell className="py-0.5">
                 <div className="flex items-center gap-2.5">
-                  <Link
+                  {basicSettings.last_login_with === "google" && <Link
                     to="#"
                     className="flex items-center justify-center size-8 bg-background rounded-full border border-input"
                   >
@@ -62,8 +71,8 @@ const BasicSettings = ({ title }: IBasicSettingsProps) => {
                       className="size-4"
                       alt=""
                     />
-                  </Link>
-                  <Link
+                  </Link>}
+                  {basicSettings.last_login_with=== "facebook" && <Link
                     to="#"
                     className="flex items-center justify-center size-8 bg-background rounded-full border border-input"
                   >
@@ -72,11 +81,12 @@ const BasicSettings = ({ title }: IBasicSettingsProps) => {
                       className="size-4"
                       alt=""
                     />
-                  </Link>
+                  </Link>}
+                  {basicSettings.last_login_with === "email" && <Mail />}
                 </div>
               </TableCell>
               <TableCell className="py-2 text-end">
-              
+
                 -
               </TableCell>
             </TableRow>
@@ -88,7 +98,7 @@ const BasicSettings = ({ title }: IBasicSettingsProps) => {
                 Public
               </TableCell>
               <TableCell className="py-2 text-end">
-             
+
                 -
               </TableCell>
             </TableRow>
@@ -105,7 +115,7 @@ const BasicSettings = ({ title }: IBasicSettingsProps) => {
                 </div>
               </TableCell>
               <TableCell className="py-2 text-end">
-              
+
                 -
               </TableCell>
             </TableRow>
