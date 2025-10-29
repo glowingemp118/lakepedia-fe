@@ -8,7 +8,9 @@ import { Sidebar } from './sidebar';
 import { Toolbar, ToolbarActions, ToolbarHeading } from './toolbar';
 
 export function Main() {
+
   const { pathname } = useLocation();
+  
   const isMobileMode = useIsMobile();
 
   useBodyClass(`

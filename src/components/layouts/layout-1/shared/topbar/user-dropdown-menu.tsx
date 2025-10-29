@@ -86,7 +86,7 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
           <div className="flex items-center gap-2">
             <img
               className="size-9 rounded-full border-2 border-green-500"
-              src={user?.image as string || toAbsoluteUrl('/media/avatars/300-2.png')}
+              src={user?.image?.url as string || toAbsoluteUrl('/media/avatars/300-2.png') }
               alt="User avatar"
             />
             <div className="flex flex-col">

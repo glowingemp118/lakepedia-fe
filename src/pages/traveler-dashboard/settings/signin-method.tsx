@@ -4,16 +4,20 @@ import { FC } from 'react'
 import QuickUpdatePassword from '../user-profile/quick-update-password';
 import { useBoolean } from '@/hooks/use-boolean';
 import QuickUpdateEmail from '../user-profile/quick-update-email';
+import { useSelector } from 'react-redux';
+import { selectUser } from '@/store/slices/userSlice';
 
 interface PageProps {
     email?: string;
 }
 const SignInMethod: FC<PageProps> = ({ email }) => {
-    
+
     const open = useBoolean();
 
-    const emailModal= useBoolean();
-    
+    const emailModal = useBoolean();
+
+    const user = useSelector(selectUser);
+
     return (
         <Card>
             <CardHeader>
@@ -36,10 +40,10 @@ const SignInMethod: FC<PageProps> = ({ email }) => {
                 </div>
             </CardContent>
 
-            <QuickUpdateEmail open={emailModal.value} onClose={emailModal.onFalse} />
-            
+            <QuickUpdateEmail email={email || user?.email as string} open={emailModal.value} onClose={emailModal.onFalse} />
+
             <QuickUpdatePassword open={open.value} onClose={open.onFalse} />
-        
+
         </Card>
     )
 }

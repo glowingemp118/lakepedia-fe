@@ -3,10 +3,15 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
 import { AvatarInput } from '@/partials/common/avatar-input';
+import { useUploadFileMutation } from '@/store/Reducer/file';
 import { useUpdateProfileMutation } from '@/store/Reducer/users';
+import { selectUser, setToken, setUser } from '@/store/slices/userSlice';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { LoaderCircleIcon } from 'lucide-react';
 import { FC, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import z from 'zod';
 
 interface PageProps {
@@ -35,7 +40,12 @@ const BasicDetails: FC<PageProps> = ({ profileData }) => {
 
     }), [profileData]);
 
-    const [updateProfile,{isLoading}] = useUpdateProfileMutation();
+    const dispatch = useDispatch();
+
+    const [updateProfile] = useUpdateProfileMutation();
+
+    const [uploadFile] = useUploadFileMutation();
+
 
     const schema = z.object({
         photo: z.any().nullable().optional(),
@@ -57,8 +67,36 @@ const BasicDetails: FC<PageProps> = ({ profileData }) => {
     }, [defaultValues])
 
 
-    const onSubmit = (data: z.infer<typeof schema>) => {
-        //console.log(data);
+    const onSubmit = async(data: z.infer<typeof schema>) => {
+
+        let image="";
+
+        console.log("Submitted Data: ", data);
+
+        // if (data.photo && typeof data.photo !== 'string') {
+        //     const uploadResponse: any = await uploadFile(data.photo);
+        //     console.log("Upload Response: ", uploadResponse);
+        //     // image = uploadResponse?.data?.id;
+        // }
+
+        const profile = {
+            first_name: data.firstName,
+            last_name: data.lastName,
+            country: data.country,
+            state: data.usState,
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            key: "profile"
+        }
+        let response: any =await  updateProfile(profile);
+
+        if (!response?.error) {
+            toast.success("Profile updated successfully");
+
+            dispatch(setUser({
+                ...response?.data?.data?.user,  
+            }));
+
+        }
     }
 
     return (
@@ -112,7 +150,11 @@ const BasicDetails: FC<PageProps> = ({ profileData }) => {
                         </div>
                         <div className='flex justify-end items-center gap-2'>
                             <Button variant={"outline"} size="lg">Discard</Button>
-                            <Button type='submit' variant={"primary"} size="lg">Save Changes</Button>
+                            <Button type='submit' variant={"primary"} size="lg" disabled={methods.formState.isSubmitting}>{methods.formState.isSubmitting ? (
+                                <span className="flex items-center gap-2">
+                                    <LoaderCircleIcon className="h-4 w-4 animate-spin" /> Loading...
+                                </span>
+                            ) : ("Save Changes")}</Button>
                         </div>
                     </form>
                 </Form>

@@ -26,7 +26,7 @@ export const RequireAuth: FC<RequireAuthProps> = ({ role }) => {
   if (!user || (role && user.role !== role)) {
     return (
       <Navigate
-        to={`/auth/${role === "admin" ? "/super-admin/signin" : ""}signin/traveler`}
+        to={`/auth/${role === "admin" ? "/super-admin/signin" : ""}signin?user=${role || "traveler"}`}
         replace
       />
     );

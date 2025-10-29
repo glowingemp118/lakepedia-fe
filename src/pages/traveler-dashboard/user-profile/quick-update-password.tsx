@@ -3,10 +3,12 @@ import DialogContent, { Dialog, DialogClose, DialogFooter, DialogHeader, DialogT
 import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useBoolean } from '@/hooks/use-boolean';
+import { useUpdateProfileMutation } from '@/store/Reducer/users';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, LoaderCircleIcon } from 'lucide-react';
 import { FC } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import * as z from 'zod';
 
 const defaultValues = {
@@ -22,20 +24,19 @@ const QuickUpdatePassword: FC<PageProps> = ({ open, onClose }) => {
 
     const show = useBoolean();
 
+    const [updateProfile] = useUpdateProfileMutation();
+
     const schema = z
         .object({
             currentPassword: z.string().min(6, "Current password must be at least 6 characters").max(100),
             password: z.string().min(6, "New password must be at least 6 characters").max(100),
-            confirmPassword: z.string().min(6, "Confirm password must be at least 6 characters").max(100),
+            confirmPassword: z.string().min(6, "Confirm password must be at least 6 characters").max(100)
         })
         .refine((data) => data.password === data.confirmPassword, {
-            path: ["confirmPassword"], 
+            path: ["confirmPassword"],
             message: "Passwords do not match",
         })
-        .refine((data) => data.password !== data.currentPassword, {
-            path: ["password"], // attach error to new password field
-            message: "New password must be different from current password",
-        });
+        
 
     const form = useForm({
         resolver: zodResolver(schema),
@@ -43,14 +44,24 @@ const QuickUpdatePassword: FC<PageProps> = ({ open, onClose }) => {
     });
     const { handleSubmit } = form;
 
-    const handleClose=()=>{
+    const handleClose = () => {
         form.reset();
         onClose();
     }
 
-    const onSubmit = (data: any) => {
-        //console.log(data);
-    };
+    const onSubmit = async (data: any) => {
+        const profile = {
+            old_password: data.currentPassword,
+            new_password: data.password,
+            key: "password"
+        };
+        let response = await updateProfile(profile);
+        if (!response?.error) {
+            toast.success("Password updated successfully");
+            handleClose();
+        }
+    }
+
     return (
         <Dialog open={open} onOpenChange={handleClose}>
             <DialogContent>
@@ -159,7 +170,13 @@ const QuickUpdatePassword: FC<PageProps> = ({ open, onClose }) => {
                             <DialogClose asChild>
                                 <Button variant="outline" onClick={handleClose}>Cancel</Button>
                             </DialogClose>
-                            <Button type="submit">Save changes</Button>
+                            <Button type="submit"
+                                disabled={form.formState.isSubmitting}
+                            >{form.formState.isSubmitting ? (
+                                <span className="flex items-center gap-2">
+                                    <LoaderCircleIcon className="h-4 w-4 animate-spin" /> Loading...
+                                </span>
+                            ) : ("Save Changes")}</Button>
                         </DialogFooter>
                     </form>
                 </Form>

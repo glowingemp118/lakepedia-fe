@@ -2,20 +2,18 @@ import RHFTextField from '@/components/rhf/rhf-textfield';
 import { Alert, AlertIcon, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
+  Form
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useBoolean } from '@/hooks/use-boolean';
-import { useResetPasswordMutation } from '@/store/Reducer/auth';
+import { useUpdateProfileMutation } from '@/store/Reducer/users';
+import { logout } from '@/store/slices/userSlice';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AlertCircle, Check, Eye, EyeOff, LoaderCircleIcon, MoveLeft } from 'lucide-react';
+import { AlertCircle, Check, LoaderCircleIcon, MoveLeft } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import * as Z from 'zod';
 
 
@@ -25,9 +23,9 @@ export function ChangeEmailPage() {
 
   const navigate = useNavigate();
 
-  const show = useBoolean();
-
   const [error, setError] = useState<string | null>(null);
+
+  const dispatch = useDispatch();
 
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -35,11 +33,13 @@ export function ChangeEmailPage() {
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  const [resetPassword] = useResetPasswordMutation();
+  const [updateProfile] = useUpdateProfileMutation();
 
-  const schema=Z.object({
-    otp:Z.string().regex(/^\d{6}$/,"OTP must be exactly 6 digits"),
-    email:Z.string().email("Invalid email address")
+
+
+  const schema = Z.object({
+    otp: Z.string().regex(/^\d{6}$/, "OTP must be exactly 6 digits"),
+    email: Z.string().email("Invalid email address")
   })
 
   const form = useForm({
@@ -50,10 +50,10 @@ export function ChangeEmailPage() {
     },
   });
 
-  const {formState:{errors}}=form;
+  const { formState: { errors } } = form;
 
 
- const email = (state as { email: string })?.email || "";
+  const email = (state as { email: string })?.email || "";
 
   const handleInputChange = (index: number, value: string) => {
     if (!/^\d?$/.test(value)) return;
@@ -62,7 +62,6 @@ export function ChangeEmailPage() {
     updatedInputs[index] = value;
     setCodeInputs(updatedInputs);
 
-    // keep hidden input in sync with RHF
     form.setValue("otp", updatedInputs.join(""));
 
     if (value && index < 5) {
@@ -89,17 +88,17 @@ export function ChangeEmailPage() {
     try {
       setError(null);
 
-      // let response = await resetPassword({
-      //   otp: codeInputs.join(""),
-      //   email,
-      // });
-      const response={
-        error:false
-      }
+      let response = await updateProfile({
+        otp: codeInputs.join(""),
+        email:values.email,
+        key: "email"
+      });
+
 
       if (!response?.error) {
-        // toast.success("Password reset successfully");
-        navigate('/auth/signin/traveler');
+        toast.success("Email changed successfully");
+        navigate('/auth/signin?user=traveler');
+        dispatch(logout());
       }
 
 
@@ -171,7 +170,7 @@ export function ChangeEmailPage() {
               <p className="text-red-400 text-sm ">{errors.otp.message}</p>
             )}
 
-           <RHFTextField name="email" label="New Email" placeholder="Enter your new email" />
+            <RHFTextField name="email" label="New Email" placeholder="Enter your new email" />
 
             <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
               {form.formState.isSubmitting ? (

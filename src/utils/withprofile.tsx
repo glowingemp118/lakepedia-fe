@@ -16,7 +16,7 @@ const withProfile = <P extends object>(Component: ComponentType<P & UserHeroProp
 
         const image = (
             <img
-                src={toAbsoluteUrl(user?.image as string || '/media/avatars/300-1.png')}
+                src={toAbsoluteUrl(user?.image?.url as string || '/media/avatars/300-1.png')}
                 className="rounded-full border-3 border-green-500 size-[100px] shrink-0"
                 alt="image"
             />
@@ -34,7 +34,7 @@ const withProfile = <P extends object>(Component: ComponentType<P & UserHeroProp
 
             info={[
                 { label: CapitalizeRole(user?.role as string || "Traveler"), icon: CircleUser },
-                { label: 'SF, Bay Area', icon: MapPin },
+                { label: CapitalizeRole(`${user?.country} ${user?.state}`|| "Unknown"), icon: MapPin },
                 { email: user?.email as string || "jenny@kteam.com", icon: Mail },
             ]}
             {...props}

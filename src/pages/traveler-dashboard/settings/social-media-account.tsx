@@ -2,9 +2,12 @@ import RHFTextField from '@/components/rhf/rhf-textfield'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Form } from '@/components/ui/form'
+import { useUpdateProfileMutation } from '@/store/Reducer/users'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { LoaderCircleIcon } from 'lucide-react'
 import { FC, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import z from 'zod'
 
 interface PageProps {
@@ -28,6 +31,10 @@ const SocialMediaAccount: FC<PageProps> = ({ profileData }) => {
     youtube: profileData?.youtube as string || '',
   }), [profileData])
 
+
+
+  const [updateProfile] = useUpdateProfileMutation();
+
   const schema = z.object({
     website: z.string().url('Invalid URL').optional(),
     facebook: z.string().url('Invalid URL').optional(),
@@ -47,8 +54,18 @@ const SocialMediaAccount: FC<PageProps> = ({ profileData }) => {
     methods.reset(defaultValues);
   }, [defaultValues])
 
-  const onSubmit = (data: z.infer<typeof schema>) => {
-    //console.log(data);
+  const onSubmit = async (data: z.infer<typeof schema>) => {
+    const accountProfile = {
+      website: data.website,
+      facebook: data.facebook,
+      instagram: data.instagram,
+      youtube: data.youtube,
+      key: "accounts"
+    }
+    let response: any = await updateProfile(accountProfile);
+    if (!response.error) {
+      toast.success("Social media accounts updated successfully");
+    }
   }
 
 
@@ -93,7 +110,15 @@ const SocialMediaAccount: FC<PageProps> = ({ profileData }) => {
             </div>
             <div className='flex justify-end items-center gap-2'>
               <Button variant={"outline"} size="lg">Discard</Button>
-              <Button type='submit' variant={"primary"} size="lg">Save Changes</Button>
+              <Button type='submit' variant={"primary"} size="lg"
+                disabled={methods.formState.isSubmitting}
+              >
+                {methods.formState.isSubmitting ? (
+                  <span className="flex items-center gap-2">
+                    <LoaderCircleIcon className="h-4 w-4 animate-spin" /> Loading...
+                  </span>
+                ) : ("Save Changes")}
+              </Button>
             </div>
           </form>
         </Form>

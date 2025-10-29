@@ -4,20 +4,27 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Form } from "@/components/ui/form"
 import { useBoolean } from "@/hooks/use-boolean"
+import { useUpdateProfileMutation } from "@/store/Reducer/users"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { OctagonAlert } from "lucide-react"
 import { useForm } from "react-hook-form"
+import { useNavigate } from "react-router"
+import { toast } from "sonner"
 import * as z from "zod"
 
 const DeactiveCard = () => {
 
     const open = useBoolean();
 
+    const navigate = useNavigate();
+
     const schema = z.object({
         confirm: z.boolean().refine((val) => val === true, {
             message: "You must confirm to deactivate your account"
         })
     })
+
+    const [updateProfile] = useUpdateProfileMutation();
 
     const methods = useForm({
         resolver: zodResolver(schema)
@@ -26,9 +33,17 @@ const DeactiveCard = () => {
         handleSubmit,
     } = methods;
 
-    const onSubmit = (data: any) => {
-        //console.log(data);
-        open.onTrue();
+    const onSubmit = async (data: any) => {
+        const settings = {
+            key: "status",
+            status: "inactive"
+        }
+        const response = await updateProfile(settings);
+        if (!response.error) {
+            toast.success("Account deactivated successfully");
+            open.onTrue();
+            navigate('/auth/signin?user=traveler');
+        }
     }
 
     return (

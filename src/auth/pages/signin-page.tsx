@@ -46,9 +46,6 @@ export function SignInPage() {
 
   const { loginWithRedirect, user, isAuthenticated } = useAuth0();
 
-  console.log("Auth0 User:", user);
-  console.log("Is Authenticated:", isAuthenticated);
-
 
   useEffect(() => {
 
@@ -134,9 +131,6 @@ export function SignInPage() {
   }, [user, isAuthenticated, dispatch, navigate]);
 
 
-
-
-
   useEffect(() => {
 
     const pwdReset = searchParams.get('pwd_reset');
@@ -220,12 +214,13 @@ export function SignInPage() {
           password: values.password
         })) : localStorage.removeItem("rememberMe");
 
-
         dispatch(setUser(response?.data?.data?.user));
 
         dispatch(setToken(response?.data?.data?.token));
+        
 
         const nextPath = searchParams.get('next') || (response?.data?.data?.user?.role === 'traveler' ? paths.travelerDashboard.root : paths.businessDashboard.root);
+        console.log("Next Path:", nextPath);
 
         navigate(nextPath);
       }

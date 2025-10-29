@@ -1,9 +1,6 @@
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import { useBoolean } from '@/hooks/use-boolean';
-import { SquarePen } from 'lucide-react';
 import { FC } from 'react';
 import { Link } from 'react-router';
 import ProfileQuickEditForm from '../quick-update-profile';
@@ -21,9 +18,7 @@ const PersonalInfo: FC<PageProps> = ({ user }) => {
         <div className='flex justify-between items-center'>
           <CardTitle>Personal Info</CardTitle>
         </div>
-        {/* <Button variant="ghost" mode="icon" onClick={open.onTrue}>
-          <SquarePen size={16} className="text-blue-500" />
-        </Button> */}
+      
       </CardHeader>
       <CardContent className="kt-scrollable-x-auto pb-3 p-0">
         <Table className="align-middle text-sm text-muted-foreground">
@@ -39,7 +34,7 @@ const PersonalInfo: FC<PageProps> = ({ user }) => {
                 <div className="flex justify-center items-center">
 
                   <img
-                    src={user.image || "/media/avatars/300-2.png"}
+                    src={user.image?.url as string || "/media/avatars/300-2.png"}
                     alt="Avatar"
                     className="size-16 rounded-full border-2 border-green-500"
                   />

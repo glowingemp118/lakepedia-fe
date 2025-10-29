@@ -47,11 +47,10 @@ export const customFetchBaseQuery = (): BaseQueryFn<
     }
 
     if (
-      'error' in result &&
-      (result.error as FetchBaseQueryError).status === 403
+      'error' in result && ((result.error as FetchBaseQueryError).status === 403 || (result.error as FetchBaseQueryError).status === 401)
     ) {
       localStorage.clear();
-      window.location.replace('/login');
+      window.location.replace('/auth/signin?user=traveler');
     }
 
     return result;

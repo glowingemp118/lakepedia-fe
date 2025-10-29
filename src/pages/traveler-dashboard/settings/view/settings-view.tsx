@@ -19,7 +19,7 @@ const SettingsView = () => {
     const basicDetails = useMemo(() => ({
         country: profileData?.user?.country || '',
         usState: profileData?.user?.state || '',
-        photo: profileData?.user?.image || '',
+        photo: profileData?.user?.image?.url || '',
         first_name: profileData?.user?.first_name || '',
         last_name: profileData?.user?.last_name || '',
         email: profileData?.user?.email || '',
