@@ -37,16 +37,27 @@ const SettingsView = () => {
         password_email: profileData?.user?.emailPreferences?.password_email,
     }), [profileData]);
 
+
+
     const travelerSettings = useMemo(() => ({
         privacy: {
             profile_public: profileData?.user?.privacy?.profile_public,
+            show_location: profileData?.user?.privacy?.show_location,
+            show_past_activity: profileData?.user?.privacy?.show_past_activity,
+            allow_messages: profileData?.user?.privacy?.allow_messages,
+            share_favorite_lakes: profileData?.user?.privacy?.share_favorite_lakes,
             share_trips: profileData?.user?.privacy?.share_trips,
-            show_location: profileData?.user?.privacy?.show_location
+            display_social_links: profileData?.user?.privacy?.display_social_links
         },
         notifications: {
-            notify_announcements: profileData?.user?.notifications?.notify_announcements,
-            notify_replies: profileData?.user?.notifications?.notify_replies,
-            notify_messages: profileData?.user?.notifications?.notify_messages,
+            notify_post_reply: profileData?.user?.notifications?.notify_post_reply,
+            notify_comment_reply: profileData?.user?.notifications?.notify_comment_reply,
+            notify_lake_reviewed: profileData?.user?.notifications?.notify_lake_reviewed,
+            notify_messages: profileData?.user?.notifications?.notify_direct_message,
+            notify_new_photo_on_followed_lake: profileData?.user?.notifications?.notify_new_photo_on_followed_lake,
+            notify_trip_suggestions: profileData?.user?.notifications?.notify_trip_suggestions,
+            notify_announcements: profileData?.user?.notifications?.notify_platform_announcements,
+            notify_mentions: profileData?.user?.notifications?.notify_mentions,
         }
     }), [profileData]);
 

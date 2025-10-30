@@ -7,12 +7,11 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { LoaderCircleIcon } from 'lucide-react'
 import { FC, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
-import { toast } from 'react-toastify';
 import z from 'zod'
+import { toast } from 'react-toastify';
 
 interface PageProps {
   profileData: {
-
     website: string;
     facebook: string;
     instagram: string;
@@ -36,10 +35,10 @@ const SocialMediaAccount: FC<PageProps> = ({ profileData }) => {
   const [updateProfile] = useUpdateProfileMutation();
 
   const schema = z.object({
-    website: z.string().url('Invalid URL').optional(),
-    facebook: z.string().url('Invalid URL').optional(),
-    instagram: z.string().url('Invalid URL').optional(),
-    youtube: z.string().url('Invalid URL').optional(),
+    website: z.string().url('Invalid URL').optional().or(z.literal('')),
+    facebook: z.string().url('Invalid URL').optional().or(z.literal('')),
+    instagram: z.string().url('Invalid URL').optional().or(z.literal('')),
+    youtube: z.string().url('Invalid URL').optional().or(z.literal('')),
 
   });
 
@@ -62,15 +61,14 @@ const SocialMediaAccount: FC<PageProps> = ({ profileData }) => {
       youtube: data.youtube,
       key: "accounts"
     }
-    let response: any = await updateProfile(accountProfile);
-    if (!response.error) {
-      toast.success("Social media accounts updated successfully");
+    if (data.website || data.facebook || data.instagram || data.youtube) {
+      let response: any = await updateProfile(accountProfile);
+      if (!response.error) {
+        toast.success("Social media accounts updated successfully");
+        methods.reset(defaultValues);
+      }
     }
   }
-  const handleReset = () => {
-    methods.reset(defaultValues);
-  }
-
 
 
   return (
@@ -113,7 +111,7 @@ const SocialMediaAccount: FC<PageProps> = ({ profileData }) => {
               </div>
             </div>
             <div className='flex justify-end items-center gap-2'>
-              <Button variant={"outline"} type="button" onClick={handleReset} size="lg">Discard</Button>
+              <Button variant={"outline"} size="lg">Discard</Button>
               <Button type='submit' variant={"primary"} size="lg"
                 disabled={methods.formState.isSubmitting}
               >

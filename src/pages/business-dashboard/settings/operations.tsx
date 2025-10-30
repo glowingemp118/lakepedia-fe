@@ -5,13 +5,11 @@ import RHFTextField from "@/components/rhf/rhf-textfield";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
+import { useUpdateBusinessMutation } from "@/store/Reducer/business";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FC, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
-
-// Operations: Open hours, Months of operation, Pricing information, 
-// Policies;
 interface PageProps {
     profileData: {
         openHours: {
@@ -37,7 +35,10 @@ const Operations: FC<PageProps> = ({ profileData }) => {
         pricingInformation: profileData?.pricingInformation || '',
         policies: profileData?.policies || '',
 
-    }), [profileData])
+    }), [profileData]);
+
+
+    const [updateBusiness] = useUpdateBusinessMutation();
 
     const schema = z.object({
         openHours: z.array(z.object({

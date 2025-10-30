@@ -6,7 +6,7 @@ import QuickUpdateEmail from '../profile/quick-update-email';
 import QuickUpdatePassword from '../profile/quick-update-password';
 
 interface PageProps {
-    email?: string;
+    email: string;
 }
 const SignInMethod: FC<PageProps> = ({ email }) => {
     
@@ -36,7 +36,7 @@ const SignInMethod: FC<PageProps> = ({ email }) => {
                 </div>
             </CardContent>
 
-            <QuickUpdateEmail open={emailModal.value} onClose={emailModal.onFalse} />
+            <QuickUpdateEmail email={email} open={emailModal.value} onClose={emailModal.onFalse} />
             
             <QuickUpdatePassword open={open.value} onClose={open.onFalse} />
         

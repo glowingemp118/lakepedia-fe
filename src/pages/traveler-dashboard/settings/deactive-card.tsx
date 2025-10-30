@@ -33,7 +33,7 @@ const DeactiveCard = () => {
         handleSubmit,
     } = methods;
 
-    const onSubmit = async (data: any) => {
+    const onSubmit = async () => {
         const settings = {
             key: "status",
             status: "inactive"

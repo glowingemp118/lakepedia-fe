@@ -3,34 +3,57 @@ import RHFTextArea from '@/components/rhf/rhf-textarea'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Form } from '@/components/ui/form'
+import { useUpdateBusinessMutation } from '@/store/Reducer/business'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { FC } from 'react'
+import { LoaderCircleIcon } from 'lucide-react'
+import { FC, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 import z from 'zod'
 
 interface PageProps {
     profileData?: {
-        licensesCertifications: string;
+        certifications: string;
         awards: string;
     } | null
 }
-const defaultValues = {
-    licensesCertifications: '',
-    awards: '',
-}
-const TrustAndEngagement: FC<PageProps> = () => {
+const TrustAndEngagement: FC<PageProps> = ({ profileData }) => {
+
+    const defaultValues = useMemo(() => ({
+        certifications: profileData?.certifications || '',
+        awards: profileData?.awards || '',
+    }), [profileData]);
+
 
     const schema = z.object({
-        licensesCertifications: z.string().min(2, 'Licenses or Certifications is required'),
+        certifications: z.string().min(2, 'Licenses or Certifications is required'),
         awards: z.string().optional(),
     });
+
+    const [updateBusiness] = useUpdateBusinessMutation();
+
     const methods = useForm({
         resolver: zodResolver(schema),
         defaultValues
     });
 
-    const onSubmit = (data: z.infer<typeof schema>) => {
-        //console.log(data);
+    useEffect(() => {
+        methods.reset(defaultValues);
+    }, [defaultValues])
+
+    const onSubmit = async (data: z.infer<typeof schema>) => {
+
+        const updateBusinessProfile = {
+            certifications: data.certifications,
+            awards: data.awards,
+        }
+
+        let response = await updateBusiness(updateBusinessProfile);
+
+        if (!response.error) {
+            toast.success("Trust and Engagement details updated successfully");
+            methods.reset(defaultValues);
+        }
     }
     return (
         <Card >
@@ -50,7 +73,7 @@ const TrustAndEngagement: FC<PageProps> = () => {
                         </div>
                         <div className="md:col-span-8 col-span-12 md:mb-4">
                             <RHFTextArea
-                                name="licensesCertifications"
+                                name="certifications"
                                 label="Licenses or Certifications"
                                 placeholder="List any professional licenses, permits, or certifications your business holds (e.g. Tour Guide License, Safety Certification, Local Authority Permit)"
                                 rows={3}
@@ -73,7 +96,13 @@ const TrustAndEngagement: FC<PageProps> = () => {
                         </div>
                         <div className='col-span-12 flex justify-end items-center gap-2'>
                             <Button type='button' variant={"outline"}>Discard</Button>
-                            <Button type='submit' variant={"primary"}>Save Changes</Button>
+                            <Button type='submit' variant={"primary"}>
+                                {methods.formState.isSubmitting ? (
+                                    <span className="flex items-center gap-2">
+                                        <LoaderCircleIcon className="h-4 w-4 animate-spin" /> Loading...
+                                    </span>
+                                ) : ("Save Changes")}
+                            </Button>
                         </div>
 
                     </CardContent>

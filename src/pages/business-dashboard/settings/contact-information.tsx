@@ -2,25 +2,23 @@ import RHFTextField from '@/components/rhf/rhf-textfield';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
+import { useUpdateBusinessMutation } from '@/store/Reducer/business';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { LoaderCircleIcon } from 'lucide-react';
 import { FC, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import z from 'zod';
 
 interface PageProps {
     profileData: {
         name: string;
         email: string;
-        address: string;
-        phone: string;
-        website: string;
-        facebook: string;
-        instagram: string;
-        youtube: string;
-        mapCoordinates: {
-            lat: number;
-            long: number;
-        } | null;
+        phone_number: string;
+        country: string;
+        state: string;
+        lat: number | null;
+        long: number | null;
     },
 }
 
@@ -30,29 +28,25 @@ const ContactInformation: FC<PageProps> = ({ profileData }) => {
     const defaultValues = useMemo(() => ({
         name: profileData?.name as string || '',
         email: profileData?.email as string || '',
-        address: profileData?.address as string || '',
-        phone: profileData?.phone as string || '',
-        website: profileData?.website as string || '',
-        facebook: profileData?.facebook as string || '',
-        instagram: profileData?.instagram as string || '',
-        youtube: profileData?.youtube as string || '',
-        mapCoordinates: profileData?.mapCoordinates as { lat: number; long: number } | null || null,
+        phone: profileData?.phone_number as string || '',
+        country: profileData?.country as string || '',
+        state: profileData?.state as string || '',
+        latitude: profileData?.lat || "",
+        longitude: profileData?.long || "",
 
-    }), [profileData])
+    }), [profileData]);
+
+    const [updateBusiness] = useUpdateBusinessMutation();
 
     const schema = z.object({
         name: z.string().min(2, 'Name is required'),
         email: z.string().email('Invalid email address'),
-        address: z.string().min(5, 'Address is required'),
+        country: z.string().min(3, 'Country is required'),
+        state: z.string().min(3, 'State is required'),
         phone: z.string().min(10, 'Phone number is required'),
-        website: z.string().url('Invalid website URL').optional(),
-        facebook: z.string().url('Invalid Facebook URL').optional(),
-        instagram: z.string().url('Invalid Instagram URL').optional(),
-        youtube: z.string().url('Invalid YouTube URL').optional(),
-        mapCoordinates: z.object({
-            lat: z.number().min(-90).max(90),
-            long: z.number().min(-180).max(180),
-        }).nullable().optional(),
+        latitude: z.string().optional(),
+        longitude: z.string().optional(),
+
     })
 
     const methods = useForm({
@@ -66,8 +60,22 @@ const ContactInformation: FC<PageProps> = ({ profileData }) => {
     }, [defaultValues])
 
 
-    const onSubmit = (data: z.infer<typeof schema>) => {
+    const onSubmit = async (data: z.infer<typeof schema>) => {
         //console.log(data);
+        const updateBusinessProfile = {
+            contact_name: data.name,
+            contact_email: data.email,
+            phone_number: data.phone,
+            map_lat: data.latitude,
+            map_lng: data.longitude,
+            country: data.country,
+            state: data.state
+        }
+        let response = await updateBusiness(updateBusinessProfile);
+        if (!response.error) {
+            toast.success("Contact information updated successfully");
+            methods.reset(defaultValues);
+        }
     }
 
 
@@ -92,7 +100,7 @@ const ContactInformation: FC<PageProps> = ({ profileData }) => {
                             </div>
                             <div className='md:col-span-8 col-span-12 md:mb-4'>
                                 <RHFTextField
-                                    name='contactName'
+                                    name='name'
                                     label='Contact Name'
                                     placeholder='Enter contact name'
                                     className='py-2 h-10'
@@ -107,7 +115,7 @@ const ContactInformation: FC<PageProps> = ({ profileData }) => {
                             </div>
                             <div className='md:col-span-8 col-span-12 md:mb-4'>
                                 <RHFTextField
-                                    name='contactEmail'
+                                    name='email'
                                     label='Contact Email'
                                     placeholder='Enter contact email'
                                     type='email'
@@ -146,47 +154,11 @@ const ContactInformation: FC<PageProps> = ({ profileData }) => {
                             </div>
                             <div className='md:col-span-8 col-span-12 md:mb-4'>
                                 <RHFTextField
-                                    name='phoneNumber'
+                                    name='phone'
                                     label='Phone Number'
                                     placeholder='Enter phone number with country code'
                                     className='py-2 h-10'
                                 />
-                            </div>
-
-                            {/* Social Media Accounts */}
-                            <div className='md:col-span-4 col-span-12 md:block hidden'>
-                                <p className='flex items-center gap-1.5 leading-none font-medium text-sm text-mono'>
-                                    Website & Social Media Accounts
-                                </p>
-                            </div>
-                            <div className='md:col-span-8 col-span-12 md:mb-4'>
-                                <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
-                                    <RHFTextField
-                                        name='website'
-                                        label='Website'
-                                        placeholder='https://yourwebsite.com'
-                                        className='py-2 h-10'
-                                    />
-                                    <RHFTextField
-                                        name='facebook'
-                                        label='Facebook Account'
-                                        placeholder='https://facebook.com/yourpage'
-                                        className='py-2 h-10'
-                                    />
-                                    <RHFTextField
-                                        name='instagram'
-                                        label='Instagram Account'
-                                        placeholder='https://instagram.com/yourprofile'
-                                        className='py-2 h-10'
-                                    />
-                                    <RHFTextField
-                                        name='youtube'
-                                        label='YouTube Account'
-                                        placeholder='https://youtube.com/@yourchannel'
-                                        className='py-2 h-10 md:col-span-2'
-                                    />
-
-                                </div>
                             </div>
 
                             {/* Map Coordinates */}
@@ -216,7 +188,13 @@ const ContactInformation: FC<PageProps> = ({ profileData }) => {
 
                         <div className='flex justify-end items-center gap-2'>
                             <Button variant={"outline"} size="lg">Discard</Button>
-                            <Button type='submit' variant={"primary"} size="lg">Save Changes</Button>
+                            <Button type='submit' variant={"primary"} size="lg">
+                                {methods.formState.isSubmitting ? (
+                                    <span className="flex items-center gap-2">
+                                        <LoaderCircleIcon className="h-4 w-4 animate-spin" /> Loading...
+                                    </span>
+                                ) : ("Save Changes")}
+                            </Button>
                         </div>
                     </form>
                 </Form>

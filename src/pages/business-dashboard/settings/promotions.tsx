@@ -3,9 +3,12 @@ import RHFTextArea from '@/components/rhf/rhf-textarea'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Form } from '@/components/ui/form'
+import { useUpdateBusinessMutation } from '@/store/Reducer/business'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { FC } from 'react'
+import { LoaderCircleIcon } from 'lucide-react'
+import { FC, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 import z from 'zod'
 
 interface PageProps {
@@ -13,21 +16,39 @@ interface PageProps {
         promotions: string;
     } | null
 }
-const defaultValues = {
-    promotions: '',
-}
-const Promotions: FC<PageProps> = () => {
+const Promotions: FC<PageProps> = ({ profileData }) => {
+
+    const defaultValues = useMemo(() => ({
+        promotions: profileData?.promotions || '',
+    }), [profileData]);
+
 
     const schema = z.object({
         promotions: z.string().min(2, 'Promotions is required'),
     });
+
+    const [updateBusiness] = useUpdateBusinessMutation();
+
     const methods = useForm({
         resolver: zodResolver(schema),
         defaultValues
     });
 
-    const onSubmit = (data: z.infer<typeof schema>) => {
-        //console.log(data);
+    useEffect(() => {
+        methods.reset(defaultValues);
+    }, [defaultValues])
+
+    const onSubmit = async (data: z.infer<typeof schema>) => {
+
+        const updateBusinessProfile = {
+            promotions: data.promotions,
+        }
+        let response = await updateBusiness(updateBusinessProfile);
+
+        if (!response.error) {
+            toast.success("Promotions details updated successfully");
+            methods.reset(defaultValues);
+        }
     }
     return (
         <Card >
@@ -56,7 +77,13 @@ const Promotions: FC<PageProps> = () => {
 
                         <div className='col-span-12 flex justify-end items-center gap-2'>
                             <Button type='button' variant={"outline"}>Discard</Button>
-                            <Button type='submit' variant={"primary"}>Save Changes</Button>
+                            <Button type='submit' variant={"primary"}>
+                                {methods.formState.isSubmitting ? (
+                                    <span className="flex items-center gap-2">
+                                        <LoaderCircleIcon className="h-4 w-4 animate-spin" /> Loading...
+                                    </span>
+                                ) : ("Save Changes")}
+                            </Button>
                         </div>
 
                     </CardContent>

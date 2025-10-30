@@ -29,7 +29,9 @@ export const customFetchBaseQuery = (): BaseQueryFn<
   });
 
   return async (args, api, extraOptions) => {
+   
     const { dispatch } = api;
+
     dispatch(showLoader());
 
     const result = await baseQuery(args, api, extraOptions);
@@ -50,7 +52,10 @@ export const customFetchBaseQuery = (): BaseQueryFn<
       'error' in result && ((result.error as FetchBaseQueryError).status === 403 || (result.error as FetchBaseQueryError).status === 401)
     ) {
       localStorage.clear();
-      window.location.replace('/auth/signin?user=traveler');
+     
+      setTimeout(() => {
+       window.location.href='/auth/signin?user=traveler';
+     }, 1500);
     }
 
     return result;

@@ -8,9 +8,9 @@ export const fileApi = createApi({
         uploadFile: builder.mutation({
             query: (fileData) => {
                 const formData = new FormData();
-                formData.append('file', fileData);
+                formData.append('files', fileData);
                 return {
-                    url: `/file`,
+                    url: `/file/upload`,
                     method: 'POST',
                     body: formData,
                 };

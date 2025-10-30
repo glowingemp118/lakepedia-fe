@@ -54,6 +54,11 @@ const EmailPreference: FC<PageProps> = ({ emailPreferences }) => {
             toast.success("Email preferences updated successfully");
         }
     }
+
+    const handleReset = () => {
+        methods.reset(defaultValues);
+    }
+
     return (
         <Card>
             <CardHeader>
@@ -69,7 +74,7 @@ const EmailPreference: FC<PageProps> = ({ emailPreferences }) => {
 
                     </CardContent>
                     <CardFooter className="flex justify-end gap-2">
-                        <Button variant={"outline"} size="lg">Discard</Button>
+                        <Button variant={"outline"} type='button' onClick={handleReset} size="lg">Discard</Button>
                         <Button variant="primary" type="submit"
                             disabled={methods.formState.isSubmitting}
                         >

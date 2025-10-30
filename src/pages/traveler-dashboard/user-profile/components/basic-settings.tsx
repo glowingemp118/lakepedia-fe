@@ -44,18 +44,7 @@ const BasicSettings = ({ title, basicSettings }: IBasicSettingsProps) => {
                 -
               </TableCell>
             </TableRow>
-            {/* <TableRow>
-              <TableCell className="py-3.5text-secondary-foreground font-normal">
-                2FA
-              </TableCell>
-              <TableCell className="py-3.5 text-secondary-foreground font-normal">
-                To be set
-              </TableCell>
-              <TableCell className="py-3 text-end">
-                
-                -
-              </TableCell>
-            </TableRow> */}
+           
             <TableRow>
               <TableCell className="py-2text-secondary-foreground font-normal">
                 Sign-in with

@@ -26,8 +26,7 @@ export const userApi = createApi({
         method: "POST",
       }),
       invalidatesTags: ["User"],
-    }),
-    
+    })
   }),
 });
 

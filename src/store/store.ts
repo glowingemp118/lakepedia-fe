@@ -20,12 +20,14 @@ import storage from "redux-persist/lib/storage";
 import { authApi } from "./Reducer/auth";
 import { userApi } from "./Reducer/users";
 import { fileApi } from "./Reducer/file";
+import { businessApi } from "./Reducer/business";
 
 // Combine all reducers into one root reducer
 const rootReducer = combineReducers({
   [authApi.reducerPath]: authApi.reducer,
   [userApi.reducerPath]: userApi.reducer,
   [fileApi.reducerPath]: fileApi.reducer,
+  [businessApi.reducerPath]: businessApi.reducer,
   user: userReducer,
   loader: loaderReducer,
 });
@@ -51,7 +53,7 @@ export const store = configureStore({
     })
       .concat(authApi.middleware)
       .concat(userApi.middleware)
-      .concat(fileApi.middleware)
+      .concat(fileApi.middleware).concat(businessApi.middleware),
 });
 
 // Initialize Redux Persist to persist store state

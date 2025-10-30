@@ -14,58 +14,26 @@ import { useUpdateProfileMutation } from '@/store/Reducer/users';
 import { toast } from 'sonner';
 
 const schema = z.object({
-  // profileVisibility: z.boolean(),
-  // showLocation: z.boolean(),
-  // showPastActivity: z.boolean(),
-  // allowMessages: z.boolean(),
-  // shareFavoriteLakes: z.boolean(),
-  // shareTrips: z.boolean(),
-  // displaySocialLinks: z.boolean(),
 
-  // postReply: z.boolean(),
-  // commentReply: z.boolean(),
-  // lakeReviewed: z.boolean(),
-  // directMessage: z.boolean(),
-  // newPhoto: z.boolean(),
-  // tripSuggestions: z.boolean(),
-  // platformAnnouncements: z.boolean(),
-  // mentions: z.boolean(),
   profile_public: z.boolean(),
   show_location: z.boolean(),
   share_trips: z.boolean(),
-  notify_announcements: z.boolean(),
-  notify_replies: z.boolean(),
+  show_past_activity: z.boolean(),
+  allow_messages: z.boolean(),
+  share_favorite_lakes: z.boolean(),
+  display_social_links: z.boolean(),
+
+
+  notify_post_reply: z.boolean(),
+  notify_comment_reply: z.boolean(),
+  notify_lake_reviewed: z.boolean(),
   notify_messages: z.boolean(),
+  notify_new_photo_on_followed_lake: z.boolean(),
+  notify_trip_suggestions: z.boolean(),
+  notify_announcements: z.boolean(),
+  notify_mentions: z.boolean(),
 });
-//  privacy:{
-//             profile_public:profileData?.user?.privacy?.profile_public,
-//             share_trips:profileData?.user?.privacy?.share_trips,
-//             show_location:profileData?.user?.privacy?.show_location
-//         },
-//         notifications:{
-//             notify_announcements:profileData?.user?.notifications?.notify_announcements,
-//             notify_replies:profileData?.user?.notifications?.notify_replies,
-//             notify_messages:profileData?.user?.notifications?.notify_messages,
-//         }
 
-// const defaultValues = {
-//   profileVisibility: true,
-//   showLocation: true,
-//   showPastActivity: true,
-//   allowMessages: true,
-//   shareFavoriteLakes: false,
-//   shareTrips: true,
-//   displaySocialLinks: true,
-
-//   postReply: true,
-//   commentReply: true,
-//   lakeReviewed: true,
-//   directMessage: true,
-//   newPhoto: true,
-//   tripSuggestions: true,
-//   platformAnnouncements: true,
-//   mentions: true,
-// };
 
 interface PageProps {
   travelerSettings: {
@@ -73,11 +41,22 @@ interface PageProps {
       profile_public: boolean;
       show_location: boolean;
       share_trips: boolean;
+      show_past_activity: boolean;
+      allow_messages: boolean;
+      share_favorite_lakes: boolean;
+      display_social_links: boolean;
+
     };
+
     notifications: {
-      notify_announcements: boolean;
-      notify_replies: boolean;
+      notify_post_reply: boolean;
+      notify_comment_reply: boolean;
+      notify_lake_reviewed: boolean;
       notify_messages: boolean;
+      notify_new_photo_on_followed_lake: boolean;
+      notify_trip_suggestions: boolean;
+      notify_announcements: boolean;
+      notify_mentions: boolean;
     };
   };
 }
@@ -86,12 +65,24 @@ const Settings: FC<PageProps> = ({ travelerSettings }) => {
 
 
   const defaultValues = useMemo(() => ({
-    profile_public: travelerSettings?.privacy?.profile_public || false,
-    show_location: travelerSettings?.privacy?.show_location || false,
-    share_trips: travelerSettings?.privacy?.share_trips || false,
-    notify_announcements: travelerSettings?.notifications?.notify_announcements || false,
-    notify_replies: travelerSettings?.notifications?.notify_replies || false,
-    notify_messages: travelerSettings?.notifications?.notify_messages || false,
+
+    profile_public: travelerSettings?.privacy?.profile_public,
+    show_location: travelerSettings?.privacy?.show_location,
+    share_trips: travelerSettings?.privacy?.share_trips,
+    show_past_activity: travelerSettings?.privacy?.show_past_activity,
+    allow_messages: travelerSettings?.privacy?.allow_messages,
+    share_favorite_lakes: travelerSettings?.privacy?.share_favorite_lakes,
+    display_social_links: travelerSettings?.privacy?.display_social_links,
+
+    notify_post_reply: travelerSettings?.notifications?.notify_post_reply,
+    notify_comment_reply: travelerSettings?.notifications?.notify_comment_reply,
+    notify_lake_reviewed: travelerSettings?.notifications?.notify_lake_reviewed,
+    notify_messages: travelerSettings?.notifications?.notify_messages,
+    notify_new_photo_on_followed_lake: travelerSettings?.notifications?.notify_new_photo_on_followed_lake,
+    notify_trip_suggestions: travelerSettings?.notifications?.notify_trip_suggestions,
+    notify_announcements: travelerSettings?.notifications?.notify_announcements,
+    notify_mentions: travelerSettings?.notifications?.notify_mentions,
+
   }), [travelerSettings]);
   const methods = useForm({
     resolver: zodResolver(schema),
@@ -102,24 +93,33 @@ const Settings: FC<PageProps> = ({ travelerSettings }) => {
 
   const onSubmit = async (data: any) => {
 
+    //privacy settings
     const privacySettings = {
       profile_public: data.profile_public,
       show_location: data.show_location,
       share_trips: data.share_trips,
-      key: "privacy"
+      show_past_activity: data.show_past_activity,
+      allow_messages: data.allow_messages,
+      share_favorite_lakes: data.share_favorite_lakes,
+      display_social_links: data.display_social_links
     }
 
-    let response: any = await updateProfile(privacySettings);
+    let response: any = await updateProfile({ privacy: privacySettings,   key: "privacy" });
 
     if (!response.error) {
+      // notification settings
       const notificationSettings = {
-        notify_announcements: data.notify_announcements,
-        notify_replies: data.notify_replies,
+        notify_post_reply: data.notify_post_reply,
+        notify_comment_reply: data.notify_comment_reply,
+        notify_lake_reviewed: data.notify_lake_reviewed,
         notify_messages: data.notify_messages,
-        key: "notifications"
+        notify_new_photo_on_followed_lake: data.notify_new_photo_on_followed_lake,
+        notify_trip_suggestions: data.notify_trip_suggestions,
+        notify_announcements: data.notify_announcements,
+        notify_mentions: data.notify_mentions,
       }
 
-      let res: any = await updateProfile(notificationSettings);
+      let res: any = await updateProfile({ notifications: notificationSettings, key: "notifications" });
 
       if (!res.error) {
         toast.success("Traveler settings updated successfully");
@@ -127,6 +127,10 @@ const Settings: FC<PageProps> = ({ travelerSettings }) => {
 
     };
   }
+  const handleReset = () => {
+    methods.reset(defaultValues);
+  }
+
 
   return (
     <Card>
@@ -164,25 +168,25 @@ const Settings: FC<PageProps> = ({ travelerSettings }) => {
                 description='Whether city/country is visible to others'
               />
 
-              {/* <RhfSwitch name="show_past_activity" label="Show past activity" className='flex !flex-row justify-between'
+              <RhfSwitch name="show_past_activity" label="Show past activity" className='flex !flex-row justify-between'
                 description="Whether others can view posts, reviews, photos, etc."
-              /> */}
+              />
 
-              {/* <RhfSwitch name="allow_messages" label="Allow messages" className='flex flex-row justify-between'
+              <RhfSwitch name="allow_messages" label="Allow messages" className='flex flex-row justify-between'
                 description="Can other users contact you?"
-              /> */}
+              />
 
-              {/* <RhfSwitch name="share_favorite_lakes" label="Share favorite lakes" className='flex flex-row justify-between'
+              <RhfSwitch name="share_favorite_lakes" label="Share favorite lakes" className='flex flex-row justify-between'
                 description="Can others see the lakes you liked/saved"
-              /> */}
+              />
 
               <RhfSwitch name="share_trips" label="Share trips" className='flex flex-row justify-between'
                 description='Can others see the trips you created'
               />
 
-              {/* <RhfSwitch name="display_social_links" label="Display social links" className='flex flex-row justify-between'
+              <RhfSwitch name="display_social_links" label="Display social links" className='flex flex-row justify-between'
                 description='Can others see the trips you created'
-              /> */}
+              />
 
             </div>
           </CardContent>
@@ -206,42 +210,42 @@ const Settings: FC<PageProps> = ({ travelerSettings }) => {
 
             <div className="grid grid-cols-1 gap-4 mt-3">
 
-              <RhfSwitch name="notify_replies" label="Post reply" className='flex flex-row justify-between'
+              <RhfSwitch name="notify_post_reply" label="Post reply" className='flex flex-row justify-between'
                 description="Someone replies to user's post (review, photos)"
               />
 
-              {/* <RhfSwitch name="commentReply" label="Comment reply" className='flex flex-row justify-between'
+              <RhfSwitch name="notify_comment_reply" label="Comment reply" className='flex flex-row justify-between'
                 description="Someone replies to user's comment"
               />
 
-              <RhfSwitch name="lakeReviewed" label="Lake reviewed" className='flex flex-row justify-between'
+              <RhfSwitch name="notify_lake_reviewed" label="Lake reviewed" className='flex flex-row justify-between'
                 description='A new review is posted for a lake the user follows/liked'
-              /> */}
+              />
 
               <RhfSwitch name="notify_messages" label="Direct message received" className='flex flex-row justify-between'
                 description="Another user sends a message"
               />
 
-              {/* <RhfSwitch name="newPhoto" label="New photo on followed lake" className='flex flex-row justify-between'
+              <RhfSwitch name="notify_new_photo_on_followed_lake" label="New photo on followed lake" className='flex flex-row justify-between'
                 description="Someone adds a photo to a followed lake"
               />
 
-              <RhfSwitch name="tripSuggestions" label="Trip suggestions near favorite lake" className='flex flex-row justify-between'
+              <RhfSwitch name="notify_trip_suggestions" label="Trip suggestions near favorite lake" className='flex flex-row justify-between'
                 description='System detects new trip ideas or POIs nearby'
-              /> */}
+              />
 
               <RhfSwitch name="notify_announcements" label="Platform announcements" className='flex flex-row justify-between'
                 description='Admin-level messages (e.g. new features, policy updates)'
               />
 
-              {/* <RhfSwitch name="mentions" label="Mentions" className='flex flex-row justify-between'
+              <RhfSwitch name="notify_mentions" label="Mentions" className='flex flex-row justify-between'
                 description='Someone mentions you in a post/comment'
-              /> */}
+              />
             </div>
           </CardContent>
 
           <CardFooter className="flex justify-end gap-3">
-            <Button type="button" variant="outline">Discard</Button>
+            <Button type="button" onClick={handleReset} variant="outline">Discard</Button>
             <Button type="submit"
               disabled={methods.formState.isSubmitting}
             >
