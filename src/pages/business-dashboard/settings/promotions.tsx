@@ -77,7 +77,7 @@ const Promotions: FC<PageProps> = ({ profileData }) => {
 
                         <div className='col-span-12 flex justify-end items-center gap-2'>
                             <Button type='button' variant={"outline"}>Discard</Button>
-                            <Button type='submit' variant={"primary"}>
+                            <Button type='submit' variant={"primary"} size="lg" disabled={methods.formState.isSubmitting}>
                                 {methods.formState.isSubmitting ? (
                                     <span className="flex items-center gap-2">
                                         <LoaderCircleIcon className="h-4 w-4 animate-spin" /> Loading...

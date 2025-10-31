@@ -22,7 +22,7 @@ export const AvatarInput: FC<AvatarInputProps> = ({ name,className,...other }) =
 
   const [avatar, setAvatar] = useState<ImageInputFile[]>([
     {
-      dataURL: toAbsoluteUrl(getValues(name) || `/media/avatars/300-2.png`)
+      dataURL: toAbsoluteUrl(getValues(name) || `/media/app/default.webp`)
     },
   ]);
 

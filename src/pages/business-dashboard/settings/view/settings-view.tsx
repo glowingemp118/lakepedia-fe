@@ -22,15 +22,11 @@ import { useGetBusinessQuery } from "@/store/Reducer/business";
 
 const BusinessSettingsView = () => {
 
-
-    const { data: profileData, isLoading, isFetching } = useGetProfileQuery({});
+    const { data: profileData, isLoading } = useGetProfileQuery({});
 
     const { data: businessProfileData } = useGetBusinessQuery({});
 
-    console.log("businessProfile", businessProfileData);
-
     const user = useSelector(selectUser);
-
 
     const emailPreference = useMemo(() => ({
         activities_email: profileData?.user?.emailPreferences?.activities_email,
@@ -92,10 +88,19 @@ const BusinessSettingsView = () => {
         promotions: (businessProfileData as any)?.business?.promotions
     }), [businessProfileData]);
 
+
+    const operations = useMemo(() => ({
+        open_hours: [...(businessProfileData as any)?.business?.open_hours || []],
+        months_of_operation: [...(businessProfileData as any)?.business?.months_of_operation || []],
+        pricing_info: (businessProfileData as any)?.business?.pricing_info,
+        policies: (businessProfileData as any)?.business?.policies,
+    }), [businessProfileData]);
+
+
     return (
         <div className='md:mx-10 mx-2 my-4 flex flex-col gap-6'>
 
-            {isLoading || isFetching ?
+            {isLoading ?
                 <ScreenLoader />
                 :
                 <>
@@ -107,7 +112,7 @@ const BusinessSettingsView = () => {
                         <BasicDetails profileData={businessProfile} />
                         <ContactInformation profileData={contactInformation} />
                         <SocialMediaAccount profileData={socialMediaDetails} />
-                        <Operations profileData={user} />
+                        <Operations profileData={operations} />
                         <MediaInformation profileData={user} />
                         <TrustAndEngagement profileData={trustAndEngagement} />
                         <Promotions profileData={promotions} />

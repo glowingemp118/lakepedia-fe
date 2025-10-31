@@ -75,7 +75,6 @@ const BasicDetails: FC<PageProps> = ({ profileData }) => {
 
         if (data.photo && typeof data.photo !== 'string') {
             const uploadResponse: any = await uploadFile(data.photo?.file as File)
-            console.log("Upload Response: ", uploadResponse);
             image = uploadResponse?.data?.data[0]?.id;
         }
 

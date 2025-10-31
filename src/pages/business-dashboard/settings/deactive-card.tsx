@@ -6,10 +6,10 @@ import { Form } from "@/components/ui/form"
 import { useBoolean } from "@/hooks/use-boolean"
 import { useUpdateProfileMutation } from "@/store/Reducer/users"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { OctagonAlert } from "lucide-react"
+import { LoaderCircleIcon, OctagonAlert } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router"
-import { toast } from "sonner"
+import { toast } from "react-toastify"
 import * as z from "zod"
 
 const DeactiveCard = () => {
@@ -24,7 +24,7 @@ const DeactiveCard = () => {
         })
     })
 
-    const [updateProfile] = useUpdateProfileMutation();
+    const [updateProfile, { isLoading }] = useUpdateProfileMutation();
 
     const methods = useForm({
         resolver: zodResolver(schema)
@@ -39,6 +39,7 @@ const DeactiveCard = () => {
             status: "inactive"
         }
         const response = await updateProfile(settings);
+
         if (!response.error) {
             toast.success("Account deactivated successfully");
             open.onTrue();
@@ -84,7 +85,13 @@ const DeactiveCard = () => {
                 open={open.value}
                 onClose={open.onFalse}
                 action={
-                    <Button variant="destructive" onClick={open.onFalse}>Deactivate</Button>
+                    <Button type='submit' variant={"primary"} size="lg" disabled={methods.formState.isSubmitting}>
+                        {isLoading ? (
+                            <span className="flex items-center gap-2">
+                                <LoaderCircleIcon className="h-4 w-4 animate-spin" /> Loading...
+                            </span>
+                        ) : ("Deactivate")}
+                    </Button>
                 }
             />
         </Card>

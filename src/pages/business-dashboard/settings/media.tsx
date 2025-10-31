@@ -1,13 +1,16 @@
 import RhfMultipleImages from '@/components/rhf/rhf-multiple-images';
 import RHFTextField from '@/components/rhf/rhf-textfield';
-import RHFUploadVideo from '@/components/rhf/rhf-upload-video';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
 import { AvatarInput } from '@/partials/common/avatar-input';
+import { useUpdateBusinessMutation } from '@/store/Reducer/business';
+import { useDeleteFileMutation, useUploadFileMutation } from '@/store/Reducer/file';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { LoaderCircleIcon } from 'lucide-react';
 import { FC, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import z from 'zod';
 
 interface PageProps {
@@ -23,17 +26,68 @@ const MediaInformation: FC<PageProps> = ({ profileData }) => {
 
 
     const defaultValues = useMemo(() => ({
-        logo: profileData?.logo as string || '',
-        thumbnail: profileData?.thumbnail as string || '',
-        galleryPhotos: profileData?.galleryPhotos as string[] || [],
-        youtubeVideo: profileData?.youtubeVideo as string || '',
-    }), [profileData])
+        logo: profileData?.logo || "",
+        thumbnail: profileData?.thumbnail || "",
+        galleryPhotos: profileData?.galleryPhotos || [],
+        youtubeVideo: profileData?.youtubeVideo || "",
+    }), [profileData]);
+
+    const [updateBusiness] = useUpdateBusinessMutation();
+
+    const [uploadFile] = useUploadFileMutation();
+
+    const [deleteFile] = useDeleteFileMutation();
+
+    const fileOrString = (fieldName: string) =>
+        z.any().superRefine((val, ctx) => {
+            if (typeof val === "string") {
+                if (!val.trim()) {
+                    ctx.addIssue({
+                        code: z.ZodIssueCode.custom,
+                        message: `${fieldName} is required`,
+                    });
+                }
+                return;
+            }
+
+            if (val instanceof File) {
+                return;
+            }
+
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: `${fieldName} must be a File or string`,
+            });
+        });
 
     const schema = z.object({
-        logo: z.string().min(2, 'Logo is required'),
-        thumbnail: z.string().min(2, 'Thumbnail is required'),
-        galleryPhotos: z.array(z.string().min(2, 'Gallery photo URL is required')),
-        youtubeVideo: z.string().min(2, 'YouTube video URL is required'),
+        logo: fileOrString("Logo"),
+        thumbnail: fileOrString("Thumbnail"),
+
+        galleryPhotos: z
+            .array(z.any())
+            .superRefine((arr, ctx) => {
+                if (!arr?.length) {
+                    ctx.addIssue({
+                        code: z.ZodIssueCode.custom,
+                        message: "At least one gallery photo is required",
+                    });
+                    return;
+                }
+
+                arr.forEach((val, idx) => {
+                    if (typeof val === "string" && val.trim()) return;
+                    if (val instanceof File) return;
+
+                    ctx.addIssue({
+                        code: z.ZodIssueCode.custom,
+                        message: "Invalid gallery photo",
+                        path: [idx],
+                    });
+                });
+            }),
+
+        youtubeVideo: z.string().url("Invalid YouTube video URL"),
     });
 
     const methods = useForm({
@@ -46,15 +100,48 @@ const MediaInformation: FC<PageProps> = ({ profileData }) => {
         methods.reset(defaultValues);
     }, [defaultValues])
 
+    console.log(methods.formState.errors);
 
-    const onSubmit = (data: z.infer<typeof schema>) => {
-        //console.log(data);
-    }
 
-    const handleDrop = (acceptedFiles: File[]) => {
-        const fileURLs = acceptedFiles.map(file => URL.createObjectURL(file));
-        const currentPhotos = methods.getValues('galleryPhotos') || [];
-        methods.setValue('galleryPhotos', [...currentPhotos, ...fileURLs]);
+    const onSubmit = async (data: z.infer<typeof schema>) => {
+        console.log("Submitted data: ", data);
+
+        let logo = "";
+
+        let thumbnail = "";
+
+        if (typeof (data.logo) !== 'string') {
+            const uploadResponse: any = await uploadFile(data.logo as File)
+            logo = uploadResponse?.data?.data[0]?.id;
+        }
+        if (typeof (data.thumbnail) !== 'string') {
+            const uploadResponse: any = await uploadFile(data.thumbnail as File)
+            thumbnail = uploadResponse?.data?.data[0]?.id;
+        }
+
+        const uploadResponses = await Promise.all(
+            data?.galleryPhotos?.map(async (file) => {
+                if (typeof file !== 'string') {
+                    const uploadResponse: any = await uploadFile(file as File);
+                    return uploadResponse?.data?.data[0]?.id;
+                } else {
+                    return file;
+                }
+            })
+        );
+
+        const mediaData = {
+            logo: logo && logo.length > 0 ? logo : data.logo,
+            thumbnail: thumbnail && thumbnail.length > 0 ? thumbnail : data.thumbnail,
+            gallery: uploadResponses,
+            video: data.youtubeVideo
+        }
+        let response = await updateBusiness({ media: mediaData });
+
+        if (!response.error) {
+            toast.success("Media information updated successfully");
+            methods.reset(defaultValues);
+        }
     }
 
 
@@ -91,7 +178,7 @@ const MediaInformation: FC<PageProps> = ({ profileData }) => {
                             <div className='md:col-span-8 col-span-12 md:mb-4'>
                                 <AvatarInput name='thumbnail' />
                             </div>
-                           
+
 
                             <div className='md:col-span-4 col-span-12 md:block hidden'>
                                 <p className='flex items-center gap-1.5 leading-none font-medium text-sm text-mono'>
@@ -99,23 +186,47 @@ const MediaInformation: FC<PageProps> = ({ profileData }) => {
                                 </p>
                             </div>
                             <div className='md:col-span-8 col-span-12 md:mb-4'>
-                                    <RhfMultipleImages name='galleryPhotos' onDrop={handleDrop} />
+                                <RhfMultipleImages name='galleryPhotos' />
                             </div>
                             <div className='md:col-span-4 col-span-12 md:block hidden'>
                                 <p className='flex items-center gap-1.5 leading-none font-medium text-sm text-mono'>
                                     YouTube video <span className='text-red-500'>*</span>
                                 </p>
-                        </div>
+                            </div>
 
                             <div className='md:col-span-8 col-span-12 md:mb-4'>
-                                <RHFUploadVideo name='youtubeVideo' />
+                                {/* <RHFUploadVideo name='youtubeVideo' /> */}
+                                <RHFTextField name='youtubeVideo' label='Youtube Video' placeholder='https://youtube.com' />
+                                {methods.watch('youtubeVideo') &&
+                                    <div className="mt-4">
+                                        <iframe
+                                            width="100%"
+                                            height="315"
+                                            style={{
+                                                borderRadius: "10px"
+                                            }}
+                                            src={`https://www.youtube.com/embed/${methods.watch('youtubeVideo').split('v=')[1]}`}
+                                            title="YouTube video player"
+                                            frameBorder="0"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                            allowFullScreen
+                                        ></iframe>
+                                    </div>
+                                }
+
                             </div>
 
                         </div>
 
                         <div className='flex justify-end items-center gap-2'>
-                            <Button variant={"outline"} size="lg">Discard</Button>
-                            <Button type='submit' variant={"primary"} size="lg">Save Changes</Button>
+                            <Button variant={"outline"} type="button" size="lg">Discard</Button>
+                            <Button type='submit' variant={"primary"} size="lg" disabled={methods.formState.isSubmitting}>
+                                {methods.formState.isSubmitting ? (
+                                    <span className="flex items-center gap-2">
+                                        <LoaderCircleIcon className="h-4 w-4 animate-spin" /> Loading...
+                                    </span>
+                                ) : ("Save Changes")}
+                            </Button>
                         </div>
                     </form>
                 </Form>

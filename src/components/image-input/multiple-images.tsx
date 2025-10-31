@@ -1,85 +1,6 @@
-// import { CloudUpload, CloudUploadIcon, Cross, X } from 'lucide-react';
-// import { FC, useRef } from 'react';
-// import { useDropzone } from 'react-dropzone';
-// import { CloseButton } from 'react-toastify';
-
-// interface PageProps {
-//     value?: File[];
-//     onChange: (files: File[]) => void;
-//     className?: string;
-//     onDrop: (acceptedFiles: File[]) => void;
-// }
-
-// export const MultiImageUpload: FC<PageProps> = ({ value = [], onChange, onDrop,className ,...other}) => {
-//     const ref = useRef<HTMLInputElement | null>(null);
-
-//     const { getRootProps, getInputProps } = useDropzone({
-//         accept: { 'image/*': [] },
-//         multiple: true,
-//         onDrop: (acceptedFiles) => {
-//             onDrop(acceptedFiles);
-//             // Update react-hook-form field value
-//             if (onChange) onChange([...value, ...acceptedFiles]);
-//         },
-//     });
-
-//     const images = value.map((file) =>
-//         Object.assign(file, { preview: URL.createObjectURL(file) })
-//     );
-
-//     return (
-//         <>
-//             <div
-//                 {...getRootProps()}
-//                 className={`border border-dashed border-gray-300 bg-gray-100 md:p-10 p-5 rounded-md text-center cursor-pointer ${className}`}
-//                 onClick={() => ref.current?.click()}
-//             >
-//                 <input {...getInputProps()} ref={ref} {...other} />
-//                 <div className='flex justify-center mb-2'>
-//                      <CloudUploadIcon size={50} className=''/>
-//                 </div>
-//                 <p className="text-gray-600">Drag and drop images here, or click to select</p>
-
-//                 <div className="mt-4 grid grid-cols-3 gap-3">
-//                 </div>
-//             </div>
-//             <div className='flex flex-wrap gap-2 mt-4'>
-//                 {images.map((file: any) => (
-//                     <div key={file.name} className="relative">
-//                         <img
-//                             key={file.name}
-//                             src={file.preview}
-//                             alt={file.name}
-
-//                             className="size-[70px] object-cover rounded-md shadow"
-//                         />
-//                         <button
-//                             type="button"
-//                             className="absolute top-1 right-1 cursor-pointer"
-//                             onClick={() => {
-//                                 const newImages = images.filter((img) => img.name !== file.name);
-//                                 onChange(newImages);
-//                             }}
-//                         >
-//                             <X size={16} />
-//                         </button>
-//                     </div>
-//                 ))}
-//             </div>
-//         </>
-//     );
-// };
-
 
 'use client';
 
-import { useEffect, useState } from 'react';
-import {
-    formatBytes,
-    useFileUpload,
-    type FileMetadata,
-    type FileWithPreview,
-} from '@/hooks/use-file-upload';
 import {
     Alert,
     AlertContent,
@@ -92,6 +13,13 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import {
+    formatBytes,
+    useFileUpload,
+    type FileMetadata,
+    type FileWithPreview,
+} from '@/hooks/use-file-upload';
+import { cn } from '@/lib/utils';
+import {
     FileArchiveIcon,
     FileSpreadsheetIcon,
     FileTextIcon,
@@ -103,9 +31,8 @@ import {
     VideoIcon,
     XIcon,
 } from 'lucide-react';
-import { toAbsoluteUrl } from '@/lib/helpers';
-import { cn } from '@/lib/utils';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useEffect, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 interface FileUploadItem extends FileWithPreview {
     progress: number;
@@ -121,6 +48,7 @@ interface ProgressUploadProps {
     className?: string;
     onFilesChange?: (files: FileWithPreview[]) => void;
     simulateUpload?: boolean;
+    name: string;
 }
 
 export function MultiImageUpload({
@@ -130,24 +58,10 @@ export function MultiImageUpload({
     multiple = true,
     onFilesChange,
     simulateUpload = true,
+    name
 }: ProgressUploadProps) {
     // Create default images using FileMetadata type
-    const defaultImages: FileMetadata[] = [
-        {
-            id: 'default-3',
-            name: 'avatar-3.png',
-            size: 42048,
-            type: 'image/png',
-            url: toAbsoluteUrl('/media/avatars/300-1.png'),
-        },
-        {
-            id: 'default-4',
-            name: 'avatar-4.png',
-            size: 62807,
-            type: 'image/png',
-            url: toAbsoluteUrl('/media/avatars/300-2.png'),
-        },
-    ];
+    const defaultImages: FileMetadata[] = [];
 
     // Convert default images to FileUploadItem format
     const defaultUploadFiles: FileUploadItem[] = defaultImages.map((image) => ({
@@ -164,6 +78,9 @@ export function MultiImageUpload({
 
     const [uploadFiles, setUploadFiles] = useState<FileUploadItem[]>(defaultUploadFiles);
 
+    const { setValue, getValues, } = useFormContext();
+
+    const currentPhotos = getValues(name) || [];
     const [
         { isDragging, errors },
         {
@@ -183,10 +100,16 @@ export function MultiImageUpload({
         multiple,
         initialFiles: defaultImages,
         onFilesChange: (newFiles) => {
+            // onDrop(newFiles as );
             // Convert to upload items when files change, preserving existing status
+
+
+
             const newUploadFiles = newFiles.map((file) => {
                 // Check if this file already exists in uploadFiles
                 const existingFile = uploadFiles.find((existing) => existing.id === file.id);
+
+                setValue(name, [...currentPhotos, ...newFiles],{shouldValidate:true});
 
                 if (existingFile) {
                     // Preserve existing file status and progress
@@ -267,6 +190,8 @@ export function MultiImageUpload({
     const removeUploadFile = (fileId: string) => {
         setUploadFiles((prev) => prev.filter((file) => file.id !== fileId));
         removeFile(fileId);
+
+        setValue(name, [...currentPhotos.filter((photo:any) => photo.id !== fileId)],{shouldValidate:true});
     };
 
     const getFileIcon = (file: File | FileMetadata) => {
@@ -284,6 +209,7 @@ export function MultiImageUpload({
     const completedCount = uploadFiles.filter((f) => f.status === 'completed').length;
     const errorCount = uploadFiles.filter((f) => f.status === 'error').length;
     const uploadingCount = uploadFiles.filter((f) => f.status === 'uploading').length;
+
 
     return (
         <>
@@ -319,7 +245,7 @@ export function MultiImageUpload({
                         </p>
                     </div>
 
-                    <Button onClick={openFileDialog}>
+                    <Button type="button" onClick={openFileDialog}>
                         <UploadIcon />
                         Select files
                     </Button>
@@ -351,109 +277,109 @@ export function MultiImageUpload({
                             </div>
                         </div>
 
-                        <Button onClick={clearFiles} variant="outline" size="sm">
-                            Clear all
-                        </Button>
-                    </div>
+                        <Button onClick={() => {clearFiles();setValue(name, [])}} variant="outline" size="sm">
+                        Clear all
+                    </Button>
+                    </div >
                 )
-            }
+}
 
-            {/* File List */}
-            {
-                uploadFiles.length > 0 && (
-                    <div className="space-y-3">
-                        {uploadFiles.map((fileItem) => (
-                            <div key={fileItem.id} className="rounded-lg border border-border bg-card p-4">
-                                <div className="flex items-start gap-2.5">
-                                    {/* File Icon */}
-                                    <div className="flex-shrink-0">
-                                        {fileItem.preview && fileItem.file.type.startsWith('image/') ? (
-                                            <img
-                                                src={fileItem.preview}
-                                                alt={fileItem.file.name}
-                                                className="h-12 w-12 rounded-lg border object-cover"
-                                            />
-                                        ) : (
-                                            <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-border text-muted-foreground">
-                                                {getFileIcon(fileItem.file)}
-                                            </div>
-                                        )}
-                                    </div>
+{/* File List */ }
+{
+    uploadFiles.length > 0 && (
+        <div className="space-y-3">
+            {uploadFiles.map((fileItem) => (
+                <div key={fileItem.id} className="rounded-lg border border-border bg-card p-4">
+                    <div className="flex items-start gap-2.5">
+                        {/* File Icon */}
+                        <div className="flex-shrink-0">
+                            {fileItem.preview && fileItem.file.type.startsWith('image/') ? (
+                                <img
+                                    src={fileItem.preview}
+                                    alt={fileItem.file.name}
+                                    className="h-12 w-12 rounded-lg border object-cover"
+                                />
+                            ) : (
+                                <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-border text-muted-foreground">
+                                    {getFileIcon(fileItem.file)}
+                                </div>
+                            )}
+                        </div>
 
-                                    {/* File Info */}
-                                    <div className="min-w-0 flex-1">
-                                        <div className="flex items-center justify-between mt-0.75">
-                                            <p className="inline-flex flex-col justify-center gap-1 truncate font-medium">
-                                                <span className="text-sm">{fileItem.file.name}</span>
-                                                <span className="text-xs text-muted-foreground">{formatBytes(fileItem.file.size)}</span>
-                                            </p>
-                                            <div className="flex items-center gap-2">
-                                                {/* Remove Button */}
-                                                <Button
-                                                    onClick={() => removeUploadFile(fileItem.id)}
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    className="size-6 text-muted-foreground hover:opacity-100 hover:bg-transparent"
-                                                >
-                                                    <XIcon className="size-4" />
-                                                </Button>
-                                            </div>
-                                        </div>
-
-                                        {/* Progress Bar */}
-                                        {fileItem.status === 'uploading' && (
-                                            <div className="mt-2">
-                                                <Progress value={fileItem.progress} className="h-1" />
-                                            </div>
-                                        )}
-
-                                        {/* Error Message */}
-                                        {fileItem.status === 'error' && fileItem.error && (
-                                            <Alert variant="destructive" appearance="light" className="items-center gap-1.5 mt-2 px-2 py-1">
-                                                <AlertIcon>
-                                                    <TriangleAlert className="size-4!" />
-                                                </AlertIcon>
-                                                <AlertTitle className="text-xs">{fileItem.error}</AlertTitle>
-                                                <AlertToolbar>
-                                                    <Button
-                                                        onClick={() => retryUpload(fileItem.id)}
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        className="size-6 text-muted-foreground hover:opacity-100 hover:bg-transparent"
-                                                    >
-                                                        <RefreshCwIcon className="size-3.5" />
-                                                    </Button>
-                                                </AlertToolbar>
-                                            </Alert>
-                                        )}
-                                    </div>
+                        {/* File Info */}
+                        <div className="min-w-0 flex-1">
+                            <div className="flex items-center justify-between mt-0.75">
+                                <p className="inline-flex flex-col justify-center gap-1 truncate font-medium">
+                                    <span className="text-sm">{fileItem.file.name}</span>
+                                    <span className="text-xs text-muted-foreground">{formatBytes(fileItem.file.size)}</span>
+                                </p>
+                                <div className="flex items-center gap-2">
+                                    {/* Remove Button */}
+                                    <Button
+                                        onClick={() => removeUploadFile(fileItem.id)}
+                                        variant="ghost"
+                                        size="icon"
+                                        className="size-6 text-muted-foreground hover:opacity-100 hover:bg-transparent"
+                                    >
+                                        <XIcon className="size-4" />
+                                    </Button>
                                 </div>
                             </div>
-                        ))}
-                    </div>
-                )
-            }
 
-            {/* Error Messages */}
-            {
-                errors.length > 0 && (
-                    <Alert variant="destructive" appearance="light">
-                        <AlertIcon>
-                            <TriangleAlert />
-                        </AlertIcon>
-                        <AlertContent>
-                            <AlertTitle>File upload error(s)</AlertTitle>
-                            <AlertDescription>
-                                {errors.map((error, index) => (
-                                    <p key={index} className="last:mb-0">
-                                        {error}
-                                    </p>
-                                ))}
-                            </AlertDescription>
-                        </AlertContent>
-                    </Alert>
-                )
-            }
+                            {/* Progress Bar */}
+                            {fileItem.status === 'uploading' && (
+                                <div className="mt-2">
+                                    <Progress value={fileItem.progress} className="h-1" />
+                                </div>
+                            )}
+
+                            {/* Error Message */}
+                            {fileItem.status === 'error' && fileItem.error && (
+                                <Alert variant="destructive" appearance="light" className="items-center gap-1.5 mt-2 px-2 py-1">
+                                    <AlertIcon>
+                                        <TriangleAlert className="size-4!" />
+                                    </AlertIcon>
+                                    <AlertTitle className="text-xs">{fileItem.error}</AlertTitle>
+                                    <AlertToolbar>
+                                        <Button
+                                            onClick={() => retryUpload(fileItem.id)}
+                                            variant="ghost"
+                                            size="icon"
+                                            className="size-6 text-muted-foreground hover:opacity-100 hover:bg-transparent"
+                                        >
+                                            <RefreshCwIcon className="size-3.5" />
+                                        </Button>
+                                    </AlertToolbar>
+                                </Alert>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            ))}
+        </div>
+    )
+}
+
+{/* Error Messages */ }
+{
+    errors.length > 0 && (
+        <Alert variant="destructive" appearance="light">
+            <AlertIcon>
+                <TriangleAlert />
+            </AlertIcon>
+            <AlertContent>
+                <AlertTitle>File upload error(s)</AlertTitle>
+                <AlertDescription>
+                    {errors.map((error, index) => (
+                        <p key={index} className="last:mb-0">
+                            {error}
+                        </p>
+                    ))}
+                </AlertDescription>
+            </AlertContent>
+        </Alert>
+    )
+}
         </>
     );
 }

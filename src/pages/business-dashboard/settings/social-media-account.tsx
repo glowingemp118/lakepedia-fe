@@ -54,6 +54,7 @@ const SocialMediaAccount: FC<PageProps> = ({ profileData }) => {
   }, [defaultValues])
 
   const onSubmit = async (data: z.infer<typeof schema>) => {
+
     const accountProfile = {
       website: data.website,
       facebook: data.facebook,
@@ -61,11 +62,17 @@ const SocialMediaAccount: FC<PageProps> = ({ profileData }) => {
       youtube: data.youtube,
       key: "accounts"
     }
+    
     if (data.website || data.facebook || data.instagram || data.youtube) {
+
       let response: any = await updateProfile(accountProfile);
+      
       if (!response.error) {
+      
         toast.success("Social media accounts updated successfully");
+      
         methods.reset(defaultValues);
+      
       }
     }
   }

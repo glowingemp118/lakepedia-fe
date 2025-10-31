@@ -5,12 +5,11 @@ import { MultiImageUpload } from '../image-input/multiple-images';
 interface PageProps {
   name: string;
   label?: string;
-  onDrop: (acceptedFiles: File[]) => void;
   [key: string]: any;
 }
 
-const RhfMultipleImages: FC<PageProps> = ({ name, label, onDrop ,...other}) => {
-  const { control } = useFormContext();
+const RhfMultipleImages: FC<PageProps> = ({ name, label, ...other}) => {
+  const { control,formState } = useFormContext();
 
   return (
     <Controller
@@ -18,8 +17,17 @@ const RhfMultipleImages: FC<PageProps> = ({ name, label, onDrop ,...other}) => {
       control={control}
       render={({ field }) => (
         <div className="flex flex-col gap-2">
+
           {label && <label className="font-medium">{label}</label>}
-          <MultiImageUpload {...field} onDrop={onDrop} {...other} />
+
+          <MultiImageUpload {...field} name={name} {...other} />
+
+          {formState.errors[name] && (
+            <p className="text-sm text-red-500 mt-1">
+              {formState.errors[name]?.message as string}
+            </p>
+          )}
+        
         </div>
       )}
     />

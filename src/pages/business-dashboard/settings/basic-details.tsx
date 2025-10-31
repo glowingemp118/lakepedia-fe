@@ -141,7 +141,7 @@ const BasicDetails: FC<PageProps> = ({ profileData }) => {
                         </div>
                         <div className='flex justify-end items-center gap-2'>
                             <Button variant={"outline"} type="button" onClick={handleReset} size="lg">Discard</Button>
-                            <Button type='submit' variant={"primary"} size="lg">
+                            <Button type='submit' variant={"primary"} size="lg" disabled={methods.formState.isSubmitting}>
                                 {methods.formState.isSubmitting ? (
                                     <span className="flex items-center gap-2">
                                         <LoaderCircleIcon className="h-4 w-4 animate-spin" /> Loading...
