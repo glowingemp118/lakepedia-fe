@@ -8,17 +8,19 @@ import { useUpdateBusinessMutation } from '@/store/Reducer/business';
 import { useDeleteFileMutation, useUploadFileMutation } from '@/store/Reducer/file';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircleIcon } from 'lucide-react';
-import { FC, useEffect, useMemo } from 'react';
+import { FC, useCallback, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import z from 'zod';
 
+
+
 interface PageProps {
     profileData: {
-        logo: string;
-        thumbnail: string;
-        galleryPhotos: string[];
-        youtubeVideo: string;
+        logo?: object;
+        thumbnail?: object;
+        gallery_photos?: object[];
+        youtube_video?: string;
     },
 }
 
@@ -26,10 +28,10 @@ const MediaInformation: FC<PageProps> = ({ profileData }) => {
 
 
     const defaultValues = useMemo(() => ({
-        logo: profileData?.logo || "",
-        thumbnail: profileData?.thumbnail || "",
-        galleryPhotos: profileData?.galleryPhotos || [],
-        youtubeVideo: profileData?.youtubeVideo || "",
+        logo: (profileData?.logo as { url: string })?.url || "",
+        thumbnail: (profileData?.thumbnail as { url: string })?.url || "",
+        galleryPhotos: profileData?.gallery_photos?.map((photo) => (photo as { url: string })?.url) || [],
+        youtubeVideo: profileData?.youtube_video || "",
     }), [profileData]);
 
     const [updateBusiness] = useUpdateBusinessMutation();
@@ -38,55 +40,22 @@ const MediaInformation: FC<PageProps> = ({ profileData }) => {
 
     const [deleteFile] = useDeleteFileMutation();
 
-    const fileOrString = (fieldName: string) =>
-        z.any().superRefine((val, ctx) => {
-            if (typeof val === "string") {
-                if (!val.trim()) {
-                    ctx.addIssue({
-                        code: z.ZodIssueCode.custom,
-                        message: `${fieldName} is required`,
-                    });
-                }
-                return;
-            }
+    const fileOrString = z.union([
+        z.string().min(1, "Required"),
+        z.instanceof(File),
+        z.object({
+            file: z.instanceof(File).optional(),
+            url: z.string().optional(),
+            id: z.string().optional(),
 
-            if (val instanceof File) {
-                return;
-            }
+        })
 
-            ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                message: `${fieldName} must be a File or string`,
-            });
-        });
+    ]);
 
     const schema = z.object({
-        logo: fileOrString("Logo"),
-        thumbnail: fileOrString("Thumbnail"),
-
-        galleryPhotos: z
-            .array(z.any())
-            .superRefine((arr, ctx) => {
-                if (!arr?.length) {
-                    ctx.addIssue({
-                        code: z.ZodIssueCode.custom,
-                        message: "At least one gallery photo is required",
-                    });
-                    return;
-                }
-
-                arr.forEach((val, idx) => {
-                    if (typeof val === "string" && val.trim()) return;
-                    if (val instanceof File) return;
-
-                    ctx.addIssue({
-                        code: z.ZodIssueCode.custom,
-                        message: "Invalid gallery photo",
-                        path: [idx],
-                    });
-                });
-            }),
-
+        logo: fileOrString,
+        thumbnail: fileOrString,
+        galleryPhotos: z.array(fileOrString).min(1, "At least one gallery photo is required"),
         youtubeVideo: z.string().url("Invalid YouTube video URL"),
     });
 
@@ -97,11 +66,9 @@ const MediaInformation: FC<PageProps> = ({ profileData }) => {
 
 
     useEffect(() => {
-        methods.reset(defaultValues);
-    }, [defaultValues])
-
-    console.log(methods.formState.errors);
-
+        if (defaultValues)
+            methods.reset(defaultValues);
+    }, [defaultValues]);
 
     const onSubmit = async (data: z.infer<typeof schema>) => {
         console.log("Submitted data: ", data);
@@ -111,30 +78,35 @@ const MediaInformation: FC<PageProps> = ({ profileData }) => {
         let thumbnail = "";
 
         if (typeof (data.logo) !== 'string') {
-            const uploadResponse: any = await uploadFile(data.logo as File)
+            const uploadResponse: any = await uploadFile((data.logo as { file: File })?.file as File)
             logo = uploadResponse?.data?.data[0]?.id;
+            let deleteResponse = await deleteFile((profileData?.logo as any)?.id);
+            if (!deleteResponse.error) { }
         }
         if (typeof (data.thumbnail) !== 'string') {
-            const uploadResponse: any = await uploadFile(data.thumbnail as File)
+            const uploadResponse: any = await uploadFile((data.thumbnail as { file: File })?.file as File)
             thumbnail = uploadResponse?.data?.data[0]?.id;
+            let deleteResponse = await deleteFile((profileData?.thumbnail as any)?.id);
+            if (!deleteResponse.error) { }
         }
 
         const uploadResponses = await Promise.all(
             data?.galleryPhotos?.map(async (file) => {
                 if (typeof file !== 'string') {
-                    const uploadResponse: any = await uploadFile(file as File);
+                    const uploadResponse: any = await uploadFile((file as { file: File })?.file as File);
                     return uploadResponse?.data?.data[0]?.id;
                 } else {
                     return file;
                 }
             })
         );
+        console.log("Gallery upload responses: ", uploadResponses);
 
         const mediaData = {
-            logo: logo && logo.length > 0 ? logo : data.logo,
-            thumbnail: thumbnail && thumbnail.length > 0 ? thumbnail : data.thumbnail,
+            ...(logo && { logo }),
+            ...(thumbnail && { thumbnail }),
             gallery: uploadResponses,
-            video: data.youtubeVideo
+            ...(data.youtubeVideo && { video: data.youtubeVideo })
         }
         let response = await updateBusiness({ media: mediaData });
 
@@ -143,6 +115,14 @@ const MediaInformation: FC<PageProps> = ({ profileData }) => {
             methods.reset(defaultValues);
         }
     }
+
+    const currentPhotos = methods.getValues("galleryPhotos") || [];
+
+    const onDrop = useCallback((acceptedFiles: any) => {
+
+        methods.setValue("galleryPhotos", [...currentPhotos, ...acceptedFiles], { shouldValidate: true });
+
+    }, [methods.setValue]);
 
 
     return (
@@ -186,7 +166,7 @@ const MediaInformation: FC<PageProps> = ({ profileData }) => {
                                 </p>
                             </div>
                             <div className='md:col-span-8 col-span-12 md:mb-4'>
-                                <RhfMultipleImages name='galleryPhotos' />
+                                <RhfMultipleImages name='galleryPhotos' onDrop={onDrop} />
                             </div>
                             <div className='md:col-span-4 col-span-12 md:block hidden'>
                                 <p className='flex items-center gap-1.5 leading-none font-medium text-sm text-mono'>
@@ -219,7 +199,8 @@ const MediaInformation: FC<PageProps> = ({ profileData }) => {
                         </div>
 
                         <div className='flex justify-end items-center gap-2'>
-                            <Button variant={"outline"} type="button" size="lg">Discard</Button>
+                            <Button variant={"outline"} type="button" size="lg"
+                                onClick={() => { methods.reset(defaultValues) }}>Discard</Button>
                             <Button type='submit' variant={"primary"} size="lg" disabled={methods.formState.isSubmitting}>
                                 {methods.formState.isSubmitting ? (
                                     <span className="flex items-center gap-2">

@@ -21,6 +21,8 @@ import { authApi } from "./Reducer/auth";
 import { userApi } from "./Reducer/users";
 import { fileApi } from "./Reducer/file";
 import { businessApi } from "./Reducer/business";
+import { tripApi } from "./Reducer/trip";
+import { lakeApi } from "./Reducer/lake";
 
 // Combine all reducers into one root reducer
 const rootReducer = combineReducers({
@@ -28,6 +30,8 @@ const rootReducer = combineReducers({
   [userApi.reducerPath]: userApi.reducer,
   [fileApi.reducerPath]: fileApi.reducer,
   [businessApi.reducerPath]: businessApi.reducer,
+  [tripApi.reducerPath]: tripApi.reducer,
+  [lakeApi.reducerPath]: lakeApi.reducer, 
   user: userReducer,
   loader: loaderReducer,
 });
@@ -53,7 +57,7 @@ export const store = configureStore({
     })
       .concat(authApi.middleware)
       .concat(userApi.middleware)
-      .concat(fileApi.middleware).concat(businessApi.middleware),
+      .concat(fileApi.middleware).concat(businessApi.middleware).concat(tripApi.middleware).concat(lakeApi.middleware),
 });
 
 // Initialize Redux Persist to persist store state

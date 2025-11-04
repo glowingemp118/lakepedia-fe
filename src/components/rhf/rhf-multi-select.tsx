@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Command, CommandGroup, CommandItem } from "@/components/ui/command";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import {
     FormControl,
     FormField,
@@ -27,15 +27,27 @@ type Props = {
     label?: string;
     placeholder?: string;
     options: Option[];
+    state?: string;
+    setState?: (value: string) => void;
+    className?: string;
 };
 
 export function RHFMultiSelect({
     name,
     label,
     placeholder = "Select",
+    state,
+    setState,
     options,
+    className,
 }: Props) {
     const { control } = useFormContext();
+
+    console.log("options in RHFMultiSelect:", options);
+
+    // const filteredOptions = options.filter((o) =>
+    //     o.label.toLowerCase().includes(state.toLowerCase())
+    // );
 
     return (
         <FormField
@@ -63,7 +75,8 @@ export function RHFMultiSelect({
                                         role="combobox"
                                         className={cn(
                                             "w-full justify-between h-[40px] dark:bg-input/30 border-input bg-transparent shadow-xs",
-                                            !selectedValues.length && "text-muted-foreground"
+                                            !selectedValues.length && "text-muted-foreground",
+                                            className,
                                         )}
                                     >
                                         <div className="flex gap-1 flex-wrap">
@@ -93,28 +106,36 @@ export function RHFMultiSelect({
                                     className="w-[var(--radix-popover-trigger-width)] max-h-[300px] p-0 z-[9999]"
                                 >
                                     <Command>
-                                        <CommandGroup className="w-full">
-                                            {options.map((option) => (
-                                                <CommandItem
-                                                    key={option.value}
-                                                    onSelect={() => handleSelect(option.value)}
-                                                >
-                                                    <div
-                                                        className={cn(
-                                                            "mr-2 flex h-4 w-4 items-center justify-center rounded-sm",
-                                                            selectedValues.includes(option.value)
-                                                                ? ""
-                                                                : "opacity-50"
-                                                        )}
+                                        <CommandInput placeholder="Search " className="h-9" value={state}
+                                        onValueChange={(val) => setState(val)}
+                                        />
+                                        <CommandList>
+                                            {options.length === 0 && (
+                                                <CommandEmpty>No Data found.</CommandEmpty>
+                                            )}
+                                            <CommandGroup className="w-full" >
+                                                {options.map((option) => (
+                                                    <CommandItem
+                                                        key={option.value}
+                                                        onSelect={() => handleSelect(option.value)}
                                                     >
-                                                        {selectedValues.includes(option.value) && (
-                                                            <Check className="h-4 w-4" />
-                                                        )}
-                                                    </div>
-                                                    {option.label}
-                                                </CommandItem>
-                                            ))}
-                                        </CommandGroup>
+                                                        <div
+                                                            className={cn(
+                                                                "mr-2 flex h-4 w-4 items-center justify-center rounded-sm",
+                                                                selectedValues.includes(option.value)
+                                                                    ? ""
+                                                                    : "opacity-50"
+                                                            )}
+                                                        >
+                                                            {selectedValues.includes(option.value) && (
+                                                                <Check className="h-4 w-4" />
+                                                            )}
+                                                        </div>
+                                                        {option.label}
+                                                    </CommandItem>
+                                                ))}
+                                            </CommandGroup>
+                                        </CommandList>
                                     </Command>
                                 </PopoverContent>
                             </Popover>

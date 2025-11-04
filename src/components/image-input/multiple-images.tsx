@@ -49,6 +49,7 @@ interface ProgressUploadProps {
     onFilesChange?: (files: FileWithPreview[]) => void;
     simulateUpload?: boolean;
     name: string;
+    onDrop?: (files: FileWithPreview[]) => void;
 }
 
 export function MultiImageUpload({
@@ -57,13 +58,43 @@ export function MultiImageUpload({
     accept = '*',
     multiple = true,
     onFilesChange,
+    onDrop,
     simulateUpload = true,
     name
 }: ProgressUploadProps) {
-    // Create default images using FileMetadata type
-    const defaultImages: FileMetadata[] = [];
 
-    // Convert default images to FileUploadItem format
+    // const defaultImages: FileMetadata[] = [];
+
+    const defaultPhotos = useFormContext().getValues(name) || [];
+
+    const defaultImages: FileMetadata[] = defaultPhotos.map((photo: any) => ({
+        id: (photo as any).id,
+        name: typeof photo === "string" ? photo.split("/").pop() : (photo as any).name || (photo as any).file?.name || 'existing_image',
+        size: (photo as any).size || (photo as any)?.file?.size || 0,
+        type: typeof photo === "string" ? photo.split(".").pop() : (photo as any).type || (photo as any)?.file?.type || 'image/jpeg',
+        url: typeof photo === "string" ? photo : (photo as any).url || (photo as any).preview,
+    })) || [];
+    useEffect(() => {
+        if (defaultPhotos.length === 0) {
+            setUploadFiles([]);
+        } else {
+            const defaultUploadFiles: FileUploadItem[] = defaultImages.map((image) => ({
+                id: image.id,
+                file: {
+                    name: image.name,
+                    size: image.size,
+                    type: image.type,
+                } as File,
+                preview: image.url,
+                progress: 100,
+                status: 'completed' as const,
+            }));
+
+            setUploadFiles(defaultUploadFiles);
+        }
+    }, [defaultPhotos]);
+
+
     const defaultUploadFiles: FileUploadItem[] = defaultImages.map((image) => ({
         id: image.id,
         file: {
@@ -74,7 +105,8 @@ export function MultiImageUpload({
         preview: image.url,
         progress: 100,
         status: 'completed' as const,
-    }));
+    }))
+
 
     const [uploadFiles, setUploadFiles] = useState<FileUploadItem[]>(defaultUploadFiles);
 
@@ -100,16 +132,17 @@ export function MultiImageUpload({
         multiple,
         initialFiles: defaultImages,
         onFilesChange: (newFiles) => {
+
             // onDrop(newFiles as );
             // Convert to upload items when files change, preserving existing status
-
+            onDrop?.(newFiles);
 
 
             const newUploadFiles = newFiles.map((file) => {
                 // Check if this file already exists in uploadFiles
                 const existingFile = uploadFiles.find((existing) => existing.id === file.id);
 
-                setValue(name, [...currentPhotos, ...newFiles],{shouldValidate:true});
+
 
                 if (existingFile) {
                     // Preserve existing file status and progress
@@ -132,45 +165,45 @@ export function MultiImageUpload({
     });
 
     // Simulate upload progress
-    useEffect(() => {
-        if (!simulateUpload) return;
+    // useEffect(() => {
+    //     if (!simulateUpload) return;
 
-        const interval = setInterval(() => {
-            setUploadFiles((prev) =>
-                prev.map((file) => {
-                    if (file.status !== 'uploading') return file;
+    //     const interval = setInterval(() => {
+    //         setUploadFiles((prev) =>
+    //             prev.map((file) => {
+    //                 if (file.status !== 'uploading') return file;
 
-                    const increment = Math.random() * 15 + 5; // 5-20% increment
-                    const newProgress = Math.min(file.progress + increment, 100);
+    //                 const increment = Math.random() * 15 + 5; // 5-20% increment
+    //                 const newProgress = Math.min(file.progress + increment, 100);
 
-                    // Simulate occasional errors (10% chance when progress > 50%)
-                    if (newProgress > 50 && Math.random() < 0.1) {
-                        return {
-                            ...file,
-                            status: 'error' as const,
-                            error: 'Upload failed. Please try again.',
-                        };
-                    }
+    //                 // Simulate occasional errors (10% chance when progress > 50%)
+    //                 if (newProgress > 50 && Math.random() < 0.1) {
+    //                     return {
+    //                         ...file,
+    //                         status: 'error' as const,
+    //                         error: 'Upload failed. Please try again.',
+    //                     };
+    //                 }
 
-                    // Complete when progress reaches 100%
-                    if (newProgress >= 100) {
-                        return {
-                            ...file,
-                            progress: 100,
-                            status: 'completed' as const,
-                        };
-                    }
+    //                 // Complete when progress reaches 100%
+    //                 if (newProgress >= 100) {
+    //                     return {
+    //                         ...file,
+    //                         progress: 100,
+    //                         status: 'completed' as const,
+    //                     };
+    //                 }
 
-                    return {
-                        ...file,
-                        progress: newProgress,
-                    };
-                }),
-            );
-        }, 500);
+    //                 return {
+    //                     ...file,
+    //                     progress: newProgress,
+    //                 };
+    //             }),
+    //         );
+    //     }, 500);
 
-        return () => clearInterval(interval);
-    }, [simulateUpload]);
+    //     return () => clearInterval(interval);
+    // }, [simulateUpload]);
 
     const retryUpload = (fileId: string) => {
         setUploadFiles((prev) =>
@@ -191,7 +224,7 @@ export function MultiImageUpload({
         setUploadFiles((prev) => prev.filter((file) => file.id !== fileId));
         removeFile(fileId);
 
-        setValue(name, [...currentPhotos.filter((photo:any) => photo.id !== fileId)],{shouldValidate:true});
+        setValue(name, [...currentPhotos.filter((photo: any) => photo.id !== fileId)], { shouldValidate: true });
     };
 
     const getFileIcon = (file: File | FileMetadata) => {
@@ -277,109 +310,109 @@ export function MultiImageUpload({
                             </div>
                         </div>
 
-                        <Button onClick={() => {clearFiles();setValue(name, [])}} variant="outline" size="sm">
-                        Clear all
-                    </Button>
+                        <Button onClick={() => { clearFiles(); setValue(name, []); setUploadFiles([]) }} variant="outline" size="sm">
+                            Clear all
+                        </Button>
                     </div >
                 )
-}
+            }
 
-{/* File List */ }
-{
-    uploadFiles.length > 0 && (
-        <div className="space-y-3">
-            {uploadFiles.map((fileItem) => (
-                <div key={fileItem.id} className="rounded-lg border border-border bg-card p-4">
-                    <div className="flex items-start gap-2.5">
-                        {/* File Icon */}
-                        <div className="flex-shrink-0">
-                            {fileItem.preview && fileItem.file.type.startsWith('image/') ? (
-                                <img
-                                    src={fileItem.preview}
-                                    alt={fileItem.file.name}
-                                    className="h-12 w-12 rounded-lg border object-cover"
-                                />
-                            ) : (
-                                <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-border text-muted-foreground">
-                                    {getFileIcon(fileItem.file)}
-                                </div>
-                            )}
-                        </div>
+            {/* File List */}
+            {
+                uploadFiles.length > 0 && (
+                    <div className="space-y-3">
+                        {uploadFiles.map((fileItem) => (
+                            <div key={fileItem.id} className="rounded-lg border border-border bg-card p-4">
+                                <div className="flex items-start gap-2.5">
+                                    {/* File Icon */}
+                                    <div className="flex-shrink-0">
+                                        {fileItem.preview && typeof fileItem.preview === "string" ? (
+                                            <img
+                                                src={fileItem.preview as string}
+                                                alt={fileItem.file.name}
+                                                className="h-12 w-12 rounded-lg border object-cover"
+                                            />
+                                        ) : (
+                                            <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-border text-muted-foreground">
+                                                {getFileIcon(fileItem.file)}
+                                            </div>
+                                        )}
+                                    </div>
 
-                        {/* File Info */}
-                        <div className="min-w-0 flex-1">
-                            <div className="flex items-center justify-between mt-0.75">
-                                <p className="inline-flex flex-col justify-center gap-1 truncate font-medium">
-                                    <span className="text-sm">{fileItem.file.name}</span>
-                                    <span className="text-xs text-muted-foreground">{formatBytes(fileItem.file.size)}</span>
-                                </p>
-                                <div className="flex items-center gap-2">
-                                    {/* Remove Button */}
-                                    <Button
-                                        onClick={() => removeUploadFile(fileItem.id)}
-                                        variant="ghost"
-                                        size="icon"
-                                        className="size-6 text-muted-foreground hover:opacity-100 hover:bg-transparent"
-                                    >
-                                        <XIcon className="size-4" />
-                                    </Button>
+                                    {/* File Info */}
+                                    <div className="min-w-0 flex-1">
+                                        <div className="flex items-center justify-between mt-0.75">
+                                            <p className="inline-flex flex-col justify-center gap-1 truncate font-medium">
+                                                <span className="text-sm">{fileItem.file.name}</span>
+                                                <span className="text-xs text-muted-foreground">{formatBytes(fileItem.file.size)}</span>
+                                            </p>
+                                            <div className="flex items-center gap-2">
+                                                {/* Remove Button */}
+                                                <Button
+                                                    onClick={() => removeUploadFile(fileItem.id)}
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="size-6 text-muted-foreground hover:opacity-100 hover:bg-transparent"
+                                                >
+                                                    <XIcon className="size-4" />
+                                                </Button>
+                                            </div>
+                                        </div>
+
+                                        {/* Progress Bar */}
+                                        {fileItem.status === 'uploading' && (
+                                            <div className="mt-2">
+                                                <Progress value={fileItem.progress} className="h-1" />
+                                            </div>
+                                        )}
+
+                                        {/* Error Message */}
+                                        {fileItem.status === 'error' && fileItem.error && (
+                                            <Alert variant="destructive" appearance="light" className="items-center gap-1.5 mt-2 px-2 py-1">
+                                                <AlertIcon>
+                                                    <TriangleAlert className="size-4!" />
+                                                </AlertIcon>
+                                                <AlertTitle className="text-xs">{fileItem.error}</AlertTitle>
+                                                <AlertToolbar>
+                                                    <Button
+                                                        onClick={() => retryUpload(fileItem.id)}
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="size-6 text-muted-foreground hover:opacity-100 hover:bg-transparent"
+                                                    >
+                                                        <RefreshCwIcon className="size-3.5" />
+                                                    </Button>
+                                                </AlertToolbar>
+                                            </Alert>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
-
-                            {/* Progress Bar */}
-                            {fileItem.status === 'uploading' && (
-                                <div className="mt-2">
-                                    <Progress value={fileItem.progress} className="h-1" />
-                                </div>
-                            )}
-
-                            {/* Error Message */}
-                            {fileItem.status === 'error' && fileItem.error && (
-                                <Alert variant="destructive" appearance="light" className="items-center gap-1.5 mt-2 px-2 py-1">
-                                    <AlertIcon>
-                                        <TriangleAlert className="size-4!" />
-                                    </AlertIcon>
-                                    <AlertTitle className="text-xs">{fileItem.error}</AlertTitle>
-                                    <AlertToolbar>
-                                        <Button
-                                            onClick={() => retryUpload(fileItem.id)}
-                                            variant="ghost"
-                                            size="icon"
-                                            className="size-6 text-muted-foreground hover:opacity-100 hover:bg-transparent"
-                                        >
-                                            <RefreshCwIcon className="size-3.5" />
-                                        </Button>
-                                    </AlertToolbar>
-                                </Alert>
-                            )}
-                        </div>
+                        ))}
                     </div>
-                </div>
-            ))}
-        </div>
-    )
-}
+                )
+            }
 
-{/* Error Messages */ }
-{
-    errors.length > 0 && (
-        <Alert variant="destructive" appearance="light">
-            <AlertIcon>
-                <TriangleAlert />
-            </AlertIcon>
-            <AlertContent>
-                <AlertTitle>File upload error(s)</AlertTitle>
-                <AlertDescription>
-                    {errors.map((error, index) => (
-                        <p key={index} className="last:mb-0">
-                            {error}
-                        </p>
-                    ))}
-                </AlertDescription>
-            </AlertContent>
-        </Alert>
-    )
-}
+            {/* Error Messages */}
+            {
+                errors.length > 0 && (
+                    <Alert variant="destructive" appearance="light">
+                        <AlertIcon>
+                            <TriangleAlert />
+                        </AlertIcon>
+                        <AlertContent>
+                            <AlertTitle>File upload error(s)</AlertTitle>
+                            <AlertDescription>
+                                {errors.map((error, index) => (
+                                    <p key={index} className="last:mb-0">
+                                        {error}
+                                    </p>
+                                ))}
+                            </AlertDescription>
+                        </AlertContent>
+                    </Alert>
+                )
+            }
         </>
     );
 }

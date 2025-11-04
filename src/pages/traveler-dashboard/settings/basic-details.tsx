@@ -30,6 +30,8 @@ interface PageProps {
 
 const BasicDetails: FC<PageProps> = ({ profileData }) => {
 
+    console.log("Profile data in basic details: ", profileData);
+
     const defaultValues = useMemo(() => ({
         photo: profileData?.photo as string || null,
         firstName: profileData?.first_name as string || '',
@@ -70,8 +72,6 @@ const BasicDetails: FC<PageProps> = ({ profileData }) => {
     const onSubmit = async (data: z.infer<typeof schema>) => {
 
         let image = "";
-
-        console.log("Submitted Data: ", data);
 
         if (data.photo && typeof data.photo !== 'string') {
             const uploadResponse: any = await uploadFile(data.photo?.file as File)

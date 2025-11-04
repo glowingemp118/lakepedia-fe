@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { X } from 'lucide-react';
 import { toAbsoluteUrl } from '@/lib/helpers';
 import { Button } from '@/components/ui/button';
@@ -20,11 +20,20 @@ export const AvatarInput: FC<AvatarInputProps> = ({ name,className,...other }) =
 
   const { setValue, getValues } = useFormContext();
 
+
   const [avatar, setAvatar] = useState<ImageInputFile[]>([
     {
-      dataURL: toAbsoluteUrl(getValues(name) || `/media/app/default.webp`)
+      dataURL: getValues(name) || toAbsoluteUrl(`/media/app/default.webp`)
     },
   ]);
+
+  useEffect(()=>{
+    if(getValues(name)){
+      setAvatar([{
+        dataURL: getValues(name)
+      }])
+    }
+  }, [getValues(name)])
 
   return (
     <ImageInput

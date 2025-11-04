@@ -8,8 +8,8 @@ interface PageProps {
   [key: string]: any;
 }
 
-const RhfMultipleImages: FC<PageProps> = ({ name, label, ...other}) => {
-  const { control,formState } = useFormContext();
+const RhfMultipleImages: FC<PageProps> = ({ name, onDrop, label, ...other }) => {
+  const { control, formState } = useFormContext();
 
   return (
     <Controller
@@ -20,7 +20,7 @@ const RhfMultipleImages: FC<PageProps> = ({ name, label, ...other}) => {
 
           {label && <label className="font-medium">{label}</label>}
 
-          <MultiImageUpload {...field} name={name} {...other} />
+          <MultiImageUpload {...field} name={name} onDrop={onDrop} {...other} />
 
           {formState.errors[name] && (
             <p className="text-sm text-red-500 mt-1">

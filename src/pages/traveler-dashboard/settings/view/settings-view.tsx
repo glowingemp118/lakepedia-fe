@@ -64,7 +64,7 @@ const SettingsView = () => {
 
     return (
         <div className='md:mx-10 mx-2 my-4 flex flex-col gap-6'>
-            {isLoading || isFetching ?
+            {isLoading  ?
                 <ScreenLoader />
                 :
                 <>

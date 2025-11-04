@@ -11,11 +11,20 @@ const TripOverView: FC<PageProps> = ({ trip }) => {
         <>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                 <h3 className="text-lg font-semibold mb-3 flex items-center gap-1"><Map size={16} /> Destinations</h3>
-                <p className="text-gray-700">{trip.destinations.join(', ')}</p>
+                <p className="text-gray-700">{trip?.destinations?.join(', ') || "Not Added"}</p>
             </motion.div>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-8">
                 <h3 className="text-lg font-semibold mb-3 flex items-center gap-1"><MapPin size={16} /> Notable Lakes</h3>
-                <TripLakes lakes={lakes} />
+                <TripLakes lakes={lakes.slice(0,trip?.lakes?.length).map((lake,index)=>{
+                    return {
+                        ...lake,
+                        id: trip?.lakes?.[index].id || lake.id,
+                        name: trip?.lakes?.[index].lake || lake.name,
+                        description: trip?.lakes?.[index].description || lake.description,
+                        location: trip?.lakes?.[index].location || lake.location,
+                        imageUrl: trip?.lakes?.[index].image_url || lake.imageUrl,
+                    }
+                })} />
             </motion.div>
         </>
     )

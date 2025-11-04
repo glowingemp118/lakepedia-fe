@@ -1,6 +1,6 @@
 import { Container } from "@/components/common/container";
 import { Navbar } from '@/components/layouts/layout-3/components/navbar';
-import { ScreenLoader } from "@/components/screen-loader";
+import { useGetBusinessQuery } from "@/store/Reducer/business";
 import { useGetProfileQuery } from "@/store/Reducer/users";
 import { selectUser } from "@/store/slices/userSlice";
 import { useMemo } from "react";
@@ -15,9 +15,8 @@ import { Settings } from "../notification-settings";
 import Operations from "../operations";
 import Promotions from "../promotions";
 import SignInMethod from "../signin-method";
-import TrustAndEngagement from "../trust-and-engement";
 import SocialMediaAccount from "../social-media-account";
-import { useGetBusinessQuery } from "@/store/Reducer/business";
+import TrustAndEngagement from "../trust-and-engement";
 
 
 const BusinessSettingsView = () => {
@@ -96,33 +95,39 @@ const BusinessSettingsView = () => {
         policies: (businessProfileData as any)?.business?.policies,
     }), [businessProfileData]);
 
+    const media = useMemo(() => ({
+        logo: (businessProfileData as any)?.business?.businessMedia?.logoMedia || {},
+        thumbnail: (businessProfileData as any)?.business?.businessMedia?.thumbnailMedia || {},
+        gallery_photos: (businessProfileData as any)?.business?.businessMedia?.galleryMedia || [],
+        youtube_video: (businessProfileData as any)?.business?.businessMedia?.video || "",
+    }), [businessProfileData]);
 
     return (
         <div className='md:mx-10 mx-2 my-4 flex flex-col gap-6'>
 
-            {isLoading ?
+            {/* {isLoading ?
                 <ScreenLoader />
                 :
-                <>
-                    <BusinessHeroWithProfile />
-                    <Container>
-                        <Navbar />
-                    </Container>
-                    <Container className='flex flex-col gap-6'>
-                        <BasicDetails profileData={businessProfile} />
-                        <ContactInformation profileData={contactInformation} />
-                        <SocialMediaAccount profileData={socialMediaDetails} />
-                        <Operations profileData={operations} />
-                        <MediaInformation profileData={user} />
-                        <TrustAndEngagement profileData={trustAndEngagement} />
-                        <Promotions profileData={promotions} />
-                        <SignInMethod email={user?.email as string || "jenny@kteam.com"} />
-                        {/* <ConnectAccount /> */}
-                        <EmailPreference emailPreferences={emailPreference} />
-                        <Settings businessSettings={businessSettings} />
-                        <DeactiveCard />
-                    </Container>
-                </>}
+                <> */}
+            <BusinessHeroWithProfile />
+            <Container>
+                <Navbar />
+            </Container>
+            <Container className='flex flex-col gap-6'>
+                <BasicDetails profileData={businessProfile} />
+                <ContactInformation profileData={contactInformation} />
+                <SocialMediaAccount profileData={socialMediaDetails} />
+                <Operations profileData={operations} />
+                <MediaInformation profileData={media} />
+                <TrustAndEngagement profileData={trustAndEngagement} />
+                <Promotions profileData={promotions} />
+                <SignInMethod email={user?.email as string || "jenny@kteam.com"} />
+                {/* <ConnectAccount /> */}
+                <EmailPreference emailPreferences={emailPreference} />
+                <Settings businessSettings={businessSettings} />
+                <DeactiveCard />
+            </Container>
+            {/* </>} */}
         </div>
     )
 }

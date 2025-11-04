@@ -5,12 +5,12 @@ import { Navbar } from '@/components/layouts/layout-3/components/navbar';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { useGetTripByIdQuery } from '@/store/Reducer/trip';
 import { Calendar, Clock, FileText, Map, MapPin } from 'lucide-react';
 import { useState } from 'react';
 import { useParams } from 'react-router';
 import { UserHeroWithProfile } from '../../profile/profile-hero';
 import TripActivity from '../trip-activity';
-import TripGroupMember from '../trip-group-member';
 import Itinerary from '../trip-itinerary';
 import TripOverView from '../trip-overview';
 import TripRecommendations from '../trip-recommendations';
@@ -22,7 +22,11 @@ export const TripDetailView = () => {
 
     const { id } = useParams();
 
-    const trip = sampleTripData;
+    const { data: tripDetail } = useGetTripByIdQuery(id, {
+        skip: !id
+    });
+
+    const trip = tripDetail?.data?.trip;
 
     const [activeTab, setActiveTab] = useState<'overview' | 'itinerary' | 'files' | 'activity' | "recommendations">('overview');
 
@@ -30,7 +34,7 @@ export const TripDetailView = () => {
     return (
         <div className="md:mx-10 mx-2 my-4 flex flex-col gap-6">
             {/* Hero Section */}
-            <UserHeroWithProfile/>
+            <UserHeroWithProfile />
 
             <Container>
                 <Navbar />
@@ -41,15 +45,19 @@ export const TripDetailView = () => {
                 <Card className="p-6 shadow-lg border rounded-2xl">
                     <div className="flex flex-col md:flex-row justify-between gap-4">
                         <div>
-                            <h1 className="text-xl font-bold">{trip.title}</h1>
-                            <p className="text-gray-500 mt-2">{trip.description}</p>
+                            <h1 className="text-xl font-bold">{trip?.name || "Not Added"}</h1>
+                            <p className="text-gray-500 mt-2">{trip?.description || "Not Added"}</p>
                         </div>
                         <div className="flex gap-3">
-                            <Badge>{trip.tripType === 'adult' ? 'Adult Trip' : 'Family Trip'}</Badge>
+                            <Badge>{trip?.type === 'adult' ? 'Adult Trip' : 'Family Trip'}</Badge>
                             <Badge appearance={"light"}
-                                variant={trip.status === 'Completed' ? 'success' : trip.status === 'In Progress' ? 'success' : 'warning'}
+                                variant={(trip?.status === 'in_progress' && 'primary') ||
+                                    (trip?.status === 'completed' && 'success') ||
+                                    (trip?.status === 'upcoming' && 'warning') ||
+                                    (trip?.status === 'planned' && 'destructive') ||
+                                    "secondary"}
                             >
-                                {trip.status}
+                                {trip?.status}
                             </Badge>
                         </div>
                     </div>
@@ -61,7 +69,7 @@ export const TripDetailView = () => {
 
                         <TripSummary trip={trip} />
 
-                        <TripGroupMember trip={trip} />
+                        {/* <TripGroupMember trip={trip} /> */}
                     </div>
 
                     {/* Main Content Tabs */}
@@ -95,15 +103,15 @@ export const TripDetailView = () => {
                         {/* Tab Content */}
                         <div className="p-4  rounded-xl border shadow-sm">
 
-                            {activeTab === 'overview' && <TripOverView trip={trip} />}
+                            {activeTab === 'overview' && <TripOverView trip={trip}/>}
 
-                            {activeTab === 'itinerary' && <Itinerary trip={trip} />}
+                            {activeTab === 'itinerary' && <Itinerary trip={sampleTripData} />}
 
-                            {activeTab === 'files' && <Files trip={trip} />}
+                            {activeTab === 'files' && <Files trip={sampleTripData} />}
 
-                            {activeTab === 'activity' && <TripActivity trip={trip} />}
+                            {activeTab === 'activity' && <TripActivity trip={sampleTripData} />}
 
-                            {activeTab === "recommendations" && <TripRecommendations trip={trip} />}
+                            {activeTab === "recommendations" && <TripRecommendations trip={sampleTripData} />}
 
                         </div>
                     </div>

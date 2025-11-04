@@ -19,6 +19,7 @@ import {
 import { useState } from "react";
 
 export default function LakeDetailPage() {
+    
     const [activeTab, setActiveTab] = useState("overview");
 
     const lake = {
@@ -305,3 +306,5 @@ export default function LakeDetailPage() {
         </Container>
     );
 }
+
+

@@ -1,12 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CardCampaign, CardCampaignRow } from '@/partials/cards';
 import { LayoutGrid, List, Plus, SquarePlus } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { paths } from '@/components/layouts/layout-3/components/paths';
+import { useGetAllLakesQuery } from '@/store/Reducer/lake';
 
 export interface ICampaignsContentItem {
+  id: string;
   logo: string;
   logoSize?: string;
   logoDark?: string;
@@ -40,190 +42,38 @@ export function CampaignsContent({ mode }: ICampaignsContentProps) {
 
   const [currentMode, setCurrentMode] = useState(mode);
 
+  const [lakes, setlakes] = useState([]);
+
+  const [page, setPage] = useState(1);
+
+  const { data, isFetching } = useGetAllLakesQuery({
+    page
+  });
+
+
+  useEffect(() => {
+    if (data?.data?.lakes) {
+      setlakes((prevLakes) => [...prevLakes, ...data.data.lakes]);
+    }
+  }, [data]);
+
+
+  console.log("lakes in campaigns content", lakes);
+
   const navigate = useNavigate();
 
-  const items: ICampaignsContentItems = [
-    {
-      logo: 'twitch-purple.svg',
-      logoSize: '50px',
-      title: 'Urban Dreams',
-      description: 'Live Gaming Spectacle Unveiled',
-      status: {
-        variant: 'success',
-        label: 'Completed',
-      },
-      statistics: [
-        {
-          total: '50.7%',
-          description: 'Traffic Up',
-        },
-        {
-          total: '20.1k',
-          description: 'New Fans',
-        },
-        {
-          total: '$100k',
-          description: 'Donated',
-        },
-      ],
-      progress: {
-        variant: 'bg-green-500',
-        value: 100,
-      },
-    },
-    {
-      logo: 'instagram.svg',
-      logoSize: '50px',
-      title: 'Photo Promotion',
-      description: 'Visual Stories Unleashed Worldwide',
-      status: {
-        variant: 'primary',
-        label: 'Running',
-      },
-      statistics: [
-        {
-          total: '25k',
-          description: 'Link Hits',
-        },
-        {
-          total: '32.9%',
-          description: 'Engage Uptick',
-        },
-        {
-          total: '$7,5k',
-          description: 'Earnings',
-        },
-      ],
-      progress: {
-        variant: 'bg-primary',
-        value: 60,
-      },
-    },
-    {
-      logo: 'youtube.svg',
-      logoSize: '50px',
-      title: 'Video Viral',
-      description: 'Video Content Showcase Spotlighted',
-      status: {
-        variant: 'primary',
-        label: 'Running',
-      },
-      statistics: [
-        {
-          total: '12M',
-          description: 'Video Plays',
-        },
-        {
-          total: '40%',
-          description: 'Sub Gain',
-        },
-        {
-          total: '25k',
-          description: 'Link Hits',
-        },
-      ],
-      progress: {
-        variant: 'bg-primary',
-        value: 55,
-      },
-    },
-    {
-      logo: 'amazon-2.svg',
-      logoDark: 'amazon-dark.svg',
-      logoSize: '50px',
-      title: 'Product Push',
-      description: 'Prime Shopping Bliss Delivered',
-      status: {
-        variant: 'success',
-        label: 'Completed',
-      },
-      statistics: [
-        {
-          total: '50%',
-          description: 'Traffic Rise',
-        },
-        {
-          total: '$34,9k',
-          description: 'Product Sales',
-        },
-        {
-          total: '10k',
-          description: 'Actions',
-        },
-      ],
-      progress: {
-        variant: 'bg-green-500',
-        value: 100,
-      },
-    },
-    {
-      logo: 'mailchimp-1.svg',
-      logoSize: '50px',
-      title: 'Email Engagement',
-      description: 'Email Engagement Power Unleashed',
-      status: {
-        variant: 'secondary',
-        label: 'Upcoming',
-      },
-      statistics: [
-        {
-          total: '24.3k',
-          description: 'Subscribers',
-        },
-        {
-          total: '34.8%',
-          description: 'Traffic Rise',
-        },
-        {
-          total: '$20,5k',
-          description: 'Total Sales',
-        },
-      ],
-      progress: {
-        variant: 'bg-input',
-        value: 100,
-      },
-    },
-    {
-      logo: 'linkedin.svg',
-      logoSize: '50px',
-      title: 'Career Boost',
-      description: 'Pro Connections Empowered Globally',
-      status: {
-        variant: 'primary',
-        label: 'Running',
-      },
-      statistics: [
-        {
-          total: '9.1k',
-          description: 'Suvey Inputs',
-        },
-        {
-          total: '834',
-          description: 'Influencer Tie-ins',
-        },
-        {
-          total: '70k',
-          description: 'Impressions',
-        },
-      ],
-      progress: {
-        variant: 'bg-primary',
-        value: 30,
-      },
-    },
-  ];
 
   const renderProject = (item: ICampaignsContentItem, index: number) => {
     return (
       <CardCampaign
-        logo={item.logo}
-        logoSize={item.logoSize}
-        title={item.title}
+        id={item?.id || ""}
+        logo={lakeImage[index % lakeImage.length].imageUrl}
+        logoSize={item?.logoSize || "70px"}
+        title={item?.lake || ""}
         description={item.description}
-        status={item.status}
-        statistics={item.statistics}
-        progress={item.progress}
+        // status={{}}
+        // statistics={item.statistics}
+        // progress={item.progress}
         url="#"
         key={index}
       />
@@ -252,7 +102,7 @@ export function CampaignsContent({ mode }: ICampaignsContentProps) {
     <div className="flex flex-col items-stretch gap-5 lg:gap-7.5">
       <div className="flex flex-wrap items-center gap-5 justify-between">
         <h3 className="text-lg text-mono font-semibold">
-          {items.length} Lakes
+          {lakes.length} Lakes
         </h3>
         <div className="flex gap-4">
           <ToggleGroup
@@ -278,13 +128,18 @@ export function CampaignsContent({ mode }: ICampaignsContentProps) {
       {currentMode === 'cards' && (
         <div id="campaigns_cards">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 lg:gap-7.5">
-            {items.map((item, index) => {
+            {/* {items.map((item, index) => {
               return renderProject(item, index);
-            })}
+            })} */}
+            {
+              lakes.map((lake: any, index: number) => {
+                return renderProject(lake, index);
+              })
+            }
           </div>
           <div className="flex grow justify-center pt-5 lg:pt-7.5">
-            <Button mode="link" underlined="dashed" asChild>
-              <Link to="/account/integrations">Show more Campaigns</Link>
+            <Button asChild onClick={() => setPage((prev) => prev + 1)}>
+              Show more Lakes
             </Button>
           </div>
         </div>
@@ -297,8 +152,8 @@ export function CampaignsContent({ mode }: ICampaignsContentProps) {
             })}
           </div>
           <div className="flex grow justify-center pt-5 lg:pt-7.5">
-            <Button mode="link" underlined="dashed" asChild>
-              <Link to="/account/integrations">Show more Campaigns</Link>
+            <Button asChild onClick={() => setPage((prev) => prev + 1)}>
+              Show more Lakes
             </Button>
           </div>
         </div>
@@ -306,3 +161,192 @@ export function CampaignsContent({ mode }: ICampaignsContentProps) {
     </div>
   );
 }
+const lakeImage = [
+  {
+
+    imageUrl: 'lake1.jpg',
+  },
+  {
+
+    imageUrl: 'lake2.jpg',
+  },
+  {
+
+    imageUrl: 'lake3.jpeg',
+  }, {
+    imageUrl: 'lake1.jpg',
+  }
+]
+
+
+const items: ICampaignsContentItems = [
+  {
+    logo: 'twitch-purple.svg',
+    logoSize: '50px',
+    title: 'Urban Dreams',
+    description: 'Live Gaming Spectacle Unveiled',
+    status: {
+      variant: 'success',
+      label: 'Completed',
+    },
+    statistics: [
+      {
+        total: '50.7%',
+        description: 'Traffic Up',
+      },
+      {
+        total: '20.1k',
+        description: 'New Fans',
+      },
+      {
+        total: '$100k',
+        description: 'Donated',
+      },
+    ],
+    progress: {
+      variant: 'bg-green-500',
+      value: 100,
+    },
+  },
+  {
+    logo: 'instagram.svg',
+    logoSize: '50px',
+    title: 'Photo Promotion',
+    description: 'Visual Stories Unleashed Worldwide',
+    status: {
+      variant: 'primary',
+      label: 'Running',
+    },
+    statistics: [
+      {
+        total: '25k',
+        description: 'Link Hits',
+      },
+      {
+        total: '32.9%',
+        description: 'Engage Uptick',
+      },
+      {
+        total: '$7,5k',
+        description: 'Earnings',
+      },
+    ],
+    progress: {
+      variant: 'bg-primary',
+      value: 60,
+    },
+  },
+  {
+    logo: 'youtube.svg',
+    logoSize: '50px',
+    title: 'Video Viral',
+    description: 'Video Content Showcase Spotlighted',
+    status: {
+      variant: 'primary',
+      label: 'Running',
+    },
+    statistics: [
+      {
+        total: '12M',
+        description: 'Video Plays',
+      },
+      {
+        total: '40%',
+        description: 'Sub Gain',
+      },
+      {
+        total: '25k',
+        description: 'Link Hits',
+      },
+    ],
+    progress: {
+      variant: 'bg-primary',
+      value: 55,
+    },
+  },
+  {
+    logo: 'amazon-2.svg',
+    logoDark: 'amazon-dark.svg',
+    logoSize: '50px',
+    title: 'Product Push',
+    description: 'Prime Shopping Bliss Delivered',
+    status: {
+      variant: 'success',
+      label: 'Completed',
+    },
+    statistics: [
+      {
+        total: '50%',
+        description: 'Traffic Rise',
+      },
+      {
+        total: '$34,9k',
+        description: 'Product Sales',
+      },
+      {
+        total: '10k',
+        description: 'Actions',
+      },
+    ],
+    progress: {
+      variant: 'bg-green-500',
+      value: 100,
+    },
+  },
+  {
+    logo: 'mailchimp-1.svg',
+    logoSize: '50px',
+    title: 'Email Engagement',
+    description: 'Email Engagement Power Unleashed',
+    status: {
+      variant: 'secondary',
+      label: 'Upcoming',
+    },
+    statistics: [
+      {
+        total: '24.3k',
+        description: 'Subscribers',
+      },
+      {
+        total: '34.8%',
+        description: 'Traffic Rise',
+      },
+      {
+        total: '$20,5k',
+        description: 'Total Sales',
+      },
+    ],
+    progress: {
+      variant: 'bg-input',
+      value: 100,
+    },
+  },
+  {
+    logo: 'linkedin.svg',
+    logoSize: '50px',
+    title: 'Career Boost',
+    description: 'Pro Connections Empowered Globally',
+    status: {
+      variant: 'primary',
+      label: 'Running',
+    },
+    statistics: [
+      {
+        total: '9.1k',
+        description: 'Suvey Inputs',
+      },
+      {
+        total: '834',
+        description: 'Influencer Tie-ins',
+      },
+      {
+        total: '70k',
+        description: 'Impressions',
+      },
+    ],
+    progress: {
+      variant: 'bg-primary',
+      value: 30,
+    },
+  },
+];

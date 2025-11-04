@@ -17,12 +17,13 @@ interface ICampaignItem {
 type ICampaignItems = Array<ICampaignItem>;
 
 interface ICampaignProps {
+  id: string;
   logo: string;
   logoSize?: string;
   logoDark?: string;
   title: string;
   description: string;
-  status: {
+  status?: {
     variant?:
     | 'primary'
     | 'destructive'
@@ -44,6 +45,7 @@ interface ICampaignProps {
 
 const CardCampaign = ({
   logo,
+  id,
   logoSize,
   logoDark,
   title,
@@ -67,35 +69,35 @@ const CardCampaign = ({
     //console.log('Card clicked!');
     if(user?.role as string==="traveler"){
 
-      navigate(paths.travelerDashboard.tripDetail('1'));
+      navigate(paths.travelerDashboard.tripDetail(id));
     }else{
-      navigate(paths.businessDashboard.lakeDetail('1'));
+      navigate(paths.businessDashboard.lakeDetail(id));
     }
   }
 
-  const renderItem = (statistic: ICampaignItem, index: number) => {
-    return (
-      <div
-        key={index}
-        className="flex flex-col gap-1.5 border border-dashed border-input rounded-md px-2.5 py-2 "
-      >
-        <span className="text-mono text-sm leading-none font-medium">
-          {statistic.total}
-        </span>
-        <span className="text-secondary-foreground text-xs">
-          {statistic.description}
-        </span>
-      </div>
-    );
-  };
+  // const renderItem = (statistic: ICampaignItem, index: number) => {
+  //   return (
+  //     <div
+  //       key={index}
+  //       className="flex flex-col gap-1.5 border border-dashed border-input rounded-md px-2.5 py-2 "
+  //     >
+  //       <span className="text-mono text-sm leading-none font-medium">
+  //         {statistic.total}
+  //       </span>
+  //       <span className="text-secondary-foreground text-xs">
+  //         {statistic.description}
+  //       </span>
+  //     </div>
+  //   );
+  // };
 
   return (
     <Card className="overflow-hidden grow justify-between  hover:border-blue-400 border transition-all duration-300 cursor-pointer" onClick={handleClick}>
       <div className="p-5 mb-5">
         <div className="flex items-center justify-between mb-5">
-          <Badge size="lg" variant={status.variant} appearance="light">
+          {/* <Badge size="lg" variant={status.variant} appearance="light">
             {status.label}
-          </Badge>
+          </Badge> */}
           <DropdownMenu2
             trigger={
               <Button variant="ghost" mode="icon">
@@ -114,14 +116,14 @@ const CardCampaign = ({
               />
               <img
                 src={toAbsoluteUrl(`/media/brand-logos/${logoDark}`)}
-                className={`light:hidden size-[${logoSize}] shrink-0`}
+                className={`light:hidden size-[${logoSize}] shrink-0 `}
                 alt="image"
               />
             </>
           ) : (
             <img
-              src={toAbsoluteUrl(`/media/brand-logos/${logo}`)}
-              className={`size-[${logoSize}] shrink-0`}
+              src={toAbsoluteUrl(`/media/images/600x600/${logo}`)}
+              className={`size-[${logoSize}] shrink-0 rounded-md`}
               alt="image"
             />
           )}
@@ -136,9 +138,9 @@ const CardCampaign = ({
           <div className="text-sm text-secondary-foreground">{description}</div>
         </div>
         <div className="flex items-center justify-center flex-wrap gap-2 lg:gap-5">
-          {statistics.map((statistic, index) => {
+          {/* {statistics.map((statistic, index) => {
             return renderItem(statistic, index);
-          })}
+          })} */}
         </div>
       </div>
      {user?.role as string==="traveler" && <div className='flex justify-end pb-2 px-5' onClick={handleFavoriteClick}>

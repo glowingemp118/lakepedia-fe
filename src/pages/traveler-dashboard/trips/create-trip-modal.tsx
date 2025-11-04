@@ -15,19 +15,24 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog"
 import { Form } from "@/components/ui/form"
-import { SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { SelectItem } from "@/components/ui/select"
+import { useGetAllLakesQuery } from "@/store/Reducer/lake"
+import { useCreateTripMutation } from "@/store/Reducer/trip"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { LoaderCircleIcon } from "lucide-react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
+import { toast } from "react-toastify"
 import { z } from "zod"
 
 const defaultValues = {
     name: '',
     privacySetting: true,
-    groupOfPeople: 2,
+    groupOfPeople: '2',
     description: '',
     startDate: undefined,
     endDate: undefined,
-    lake: '',
+    lakes: [],
     tripType: ''
 }
 
@@ -37,21 +42,18 @@ const tripTypes = [
     { label: 'Friends', value: 'friends' },
     { label: 'Couple', value: 'couple' },
 ]
-const lakes = [
-    { label: 'Lake Tahoe', value: 'lake_tahoe' },
-    { label: 'Crater Lake', value: 'crater_lake' }
-]
 
 const tripSchema = z.object({
     name: z.string().min(3, "Trip name is required"),
-    lake: z.string().min(1, "Lake is required"),
+    lakes: z.array(z.number().min(1, "At least one lake must be selected")),
     tripType: z.string().min(1, "Trip type is required"),
     privacySetting: z.boolean().optional(),
-    groupOfPeople: z.number().min(2, "At least one person is required"),
+    groupOfPeople: z.string().min(1, "Group of people is required"),
     description: z.string().optional(),
     startDate: z.date(),
     endDate: z.date()
 })
+
 
 type TripFormData = z.infer<typeof tripSchema>
 
@@ -62,17 +64,57 @@ interface AddTripModalProps {
 
 export default function AddTripModal({ open, onClose }: AddTripModalProps) {
 
+
+    const [lake, setLake] = useState('');
+
+    const [lakes, setLakes] = useState([]);
+
+    const [createTrip] = useCreateTripMutation();
+
+    const { data: lakesData } = useGetAllLakesQuery({
+        search: lake.length > 0 && lake
+    });
+
     const form = useForm<TripFormData>({
         resolver: zodResolver(tripSchema),
         defaultValues,
 
-    })
-    const { handleSubmit,reset } = form;
+    });
 
-    const handleFormSubmit = (data: TripFormData) => {
-        // onSubmit(data)
-        reset()
-        onClose()
+    useEffect(() => {
+        if (lakesData?.data?.lakes) {
+            const lakeOptions = lakesData.data.lakes.map((lake: any) => {
+                const label = `${lake.lake} ${typeof lake.location === "string" ? ` - ${lake.location}` : ""}`;
+
+                return {
+                    label,
+                    value: lake.id
+                };
+            });
+            setLakes(lakeOptions);
+        }
+    }, [lakesData, lake]);
+
+
+    const { handleSubmit, reset } = form;
+
+    const handleFormSubmit = async (data: TripFormData) => {
+
+        let response = await createTrip({
+            name: data.name,
+            start_date: data.startDate,
+            end_date: data.endDate,
+            group_of_people: data.groupOfPeople,
+            lake_ids: data.lakes,
+            type: data.tripType,
+            description: data.description,
+            is_private: data.privacySetting,
+        });
+        if (!response.error) {
+            toast.success("Trip created successfully!");
+            reset()
+            onClose()
+        }
     }
 
 
@@ -94,20 +136,16 @@ export default function AddTripModal({ open, onClose }: AddTripModalProps) {
 
                         <RHFTextField name="name" label="Trip Name" placeholder="e.g. Lake Tahoe Adventure" />
 
-                        <RHFSelect name="tripType" label="Select Trip Type" >
-                            <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Select trip type" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {tripTypes.map((type) => (
-                                    <SelectItem key={type.value} value={type.value}>{type.label}</SelectItem>
-                                ))}
-                            </SelectContent>
+                        <RHFSelect name="tripType" label="Select Trip Type" placeholder="Select trip type">
+                            {tripTypes.map((type) => (
+                                <SelectItem key={type.value} value={type.value}>{type.label}</SelectItem>
+                            ))}
                         </RHFSelect>
 
-                        <RHFMultiSelect name="lake" label="Select Lake" placeholder="Select Lake" options={lakes} />
+                        <RHFMultiSelect name="lakes" label="Select Lake" className="!min-h-[40px] h-auto" placeholder="Select Lake" state={lake} setState={setLake} options={lakes}
+                        />
 
-                        <RHFTextField name="groupOfPeople" label="Group of People" placeholder="e.g. 2" />
+                        <RHFTextField name="groupOfPeople" type="number" label="Group of People" placeholder="e.g. 2" />
 
                         <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
                             <RHFDate name="startDate" label="Start Date" />
@@ -119,7 +157,10 @@ export default function AddTripModal({ open, onClose }: AddTripModalProps) {
 
                         <DialogFooter>
                             <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
-                            <Button type="submit">Save Trip</Button>
+                            <Button type="submit" disabled={form.formState.isSubmitting} >
+                                {form.formState.isSubmitting ? <span className="flex items-center gap-2">
+                                    <LoaderCircleIcon className="h-4 w-4 animate-spin" /> Loading...
+                                </span> : "Save Trip"}</Button>
                         </DialogFooter>
                     </form>
                 </Form>

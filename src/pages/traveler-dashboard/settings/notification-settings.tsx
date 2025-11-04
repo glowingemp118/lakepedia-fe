@@ -11,7 +11,7 @@ import * as z from "zod";
 import RhfSwitch from '@/components/rhf/rhf-switch';
 import { FC, useMemo } from 'react';
 import { useUpdateProfileMutation } from '@/store/Reducer/users';
-import { toast } from 'sonner';
+import { toast } from 'react-toastify';
 
 const schema = z.object({
 
