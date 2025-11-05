@@ -20,7 +20,7 @@ export function AccountUserProfileContent() {
       <div className="col-span-1">
         <div className="grid gap-5 lg:gap-7.5">
           <PersonalInfo user={user} />
-          <BasicSettings title="Basic Settings" />
+          {/* <BasicSettings title="Basic Settings" /> */}
           {/* <CommunityBadges /> */}
         </div>
       </div>

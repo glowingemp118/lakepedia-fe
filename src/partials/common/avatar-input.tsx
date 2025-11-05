@@ -20,17 +20,18 @@ export const AvatarInput: FC<AvatarInputProps> = ({ name,className,...other }) =
 
   const { setValue, getValues } = useFormContext();
 
+  console.log("Avatar Input - getValues for ", name, ": ", getValues(name));
 
   const [avatar, setAvatar] = useState<ImageInputFile[]>([
     {
-      dataURL: getValues(name) || toAbsoluteUrl(`/media/app/default.webp`)
+      dataURL: typeof getValues(name) === "string" ? getValues(name): getValues(name)?.dataURL || toAbsoluteUrl(`/media/app/default.webp`)
     },
   ]);
 
   useEffect(()=>{
     if(getValues(name)){
       setAvatar([{
-        dataURL: getValues(name)
+        dataURL: typeof getValues(name) === "string" ? getValues(name): getValues(name)?.dataURL || toAbsoluteUrl(`/media/app/default.webp`)
       }])
     }
   }, [getValues(name)])

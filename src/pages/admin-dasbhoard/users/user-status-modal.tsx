@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import RHFSelect from "@/components/rhf/rhf-select";
+import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogContent,
@@ -8,46 +9,64 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
+import { Form } from "@/components/ui/form";
+import { SelectItem } from "@/components/ui/select";
+import { useUpdateUserStatusMutation } from "@/store/Reducer/users";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useMemo } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+import * as z from "zod";
 
 interface UserStatusModalProps {
     user?: {
         id: string;
         name: string;
-        status: "Active" | "Pending" | "Rejected";
+        status: "active" | "inactive" | "deleted" | "blocked";
     };
     isOpen: boolean;
     onClose: () => void;
-    onSave: (updatedStatus: string) => void;
 }
 
 export function UserStatusModal({
     user,
     isOpen,
     onClose,
-    onSave,
 }: UserStatusModalProps) {
-    const [status, setStatus] = useState<"Active" | "Pending" | "Rejected">(
-        "Pending"
-    );
+
+    const defaultValues = useMemo(() => ({
+        status: user?.status || "",
+    }), [user]);
+
+    const [updateUserStatus] = useUpdateUserStatusMutation();
+
+
+    const schema = z.object({
+        status: z.string().nonempty("Status is required"),
+    });
+
+    const methods = useForm({
+        resolver: zodResolver(schema),
+        defaultValues
+    });
 
     useEffect(() => {
-        if (user) {
-            setStatus(user.status);
-        }
-    }, [user]);
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        onSave(status); // send updated status back to parent
-        onClose();
+        methods.reset(defaultValues);
+
+    }, [defaultValues]);
+
+    const handleSubmit = async (data: any) => {
+        if (!user) return;
+
+        let response = await updateUserStatus({ id: user.id, status: data.status });
+        
+        if (!response.error) {
+            toast.success("User status updated successfully");
+            onClose();
+            methods.reset(defaultValues);
+        }
+    
     };
 
     return (
@@ -58,30 +77,26 @@ export function UserStatusModal({
                         Change User Status
                     </DialogTitle>
                 </DialogHeader>
+                <Form {...methods}>
 
-                <form onSubmit={handleSubmit} className="space-y-6">
+                    <form onSubmit={methods.handleSubmit(handleSubmit)} className="space-y-6">
 
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium">Status</label>
-                        <Select value={status} onValueChange={(val: any) => setStatus(val)}>
-                            <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Select status" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="Active">Active</SelectItem>
-                                <SelectItem value="Pending">Pending</SelectItem>
-                                <SelectItem value="Rejected">Rejected</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
+                        <div className="space-y-2">
+                            <RHFSelect name="status" placeholder="Select status" label="Select Status">
+                                {['active', 'inactive', 'deleted', 'blocked'].map((status) => (
+                                    <SelectItem key={status} value={status}>{status.charAt(0).toUpperCase() + status.slice(1)}</SelectItem>
+                                ))}
+                            </RHFSelect>
+                        </div>
 
-                    <DialogFooter className="flex justify-end space-x-2 pt-2">
-                        <Button type="button" variant="outline" onClick={onClose}>
-                            Cancel
-                        </Button>
-                        <Button type="submit">Save</Button>
-                    </DialogFooter>
-                </form>
+                        <DialogFooter className="flex justify-end space-x-2 pt-2">
+                            <Button type="button" variant="outline" onClick={onClose}>
+                                Cancel
+                            </Button>
+                            <Button type="submit">Save</Button>
+                        </DialogFooter>
+                    </form>
+                </Form>
             </DialogContent>
         </Dialog>
     );

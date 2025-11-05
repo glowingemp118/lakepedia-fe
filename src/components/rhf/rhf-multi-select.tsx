@@ -19,7 +19,7 @@ import { useFormContext } from "react-hook-form";
 
 type Option = {
     label: string;
-    value: string;
+    value: number;
 };
 
 type Props = {
@@ -30,6 +30,8 @@ type Props = {
     state?: string;
     setState?: (value: string) => void;
     className?: string;
+    single?: boolean;
+    filter?: boolean;
 };
 
 export function RHFMultiSelect({
@@ -40,26 +42,44 @@ export function RHFMultiSelect({
     setState,
     options,
     className,
+    single,
+    filter
 }: Props) {
     const { control } = useFormContext();
 
-    console.log("options in RHFMultiSelect:", options);
 
-    // const filteredOptions = options.filter((o) =>
-    //     o.label.toLowerCase().includes(state.toLowerCase())
+    // console.log("options in RHFMultiSelect:", options);
+    // const [searchOptions, setSearchOptions] = useState<Option[]>([]);
+
+
+
+    // useEffect(()=>{
+    //     if(options){
+    //         const filteredOptions = options.filter((o) =>
+    //     o.label.toLowerCase().includes(state?.toLowerCase())
     // );
+    //         setSearchOptions(filteredOptions);
+    //     }
+    // }, [options,state]);
 
     return (
         <FormField
             control={control}
             name={name}
             render={({ field }) => {
-                const selectedValues = field.value || [];
+                let selectedValues = field.value || [];
 
-                const handleSelect = (val: string) => {
-                    const newValue = selectedValues.includes(val)
-                        ? selectedValues.filter((v: string) => v !== val)
+                const handleSelect = (val: number) => {
+
+                    const newValue = single ? [val] : selectedValues.includes(val)
+
+                        ? selectedValues.filter((v: number) => v !== val)
+
                         : [...selectedValues, val];
+
+                    if (single) selectedValues = newValue;
+
+
 
                     field.onChange(newValue);
                 };
@@ -81,7 +101,7 @@ export function RHFMultiSelect({
                                     >
                                         <div className="flex gap-1 flex-wrap">
                                             {selectedValues.length ? (
-                                                selectedValues.map((val: string) => {
+                                                selectedValues.map((val: number) => {
                                                     const item = options.find((o) => o.value === val);
                                                     return (
                                                         <Badge
@@ -106,14 +126,12 @@ export function RHFMultiSelect({
                                     className="w-[var(--radix-popover-trigger-width)] max-h-[300px] p-0 z-[9999]"
                                 >
                                     <Command>
-                                        <CommandInput placeholder="Search " className="h-9" value={state}
-                                        onValueChange={(val) => setState(val)}
-                                        />
+                                        {filter && <CommandInput placeholder="Search " className="h-9" value={state}
+                                            onValueChange={(val) => setState?.(val)}
+                                        />}
                                         <CommandList>
-                                            {options.length === 0 && (
-                                                <CommandEmpty>No Data found.</CommandEmpty>
-                                            )}
-                                            <CommandGroup className="w-full" >
+                                            <CommandEmpty>No Data found.</CommandEmpty>
+                                            <CommandGroup className="w-full">
                                                 {options.map((option) => (
                                                     <CommandItem
                                                         key={option.value}
@@ -122,18 +140,19 @@ export function RHFMultiSelect({
                                                         <div
                                                             className={cn(
                                                                 "mr-2 flex h-4 w-4 items-center justify-center rounded-sm",
-                                                                selectedValues.includes(option.value)
+                                                                selectedValues.length > 0 && selectedValues.includes(option.value)
                                                                     ? ""
                                                                     : "opacity-50"
                                                             )}
                                                         >
-                                                            {selectedValues.includes(option.value) && (
+                                                            {selectedValues.length > 0 && selectedValues?.includes(option.value) && (
                                                                 <Check className="h-4 w-4" />
                                                             )}
                                                         </div>
                                                         {option.label}
                                                     </CommandItem>
-                                                ))}
+                                                ))
+                                                }
                                             </CommandGroup>
                                         </CommandList>
                                     </Command>
@@ -147,3 +166,5 @@ export function RHFMultiSelect({
         />
     );
 }
+
+

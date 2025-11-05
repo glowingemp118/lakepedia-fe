@@ -9,12 +9,13 @@ import { toAbsoluteUrl } from '@/lib/helpers';
 
 interface IBusiness {
     id: string;
-    image: string;
-    name: string;
+    image: { url?: string };
+    first_name: string;
+    last_name: string;
     email: string;
     country: string;
     state: string;
-    status: 'Active' | 'Pending' | 'Rejected';
+    status: 'active' | 'inactive' | 'deleted' | 'blocked';
 }
 
 interface PageProps {
@@ -31,10 +32,10 @@ const UserTableRow: FC<PageProps> = ({ item, handleEdit, handleDelete }) => {
             <TableCell>
                 <div className="flex items-center gap-3">
                     <Avatar>
-                        <AvatarImage src={toAbsoluteUrl(item.image)} className='cursor-pointer rounded-lg' />
+                        <AvatarImage src={toAbsoluteUrl((item?.image as { url: string })?.url)} className='cursor-pointer rounded-lg' />
                     </Avatar>
                     <div className="flex flex-col">
-                        <span className="font-medium">{item.name}</span>
+                        <span className="font-medium">{item.first_name + " " + item.last_name}</span>
                         <span className="text-xs text-gray-500">{item.email}</span>
                     </div>
                 </div>
@@ -42,24 +43,26 @@ const UserTableRow: FC<PageProps> = ({ item, handleEdit, handleDelete }) => {
 
             {/* Business Type */}
             <TableCell>
-                {item.country}
+                {item.country || "--"}
             </TableCell>
 
             {/* Services Offered */}
             <TableCell>
-                {item.state}
-               
+                {item.state || "--"}
+
             </TableCell>
 
             {/* Status */}
             <TableCell className="text-center">
                 <Badge variant={
-                    (item.status === "Active" && "success") ||
-                    (item.status === "Pending" && "warning") ||
-                    (item.status === "Rejected" && "destructive") ||
+                    (item.status === "active" && "success") ||
+                    (item.status === "inactive" && "warning") ||
+                    (item.status === "blocked" && "destructive") ||
+                    (item.status === "deleted" && "destructive") ||
                     "primary"
                 }
                     appearance={"light"}
+                    className='capitalize'
                 >{item.status}</Badge>
             </TableCell>
 
@@ -74,7 +77,7 @@ const UserTableRow: FC<PageProps> = ({ item, handleEdit, handleDelete }) => {
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
-                                <Eye className="w-4 h-4 text-gray-700 dark:text-gray-200" />
+                                    <Eye className="w-4 h-4 text-gray-700 dark:text-gray-200" />
                                 </TooltipTrigger>
                                 <TooltipContent>View Details</TooltipContent>
                             </Tooltip>

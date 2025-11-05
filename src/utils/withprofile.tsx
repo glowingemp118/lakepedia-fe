@@ -11,7 +11,7 @@ const withProfile = <P extends object>(Component: ComponentType<P & UserHeroProp
 
 
     return (props: P) => {
-
+        
         const user = useSelector(selectUser);
 
         const image = (

@@ -5,6 +5,7 @@ import { customFetchBaseQuery } from "../baseQuery";
 export const lakeApi = createApi({
     reducerPath: "lake",
     baseQuery: customFetchBaseQuery(),
+    tagTypes: ["Lake"],
     endpoints: (builder) => ({
         createLake: builder.mutation({
             query: (lake) => ({
@@ -12,6 +13,7 @@ export const lakeApi = createApi({
                 method: "POST",
                 body: lake,
             }),
+            invalidatesTags: ["Lake"],
         }),
         getAllLakes: builder.query({
             query: ({ search, page }) => {
@@ -24,6 +26,17 @@ export const lakeApi = createApi({
                 }
                 return url
             },
+            // providesTags: ["Lake"],
+        }),
+        getBusinessLakes: builder.query({
+            query: ({ page }) => {
+                let url = '/business/lake';
+                if (page) {
+                    url += `?page=${page}`;
+                }
+                return url;
+            },
+            providesTags: ["Lake"],
         }),
         updateLake: builder.mutation({
             query: ({ lakeId, ...lake }) => ({
@@ -31,14 +44,16 @@ export const lakeApi = createApi({
                 method: "PUT",
                 body: lake,
             }),
+            invalidatesTags: ["Lake"],
         }),
         deleteLake: builder.mutation({
             query: (lakeId) => ({
-                url: `/lakes/${lakeId}`,
+                url: `/business/lake/${lakeId}`,
                 method: "DELETE",
             }),
+            invalidatesTags: ["Lake"],
         }),
     }),
 });
 
-export const { useCreateLakeMutation, useGetAllLakesQuery, useUpdateLakeMutation, useDeleteLakeMutation } = lakeApi;
+export const { useCreateLakeMutation, useGetAllLakesQuery, useUpdateLakeMutation, useDeleteLakeMutation, useGetBusinessLakesQuery } = lakeApi;

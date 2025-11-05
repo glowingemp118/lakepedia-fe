@@ -1,10 +1,7 @@
-import RHFSelect from '@/components/rhf/rhf-select';
-import RHFSwitch from '@/components/rhf/rhf-switch';
 import RHFTextField from '@/components/rhf/rhf-textfield';
 import { Button } from '@/components/ui/button';
 import DialogContent, { Dialog, DialogClose, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Form } from '@/components/ui/form';
-import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AvatarInput } from '@/partials/common/avatar-input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FC, useEffect, useMemo } from 'react';

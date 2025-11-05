@@ -10,7 +10,7 @@ import { useBoolean } from '@/hooks/use-boolean';
 import { formatDate } from '@/lib/helpers';
 import { useGetAllTripsQuery } from '@/store/Reducer/trip';
 import { Heart, LayoutGrid, List, Plus } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
 import AddTripModal from './create-trip-modal';
 
@@ -47,17 +47,16 @@ interface TripItem {
 }
 
 type ITrips2Items = Array<TripItem>;
-
-const Projects2 = () => {
+interface PageProps{
+  trips:any;
+}
+const Projects2:FC<PageProps> = ({ trips }) => {
 
   const { state } = useLocation();
 
   const navigate = useNavigate();
 
   const open = useBoolean();
-
-
-  const { data, isLoading, isFetching } = useGetAllTripsQuery({});
 
 
   const [activeView, setActiveView] = useState<'cards' | 'list'>('cards');
@@ -203,12 +202,10 @@ const Projects2 = () => {
 
   return (
     <>
-      {isLoading || isFetching ?
-        <ScreenLoader />
-        :
+      
         <div className="flex flex-col gap-6">
           <div className="flex justify-between items-center">
-            <h3 className="text-lg font-semibold">{data?.data?.trips?.length} Trips</h3>
+            <h3 className="text-lg font-semibold">{trips?.length} Trips</h3>
             <div className="flex gap-4">
               <ToggleGroup
                 type="single"
@@ -234,12 +231,12 @@ const Projects2 = () => {
           {activeView === 'cards' ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
               {/* {trips.map((trip, i) => renderCard(trip))} */}
-              {data?.data?.trips?.map((trip: any) => renderCard(trip))}
+              {trips?.map((trip: any) => renderCard(trip))}
             </div>
           ) : (
             <div className="flex flex-col gap-4">
               {/* {trips.map((trip:any) => renderRow(trip))} */}
-              {data?.data?.trips?.map((trip: any) => renderRow(trip))}
+              {trips?.map((trip: any) => renderRow(trip))}
             </div>
           )}
 
@@ -251,7 +248,7 @@ const Projects2 = () => {
 
           <AddTripModal open={open.value} onClose={open.onFalse} />
         </div>
-      }
+      
     </>
   );
 };

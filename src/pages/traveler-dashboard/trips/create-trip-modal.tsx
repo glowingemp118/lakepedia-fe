@@ -72,7 +72,7 @@ export default function AddTripModal({ open, onClose }: AddTripModalProps) {
     const [createTrip] = useCreateTripMutation();
 
     const { data: lakesData } = useGetAllLakesQuery({
-        search: lake.length > 0 && lake
+        search: lake
     });
 
     const form = useForm<TripFormData>({
@@ -93,7 +93,7 @@ export default function AddTripModal({ open, onClose }: AddTripModalProps) {
             });
             setLakes(lakeOptions);
         }
-    }, [lakesData, lake]);
+    }, [lakesData]);
 
 
     const { handleSubmit, reset } = form;
@@ -142,7 +142,8 @@ export default function AddTripModal({ open, onClose }: AddTripModalProps) {
                             ))}
                         </RHFSelect>
 
-                        <RHFMultiSelect name="lakes" label="Select Lake" className="!min-h-[40px] h-auto" placeholder="Select Lake" state={lake} setState={setLake} options={lakes}
+                        <RHFMultiSelect name="lakes" label="Select Lake" className="!min-h-[40px] h-auto" placeholder="Select Lake" state={lake} setState={setLake} options={lakes} 
+                        filter
                         />
 
                         <RHFTextField name="groupOfPeople" type="number" label="Group of People" placeholder="e.g. 2" />

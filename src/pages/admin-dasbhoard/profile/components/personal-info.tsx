@@ -39,7 +39,7 @@ const PersonalInfo: FC<PageProps> = ({ user }) => {
                 <div className="flex justify-center items-center">
 
                   <img
-                    src={user.image || "/media/avatars/300-2.png"}
+                    src={user.image?.url || "/media/avatars/300-2.png"}
                     alt="Avatar"
                     className="size-16 rounded-full border-2 border-green-500"
                   />

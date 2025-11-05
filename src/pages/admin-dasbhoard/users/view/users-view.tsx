@@ -1,5 +1,5 @@
 
-import { Table, TableBody, TableHeadCustom } from '@/components/ui/table';
+import { PaginationControls, Table, TableBodyWrapper, TableHeadCustom } from '@/components/ui/table';
 
 import ConfirmDialog from '@/components/comfirm-dialog/confirm-dialog';
 import { Container } from '@/components/common/container';
@@ -7,8 +7,9 @@ import { Navbar } from '@/components/layouts/layout-3/components/navbar';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
+import { ScrollBar,ScrollArea } from '@/components/ui/scroll-area';
 import { useBoolean } from '@/hooks/use-boolean';
+import { useGetAllUsersQuery } from '@/store/Reducer/users';
 import { useState } from 'react';
 import { AdminHeroWithProfile } from '../../profile/profile-hero';
 import { UserStatusModal } from '../user-status-modal';
@@ -30,8 +31,17 @@ const UsersView = () => {
 
   const deleteModal = useBoolean();
 
-  const [currentUser, setCurrentUser] = useState<IUsers | null>(null);
+  const [currentUser, setCurrentUser] = useState(null);
 
+  const [page, setPage] = useState(1);
+
+  const [globalFilter, setGlobalFilter] = useState('');
+
+  const { data: userData, isLoading, isFetching } = useGetAllUsersQuery({
+    page,
+    limit: 10,
+    search: globalFilter,
+  });
   return (
 
     <div className='md:mx-10 mx-2 my-4 flex flex-col gap-6'>
@@ -51,49 +61,48 @@ const UsersView = () => {
           </div>
           <div className='w-full '>
             <Input
-              placeholder="Search Business"
-              // value={globalFilter}
-              // onChange={(e) => setGlobalFilter(e.target.value)}
+              placeholder="Search User"
+              value={globalFilter}
+              onChange={(e) => setGlobalFilter(e.target.value)}
               className="w-full h-10 "
             />
           </div>
           <div className='border rounded-lg my-5 overflow-x-auto'>
-            <Table className="w-full">
-              <TableHeadCustom headLabel={headLabel} />
-              <TableBody>
-                {data.map((item: any, index: number) => (
-                  <UserTableRow key={index} item={item}
-                    handleEdit={() => {
-                      setCurrentUser(item);
-                      open.onTrue();
-                    }}
-                    handleDelete={() => {
-                      setCurrentUser(item);
-                      deleteModal.onTrue();
-                    }}
-                  />
-                ))}
-              </TableBody>
-            </Table>
+            <ScrollArea>
+              <Table className="w-full">
+                <TableHeadCustom headLabel={headLabel} />
+
+                <TableBodyWrapper
+                  loading={isLoading || isFetching}
+                  colSpan={headLabel.length}
+                  dataLength={userData?.data?.users?.length || 0}
+                >
+                  {userData?.data?.users?.map((item: any, index: number) => (
+                    <UserTableRow key={index} item={item}
+                      handleEdit={() => {
+                        setCurrentUser(item);
+                        open.onTrue();
+                      }}
+                      handleDelete={() => {
+                        setCurrentUser(item);
+                        deleteModal.onTrue();
+                      }}
+                    />
+                  ))}
+                </TableBodyWrapper>
+              </Table>
+              <ScrollBar orientation="horizontal"/>
+            </ScrollArea>
             <div >
             </div>
 
-            <Pagination className='w-full flex justify-end mt-2'>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious href="#" />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#">1</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationNext href="#" />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
+            <PaginationControls
+              currentPage={page}
+              totalPages={userData?.data?.meta?.pages || 1}
+              totalRecords={userData?.data?.meta?.total || 0}
+              limit={10}
+              onPageChange={(p: number) => setPage(p)}
+            />
 
           </div>
         </Card>
@@ -129,64 +138,7 @@ interface IUsers {
   email: string;
   country: string;
   state: string;
-  status: 'Active' | 'Pending' | 'Rejected';
+  status: 'active' | 'inactive' | 'blocked'|"deleted";
 }
 
 
-
-const data: IUsers[] = [
-  {
-    id: '1',
-    image: '/media/images/altit-fort.jpg',
-    name: 'John Doe',
-    email: 'contact@bluewaveboating.com',
-    country: 'USA',
-    state: 'California',
-    status: 'Active',
-  },
-  {
-    id: '2',
-    image: '/media/images/attabad.jpg',
-    name: 'Jane Smith',
-    email: 'info@trouthaven.com',
-    country: 'USA',
-    state: 'Montana',
-    status: 'Pending',
-  },
-  {
-    id: '3',
-    image: '/media/images/baltit-fort.webp',
-    name: 'Mike Johnson',
-    email: 'support@lakesideadventures.com',
-    country: 'USA',
-    state: 'Minnesota',
-    status: 'Active',
-  },
-  {
-    id: '4',
-    image: '/media/images/eagles-nest-hotel.webp',
-    name: 'Sara Wilson',
-    email: 'hello@naturenest.com',
-    country: 'USA',
-    state: 'Oregon',
-    status: 'Rejected',
-  },
-  {
-    id: '5',
-    image: '/media/images/skardu-hotel.jpg',
-    name: 'David Brown',
-    email: 'reservations@sunsetcafe.com',
-    country: 'USA',
-    state: 'Washington',
-    status: 'Active',
-  },
-  {
-    id: '6',
-    image: '/media/images/serena.jpg',
-    name: 'Emma Davis',
-    email: 'eco@ecoriderentals.com',
-    country: 'USA',
-    state: 'California',
-    status: 'Pending',
-  },
-];

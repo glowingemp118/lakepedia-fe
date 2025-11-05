@@ -30,7 +30,6 @@ interface PageProps {
 
 const BasicDetails: FC<PageProps> = ({ profileData }) => {
 
-    console.log("Profile data in basic details: ", profileData);
 
     const defaultValues = useMemo(() => ({
         photo: profileData?.photo as string || null,

@@ -9,6 +9,8 @@ import { DropdownMenu2 } from '../dropdown-menu/dropdown-menu-2';
 import { useSelector } from 'react-redux';
 import { selectUser } from '@/store/slices/userSlice';
 import { paths } from '@/components/layouts/layout-3/components/paths';
+import { useDeleteLakeMutation } from '@/store/Reducer/lake';
+import { useBoolean } from '@/hooks/use-boolean';
 
 interface ICampaignItem {
   total: string;
@@ -35,7 +37,7 @@ interface ICampaignProps {
     | undefined;
     label: string;
   };
-  statistics: ICampaignItem[];
+  // statistics: ICampaignItem[];
   progress?: {
     variant: string;
     value: number;
@@ -51,26 +53,26 @@ const CardCampaign = ({
   title,
   description,
   status,
-  statistics,
+  // statistics,
   progress,
   url,
 }: ICampaignProps) => {
 
-  const user=useSelector(selectUser);
+  const user = useSelector(selectUser);
 
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     //console.log('Favorite clicked!');
   }
 
-  const handleClick = () => {
-    //console.log('Card clicked!');
-    if(user?.role as string==="traveler"){
+  const handleClick = (e: React.MouseEvent) => {
+    // e.preventDefault();
+    if (user?.role as string === "traveler" && e.currentTarget.id === "card-campaign") {
 
       navigate(paths.travelerDashboard.tripDetail(id));
-    }else{
+    } else {
       navigate(paths.businessDashboard.lakeDetail(id));
     }
   }
@@ -92,13 +94,14 @@ const CardCampaign = ({
   // };
 
   return (
-    <Card className="overflow-hidden grow justify-between  hover:border-blue-400 border transition-all duration-300 cursor-pointer" onClick={handleClick}>
+    <Card className="overflow-hidden grow justify-between  hover:border-blue-400 border transition-all duration-300 cursor-pointer" onClick={handleClick} id="card-campaign">
       <div className="p-5 mb-5">
         <div className="flex items-center justify-between mb-5">
-          {/* <Badge size="lg" variant={status.variant} appearance="light">
-            {status.label}
-          </Badge> */}
+          <Badge size="lg" variant={status?.variant} appearance="light">
+            {status?.label}
+          </Badge>
           <DropdownMenu2
+            id={id}
             trigger={
               <Button variant="ghost" mode="icon">
                 <EllipsisVertical />
@@ -128,10 +131,10 @@ const CardCampaign = ({
             />
           )}
         </div>
-        <div className="text-center mb-7">
+        <div className="text-center mb-7 ">
           <Link
             to={url}
-            className="text-lg font-medium text-mono hover:text-primary"
+            className="text-lg font-medium text-mono hover:text-primary "
           >
             {title}
           </Link>
@@ -143,10 +146,10 @@ const CardCampaign = ({
           })} */}
         </div>
       </div>
-     {user?.role as string==="traveler" && <div className='flex justify-end pb-2 px-5' onClick={handleFavoriteClick}>
+      {user?.role as string === "traveler" && <div className='flex justify-end pb-2 px-5' onClick={handleFavoriteClick}>
         <Heart size={24} className='text-red-500  hover:size-[28px]  transition-all hover:text-black hover:dark:text-white  p-1 rounded-full cursor-pointer' />
       </div>}
-     
+
       <Progress
         value={progress?.value}
         indicatorClassName={progress?.variant}

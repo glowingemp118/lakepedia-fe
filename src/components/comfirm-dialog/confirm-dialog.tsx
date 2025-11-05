@@ -10,7 +10,7 @@ interface ConfirmDialogProps {
   onConfirm?: () => void;
   action?: React.ReactNode;
 }
-const ConfirmDialog: FC<ConfirmDialogProps> = ({ open, title, content, onClose, onConfirm }) => {
+const ConfirmDialog: FC<ConfirmDialogProps> = ({ open, title, content, onClose, onConfirm,action }) => {
   return (
     <div>
       <Dialog open={open} onOpenChange={onClose}>
@@ -22,7 +22,7 @@ const ConfirmDialog: FC<ConfirmDialogProps> = ({ open, title, content, onClose, 
             <p className="text-sm text-gray-600 dark:text-white mb-4">{content || "Are you sure you want to proceed?"}</p>
             <div className="flex justify-end space-x-2">
               <Button variant={"outline"} className='cursor-pointer' onClick={onClose} >Cancel</Button>
-              <Button variant={"destructive"} className='cursor-pointer' onClick={onConfirm} >Confirm</Button>
+              {action ? <>{action}</> : <Button variant={"destructive"} className='cursor-pointer' onClick={onConfirm} >Confirm</Button>}
             </div>
           </DialogContent>
         </DialogOverlay>

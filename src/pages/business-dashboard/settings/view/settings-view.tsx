@@ -21,7 +21,7 @@ import TrustAndEngagement from "../trust-and-engement";
 
 const BusinessSettingsView = () => {
 
-    const { data: profileData, isLoading } = useGetProfileQuery({});
+    const { data: profileData } = useGetProfileQuery({});
 
     const { data: businessProfileData } = useGetBusinessQuery({});
 
