@@ -1,12 +1,12 @@
 "use client"
 
 import RHFDate from "@/components/rhf/rhf-date"
-import { RHFMultiSelect } from "@/components/rhf/rhf-multi-select"
 import RHFSelect from "@/components/rhf/rhf-select"
 import RHFSwitch from "@/components/rhf/rhf-switch"
 import RHFTextArea from "@/components/rhf/rhf-textarea"
 import RHFTextField from "@/components/rhf/rhf-textfield"
 import { Button } from "@/components/ui/button"
+import RHFCustomDropdown from '@/components/rhf/rhf-custom-dropdown';
 import {
     Dialog,
     DialogContent,
@@ -71,7 +71,7 @@ export default function AddTripModal({ open, onClose }: AddTripModalProps) {
 
     const [createTrip] = useCreateTripMutation();
 
-    const { data: lakesData } = useGetAllLakesQuery({
+    const { data: lakesData,isLoading,isFetching } = useGetAllLakesQuery({
         search: lake
     });
 
@@ -142,8 +142,17 @@ export default function AddTripModal({ open, onClose }: AddTripModalProps) {
                             ))}
                         </RHFSelect>
 
-                        <RHFMultiSelect name="lakes" label="Select Lake" className="!min-h-[40px] h-auto" placeholder="Select Lake" state={lake} setState={setLake} options={lakes} 
+                        {/* <RHFMultiSelect name="lakes" label="Select Lake" className="!min-h-[40px] h-auto" placeholder="Select Lake" state={lake} setState={setLake} options={lakes} 
                         filter
+                        /> */}
+                        <RHFCustomDropdown
+                            name="lakes"
+                            label="Lakes"
+                            placeholder="Select Lakes"
+                            options={lakes}
+                            loading={isLoading || isFetching}
+                            onSearch={(v: string) => setLake(v)}
+                            chip={true}
                         />
 
                         <RHFTextField name="groupOfPeople" type="number" label="Group of People" placeholder="e.g. 2" />

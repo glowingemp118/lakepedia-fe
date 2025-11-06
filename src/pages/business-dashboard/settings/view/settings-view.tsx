@@ -65,7 +65,7 @@ const BusinessSettingsView = () => {
         businessName: (businessProfileData as any)?.business?.name || '',
         businessType: (businessProfileData as any)?.business?.business_type || '',
         description: (businessProfileData as any)?.business?.description || '',
-        services_offered: (businessProfileData as any)?.business?.services_offered || [],
+        services_offered:(businessProfileData as any)?.business?.services_offered || [],
     }), [businessProfileData]);
 
     const contactInformation = useMemo(() => ({

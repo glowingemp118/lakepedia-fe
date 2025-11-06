@@ -1,8 +1,10 @@
 'use client';
 
-import * as React from 'react';
+import { toAbsoluteUrl } from '@/lib/helpers';
 import { cn } from '@/lib/utils';
+import * as React from 'react';
 import { FC } from 'react';
+import { LoadingBar } from './table-bar-loading';
 
 function Table({ className, ...props }: React.HTMLAttributes<HTMLTableElement>) {
   return (
@@ -75,7 +77,7 @@ interface CustomHeaderProps {
     align?: string;
   }>;
 }
-  
+
 const TableHeadCustom: FC<CustomHeaderProps> = ({ headLabel }) => {
 
   const getTextAlignClass = (align?: string) => {
@@ -111,7 +113,6 @@ const TableHeadCustom: FC<CustomHeaderProps> = ({ headLabel }) => {
   );
 };
 
-'use client';
 
 import {
   Pagination,
@@ -138,14 +139,22 @@ const PaginationControls = ({
   totalRecords,
   onPageChange,
 }: PaginationControlsProps) => {
+
   const getPageNumbers = () => {
+
     const maxPagesToShow = 5;
+
     let start = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+
     let end = start + maxPagesToShow - 1;
+
     if (end > totalPages) {
+
       end = totalPages;
+
       start = Math.max(1, end - maxPagesToShow + 1);
     }
+
     return Array.from({ length: end - start + 1 }, (_, i) => start + i);
   };
 
@@ -160,6 +169,7 @@ const PaginationControls = ({
         <PaginationItem>
           <PaginationPrevious
             href="#"
+
             aria-disabled={currentPage === 1}
             className={
               currentPage === 1 ? 'pointer-events-none opacity-50' : ''
@@ -210,53 +220,57 @@ const PaginationControls = ({
   );
 };
 
-'use client';
-
-import { ReactNode } from 'react';
-import { LoadingBar } from './table-bar-loading';
 
 interface TableBodyWrapperProps {
   loading?: boolean;
   colSpan: number;
   dataLength: number;
   emptyMessage?: string;
-  children: ReactNode;
 }
 
-const TableBodyWrapper = ({
-  loading,
+const TableNoData = ({
   colSpan,
   dataLength,
-  emptyMessage = 'No data found',
-  children,
+  emptyMessage = 'No data',
+
 }: TableBodyWrapperProps) => {
   return (
-    <TableBody>
-      {loading ? (
-        <tr>
-          <td colSpan={colSpan} className="py-0 text-center">
-            <LoadingBar variant="default" />
-          </td>
-        </tr>
-      ) : dataLength === 0 ? (
+    <>
+      {dataLength === 0 && (
         <tr>
           <td
             colSpan={colSpan}
-            className="h-[40vh] border-b-0 text-center align-middle"
+            className=" delay-150 h-[40vh] border-b-0 text-center align-middle border-dashed border-gray-500 bg-grey-500/40"
           >
-            <div className="flex h-full w-full items-center justify-center text-xl">
+            <div className="flex h-full w-full items-center justify-center text-xl flex-col">
               {emptyMessage}
+              <img src={toAbsoluteUrl('/public/media/app/ic_content.svg')} alt="No content" />
             </div>
           </td>
         </tr>
-      ) : (
-        children
       )}
-    </TableBody>
+    </>
   );
 };
+interface TableDataLoadingProps {
+  loading: boolean,
+  colSpan: number
+}
+const TableDataLoading: FC<TableDataLoadingProps> = ({ loading, colSpan }) => {
+  return loading ? (
+    <>
+      <tr>
+        <td colSpan={colSpan} >
+          <LoadingBar variant="default" />
+        </td>
+      </tr>
+    </>
+  ) : null
+}
 
 
 
 
-export { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow, TableHeadCustom ,PaginationControls, TableBodyWrapper};
+
+export { PaginationControls, Table, TableBody, TableCaption, TableCell, TableDataLoading, TableFooter, TableHead, TableHeadCustom, TableHeader, TableNoData, TableRow };
+

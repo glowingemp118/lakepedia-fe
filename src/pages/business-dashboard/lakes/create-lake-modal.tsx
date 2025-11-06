@@ -1,13 +1,13 @@
-import { RHFMultiSelect } from '@/components/rhf/rhf-multi-select';
+import RHFCustomDropdown from '@/components/rhf/rhf-custom-dropdown';
 import { Button } from '@/components/ui/button';
 import DialogContent, { Dialog, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { useCreateLakeMutation, useGetAllLakesQuery } from '@/store/Reducer/lake'
-import React, { FC, useEffect, useState } from 'react'
-import * as z from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from '@/components/ui/form';
+import { useCreateLakeMutation, useGetAllLakesQuery } from '@/store/Reducer/lake';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircleIcon } from 'lucide-react';
+import { FC, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
 
 interface PageProps {
     open: boolean;
@@ -24,7 +24,7 @@ const CreateLakeModal: FC<PageProps> = ({ open, onClose }) => {
 
     const [lake, setLake] = useState('');
 
-    const { data } = useGetAllLakesQuery({
+    const { data, isLoading, isFetching } = useGetAllLakesQuery({
         search: lake,
     });
 
@@ -54,6 +54,8 @@ const CreateLakeModal: FC<PageProps> = ({ open, onClose }) => {
 
     const handleSubmit = async (data: any) => {
 
+        if(!data.lake.length) return ;
+
         const response = await createLake({
             lake_id: data.lake[0]
         });
@@ -64,6 +66,8 @@ const CreateLakeModal: FC<PageProps> = ({ open, onClose }) => {
         }
 
     };
+
+    console.log("lake",form.watch("lake"));
 
     return (
         <Dialog open={open} onOpenChange={onClose}>
@@ -79,8 +83,15 @@ const CreateLakeModal: FC<PageProps> = ({ open, onClose }) => {
                     <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
 
                         <div className="space-y-2">
-                            <label className="text-sm font-medium">Lake</label>
-                            <RHFMultiSelect name="lake" placeholder='Select Lake' options={lakes} single filter state={lake} setState={setLake} />
+
+                            <RHFCustomDropdown
+                                name="lake"
+                                label="Lake"
+                                options={lakes}
+                                loading={isLoading || isFetching}
+                                onSearch={(v: string) => setLake(v)}
+                                chip={false}
+                            />
                         </div>
 
                         <DialogFooter className="flex justify-end space-x-2 pt-2">

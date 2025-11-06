@@ -92,7 +92,7 @@ export function LakesContent({ mode, lakes }: ILakesContentProps) {
     <div className="flex flex-col items-stretch gap-5 lg:gap-7.5">
       <div className="flex flex-wrap items-center gap-5 justify-between">
         <h3 className="text-lg text-mono font-semibold">
-          {lakes.length} Lakes
+          {lakes?.length} Lakes
         </h3>
         <div className="flex gap-4">
           <ToggleGroup
@@ -120,7 +120,7 @@ export function LakesContent({ mode, lakes }: ILakesContentProps) {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 lg:gap-7.5">
 
             {
-              lakes.map((lake: any, index: number) => {
+              lakes && lakes.map((lake: any, index: number) => {
                 return renderProject(lake, index);
               })
             }

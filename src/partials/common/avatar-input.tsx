@@ -20,8 +20,6 @@ export const AvatarInput: FC<AvatarInputProps> = ({ name,className,...other }) =
 
   const { setValue, getValues } = useFormContext();
 
-  console.log("Avatar Input - getValues for ", name, ": ", getValues(name));
-
   const [avatar, setAvatar] = useState<ImageInputFile[]>([
     {
       dataURL: typeof getValues(name) === "string" ? getValues(name): getValues(name)?.dataURL || toAbsoluteUrl(`/media/app/default.webp`)
@@ -71,9 +69,9 @@ export const AvatarInput: FC<AvatarInputProps> = ({ name,className,...other }) =
               backgroundImage: `url(${toAbsoluteUrl(`/media/avatars/blank.png`)})`,
             }}
           >
-            {avatar.length > 0 && (
+            {avatar?.length > 0 && (
               <img
-                src={avatar[0].dataURL}
+                src={avatar[0].dataURL || toAbsoluteUrl(`/media/app/default.webp`)}
                 alt="avatar"
                 className="w-16 h-16 object-cover rounded-full"
               />

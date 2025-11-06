@@ -23,7 +23,7 @@ interface UserStatusModalProps {
         id: string;
         name: string;
         status: "active" | "inactive" | "deleted" | "blocked";
-    };
+    }| null;
     isOpen: boolean;
     onClose: () => void;
 }

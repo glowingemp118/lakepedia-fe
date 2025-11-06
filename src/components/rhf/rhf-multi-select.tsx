@@ -48,7 +48,6 @@ export function RHFMultiSelect({
     const { control } = useFormContext();
 
 
-    // console.log("options in RHFMultiSelect:", options);
     // const [searchOptions, setSearchOptions] = useState<Option[]>([]);
 
 
@@ -100,8 +99,8 @@ export function RHFMultiSelect({
                                         )}
                                     >
                                         <div className="flex gap-1 flex-wrap">
-                                            {selectedValues.length ? (
-                                                selectedValues.map((val: number) => {
+                                            {selectedValues.length > 0 ? (
+                                                selectedValues.length !== 0 && selectedValues.map((val: number) => {
                                                     const item = options.find((o) => o.value === val);
                                                     return (
                                                         <Badge
@@ -132,7 +131,7 @@ export function RHFMultiSelect({
                                         <CommandList>
                                             <CommandEmpty>No Data found.</CommandEmpty>
                                             <CommandGroup className="w-full">
-                                                {options.map((option) => (
+                                                {options && options.map((option) => (
                                                     <CommandItem
                                                         key={option.value}
                                                         onSelect={() => handleSelect(option.value)}

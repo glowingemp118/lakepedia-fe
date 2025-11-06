@@ -32,7 +32,6 @@ export function CallbackPage() {
     // We need to get the session and integrate it with our auth context
     const handleCallback = async () => {
       try {
-        //console.log('Processing OAuth callback');
         
         // Get the session from Supabase
         // const { data, error } = await supabase.auth.getSession();
@@ -47,7 +46,6 @@ export function CallbackPage() {
         //   throw new Error('Authentication session not established');
         // }
 
-        //console.log('Session obtained successfully from OAuth provider');
 
         // Create auth model from session data (same structure as used in regular login)
         const authModel = {

@@ -1,5 +1,5 @@
 
-import { PaginationControls, Table, TableBodyWrapper, TableHeadCustom } from '@/components/ui/table';
+import { PaginationControls, Table, TableBody, TableDataLoading, TableHeadCustom, TableNoData } from '@/components/ui/table';
 
 import ConfirmDialog from '@/components/comfirm-dialog/confirm-dialog';
 import { Container } from '@/components/common/container';
@@ -7,7 +7,7 @@ import { Navbar } from '@/components/layouts/layout-3/components/navbar';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { ScrollBar,ScrollArea } from '@/components/ui/scroll-area';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { useBoolean } from '@/hooks/use-boolean';
 import { useGetAllUsersQuery } from '@/store/Reducer/users';
 import { useState } from 'react';
@@ -42,6 +42,7 @@ const UsersView = () => {
     limit: 10,
     search: globalFilter,
   });
+
   return (
 
     <div className='md:mx-10 mx-2 my-4 flex flex-col gap-6'>
@@ -52,7 +53,6 @@ const UsersView = () => {
       <Container className=''>
 
         <Card className='mt-5 shadow-md col-span-12 lg:col-span-12  md:px-8 px-2  mb-5  dark:bg-secondary'>
-
           <div className='flex md:justify-between md:items-center flex-col md:flex-row gap-4'>
             <h3 className='text-xl font-semibold md:ml-0 ml-2 my-5'>Users List</h3>
             <div>
@@ -67,31 +67,35 @@ const UsersView = () => {
               className="w-full h-10 "
             />
           </div>
-          <div className='border rounded-lg my-5 overflow-x-auto'>
-            <ScrollArea>
-              <Table className="w-full">
-                <TableHeadCustom headLabel={headLabel} />
+          <div className='border rounded-lg my-5 lg:col-span-12'>
+            <ScrollArea className="w-full overflow-auto ">
+              <div className="min-w-max">
+                <Table className="w-full">
+                  <TableHeadCustom headLabel={headLabel} />
+                  <TableBody>
 
-                <TableBodyWrapper
-                  loading={isLoading || isFetching}
-                  colSpan={headLabel.length}
-                  dataLength={userData?.data?.users?.length || 0}
-                >
-                  {userData?.data?.users?.map((item: any, index: number) => (
-                    <UserTableRow key={index} item={item}
-                      handleEdit={() => {
-                        setCurrentUser(item);
-                        open.onTrue();
-                      }}
-                      handleDelete={() => {
-                        setCurrentUser(item);
-                        deleteModal.onTrue();
-                      }}
+                    {(isLoading || isFetching) && <TableDataLoading loading={isLoading || isFetching} colSpan={headLabel.length} />}
+
+                    {userData?.data?.users?.map((item: any, index: number) => (
+                      <UserTableRow key={index} item={item}
+                        handleEdit={() => {
+                          setCurrentUser(item);
+                          open.onTrue();
+                        }}
+                        handleDelete={() => {
+                          setCurrentUser(item);
+                          deleteModal.onTrue();
+                        }}
+                      />
+                    ))}
+                    <TableNoData
+                      colSpan={headLabel.length}
+                      dataLength={userData?.data?.users?.length || 0}
                     />
-                  ))}
-                </TableBodyWrapper>
-              </Table>
-              <ScrollBar orientation="horizontal"/>
+                  </TableBody>
+                </Table>
+              </div>
+              <ScrollBar orientation="horizontal" />
             </ScrollArea>
             <div >
             </div>
@@ -105,7 +109,7 @@ const UsersView = () => {
             />
 
           </div>
-        </Card>
+        </Card >
         <UserStatusModal isOpen={open.value} onClose={open.onFalse} user={currentUser} />
 
         <ConfirmDialog
@@ -124,21 +128,11 @@ const UsersView = () => {
             </Button>
           }
         />
-      </Container>
-    </div>
+      </Container >
+    </div >
   )
 }
 
 export default UsersView
-
-interface IUsers {
-  id: string;
-  image: string;
-  name: string;
-  email: string;
-  country: string;
-  state: string;
-  status: 'active' | 'inactive' | 'blocked'|"deleted";
-}
 
 

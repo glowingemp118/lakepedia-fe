@@ -95,7 +95,6 @@ export function AdminSignInPage() {
       // setIsProcessing(true);
       setError(null);
 
-      //console.log('Attempting to sign in with email:', values.email);
 
       // Simple validation
       if (!values.email.trim() || !values.password) {
