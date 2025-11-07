@@ -1,9 +1,9 @@
 
-const TRAVELER_DASHBOARD = '/traveler-dashboard';
+const TRAVELER_DASHBOARD = '/traveler';
 
-const BUSINESS_DASHBOARD = '/business-dashboard';
+const BUSINESS_DASHBOARD = '/business';
 
-const ADMIN_DASHBOARD = '/admin-dashboard';
+const ADMIN_DASHBOARD = '/admin';
 
 export const paths = {
     travelerDashboard: {
@@ -35,7 +35,7 @@ export const paths = {
         root: ADMIN_DASHBOARD,
         profile: `${ADMIN_DASHBOARD}/profile`,
         businessess: `${ADMIN_DASHBOARD}/businesses`,
-        users: `${ADMIN_DASHBOARD}/users`,
+        travelers: `${ADMIN_DASHBOARD}/travelers`,
         account: `${ADMIN_DASHBOARD}/account`,
         network: `${ADMIN_DASHBOARD}/network`,
         plans: `${ADMIN_DASHBOARD}/plans`,

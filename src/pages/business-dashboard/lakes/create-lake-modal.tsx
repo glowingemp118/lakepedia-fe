@@ -66,9 +66,6 @@ const CreateLakeModal: FC<PageProps> = ({ open, onClose }) => {
         }
 
     };
-
-    console.log("lake",form.watch("lake"));
-
     return (
         <Dialog open={open} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-lg">

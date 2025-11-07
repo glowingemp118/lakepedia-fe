@@ -90,7 +90,7 @@ const PersonalInfo: FC<PageProps> = ({ user }) => {
                 UsState
               </TableCell>
               <TableCell className="py-3 text-secondary-foreground text-sm font-normal">
-                {user?.state || ''}
+                {user?.state || 'Not Added'}
               </TableCell>
               <TableCell className="py-3 text-center">
                 -
@@ -101,7 +101,7 @@ const PersonalInfo: FC<PageProps> = ({ user }) => {
                 Country
               </TableCell>
               <TableCell className="py-3 text-secondary-foreground text-sm font-normal">
-                {user?.country || ''}
+                {user?.country || 'Not Added'}
               </TableCell>
               <TableCell className="py-3 text-center">
                 -

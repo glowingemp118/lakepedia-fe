@@ -51,22 +51,22 @@ export function SignInPage() {
 
     const pathname = window.location.pathname;
 
-    const userType = pathname.includes('business') ? 'business' : 'traveler';
+    const userType = pathname.includes('?user=business') ? 'business' : 'traveler';
     
     if (userType === 'traveler' || userType === 'business') {
       setCurrentTab(userType);
     }
   }, []);
 
-  // useEffect(() => {
-  //   if (currentTab) {
+  useEffect(() => {
+    if (currentTab) {
       
-  //     const pathname = currentTab === "business" ? "/auth/signin/business" : "/auth/signin/traveler";
+      const pathname = currentTab === "business" ? "/signin?user=business" : "/signin?user-traveler";
 
-  //     navigate(pathname, { replace: true });
+      navigate(pathname, { replace: true });
      
-  //   }
-  // }, [currentTab, navigate]);
+    }
+  }, [currentTab, navigate]);
 
 
   useEffect(() => {

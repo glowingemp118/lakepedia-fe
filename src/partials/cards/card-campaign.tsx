@@ -1,16 +1,14 @@
-import { EllipsisVertical, Heart } from 'lucide-react';
-import { Link, useNavigate } from 'react-router';
-import { toAbsoluteUrl } from '@/lib/helpers';
+import { paths } from '@/components/layouts/layout-3/components/paths';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { DropdownMenu2 } from '../dropdown-menu/dropdown-menu-2';
-import { useSelector } from 'react-redux';
+import { toAbsoluteUrl } from '@/lib/helpers';
 import { selectUser } from '@/store/slices/userSlice';
-import { paths } from '@/components/layouts/layout-3/components/paths';
-import { useDeleteLakeMutation } from '@/store/Reducer/lake';
-import { useBoolean } from '@/hooks/use-boolean';
+import { EllipsisVertical, Heart } from 'lucide-react';
+import { useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router';
+import { DropdownMenu2 } from '../dropdown-menu/dropdown-menu-2';
 
 interface ICampaignItem {
   total: string;
@@ -64,7 +62,6 @@ const CardCampaign = ({
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    //console.log('Favorite clicked!');
   }
 
   const handleClick = (e: React.MouseEvent) => {
@@ -163,5 +160,5 @@ export {
   CardCampaign,
   type ICampaignItem,
   type ICampaignItems,
-  type ICampaignProps,
+  type ICampaignProps
 };

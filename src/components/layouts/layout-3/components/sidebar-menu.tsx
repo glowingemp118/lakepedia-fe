@@ -116,8 +116,8 @@ export const AdminSidebar = [
   },
   {
     icon: Users,
-    path: paths.adminDashboard.users,
-    title: 'Users',
+    path: paths.adminDashboard.travelers,
+    title: 'Travelers',
   },
   // {
   //   icon: Plane,

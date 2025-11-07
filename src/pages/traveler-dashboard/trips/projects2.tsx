@@ -1,6 +1,5 @@
 
 import { paths } from '@/components/layouts/layout-3/components/paths';
-import { ScreenLoader } from '@/components/screen-loader';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -8,11 +7,11 @@ import { Progress } from '@/components/ui/progress';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useBoolean } from '@/hooks/use-boolean';
 import { formatDate } from '@/lib/helpers';
-import { useGetAllTripsQuery } from '@/store/Reducer/trip';
-import { Heart, LayoutGrid, List, Plus } from 'lucide-react';
+import { DropdownMenu2 } from '@/partials/dropdown-menu/dropdown-menu-2';
+import { EllipsisVertical, Heart, LayoutGrid, List, Plus } from 'lucide-react';
 import { FC, useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
-import AddTripModal from './create-trip-modal';
+import QuickAddEditTripModal from './quick-add-edit-trip-modal';
 
 
 interface TripItem {
@@ -47,17 +46,16 @@ interface TripItem {
 }
 
 type ITrips2Items = Array<TripItem>;
-interface PageProps{
-  trips:any;
+interface PageProps {
+  trips: any;
 }
-const Projects2:FC<PageProps> = ({ trips }) => {
+const Projects2: FC<PageProps> = ({ trips }) => {
 
   const { state } = useLocation();
 
   const navigate = useNavigate();
 
   const open = useBoolean();
-
 
   const [activeView, setActiveView] = useState<'cards' | 'list'>('cards');
 
@@ -81,19 +79,36 @@ const Projects2:FC<PageProps> = ({ trips }) => {
       onClick={() => { navigate(paths.travelerDashboard.tripDetail(trip.id)) }}
     >
       <div className="flex flex-col gap-2">
-        <div className="flex justify-between items-center">
-          <h4 className="font-semibold text-lg text-gray-900">{trip.name}</h4>
-          <Badge variant={
+        <div className='flex justify-between items-center'>
+          <Badge appearance={"light"} className='capitalize' variant={
             (trip?.status === 'in_progress' && 'primary') ||
             (trip?.status === 'completed' && 'success') ||
             (trip?.status === 'upcoming' && 'warning') ||
             (trip?.status === 'planned' && 'destructive') ||
             "secondary"
           }>{trip.status}</Badge>
+          <DropdownMenu2
+            id={trip.id}
+            trip={trip}
+            trigger={
+              <Button variant="ghost" mode="icon">
+                <EllipsisVertical />
+              </Button>
+            }
+          />
+        </div>
+        <div className="flex justify-between items-center">
+          <h4 className="font-semibold text-lg text-gray-900 dark:text-white">{trip.name}</h4>
+
         </div>
         <p className="text-sm text-gray-600 line-clamp-2">{trip.description}</p>
         <div className="text-sm text-gray-500 mt-2 space-y-1">
-          <p><strong>Lakes:</strong> {trip?.lakes.length > 0 ? trip.lakes?.map((lake: any) => lake.lake).join(", ") : "No lakes specified"}</p>
+          <p className='flex gap-2'><strong>Lakes:</strong> {trip?.lakes.length > 0 ? <div className='flex flex-wrap gap-1'>
+            {trip.lakes?.map((lake: any) => {
+              return <Badge appearance={"light"} className='capitalize'  >{lake.lake}</Badge>
+            })}
+          </div> : "No lakes specified"
+          }</p>
           <p className='capitalize'><strong>Type:</strong> {trip.type}</p>
           <p><strong>Dates:</strong> {formatDate(trip.start_date)} → {formatDate(trip.end_date)}</p>
         </div>
@@ -143,14 +158,14 @@ const Projects2:FC<PageProps> = ({ trips }) => {
     >
       {/* Left Side — Trip Info */}
       <div className="flex flex-col gap-1 w-full lg:w-2/3">
-        <div className="flex items-center gap-3">
-          <h4 className="font-semibold text-lg text-gray-900">{trip.name}</h4>
+        <div className="flex items-center gap-3 flex-wrap">
+          <h4 className="font-semibold text-lg text-gray-900 dark:text-white">{trip.name}</h4>
           {trip.isPrivate && (
             <Badge variant="destructive" className="text-xs">
               Private
             </Badge>
           )}
-          <Badge variant={
+          <Badge appearance={"light"} className='capitalize' variant={
             (trip?.status === 'in_progress' && 'primary') ||
             (trip?.status === 'completed' && 'success') ||
             (trip?.status === 'upcoming' && 'warning') ||
@@ -162,12 +177,18 @@ const Projects2:FC<PageProps> = ({ trips }) => {
         <p className="text-sm text-gray-600 mt-1 line-clamp-2">{trip.description}</p>
 
         <div className="text-sm text-gray-500 mt-2 grid grid-cols-1 sm:grid-cols-2 gap-y-1">
-          <p>
+          <p className='capitalize'>
             <strong>Type:</strong> {trip.type}
           </p>
-          <p>
+          {/* <p>
             <strong>Lake:</strong> {trip?.lakes?.length > 0 ? trip.lakes?.map((lake: any) => lake.lake).join(", ") : "No lakes specified"}
-          </p>
+          </p> */}
+          <p className='flex gap-2'><strong>Lakes:</strong> {trip?.lakes.length > 0 ? <div className='flex flex-wrap gap-1'>
+            {trip.lakes?.map((lake: any) => {
+              return <Badge appearance={"light"} className='capitaliz'>{lake.lake}</Badge>
+            })}
+          </div> : "No lakes specified"
+          }</p>
           <p>
             <strong>Group Size:</strong> {trip.number_of_people}
           </p>
@@ -178,8 +199,17 @@ const Projects2:FC<PageProps> = ({ trips }) => {
       </div>
 
       {/* Right Side — Action + Progress */}
-      <div className="flex flex-col items-end mt-4 lg:mt-0 gap-3 min-w-[180px]">
+      <div className="flex flex-col items-end  lg:mt-0 gap-3 min-w-[180px]">
         {/* Optional Progress (if you want to add like your card layout) */}
+        <DropdownMenu2
+          id={trip.id}
+          trip={trip}
+          trigger={
+            <Button variant="ghost" mode="icon">
+              <EllipsisVertical />
+            </Button>
+          }
+        />
 
         <div className="w-full">
           <Progress value={60} className="h-1.5 mb-2" />
@@ -202,53 +232,53 @@ const Projects2:FC<PageProps> = ({ trips }) => {
 
   return (
     <>
-      
-        <div className="flex flex-col gap-6">
-          <div className="flex justify-between items-center">
-            <h3 className="text-lg font-semibold">{trips?.length} Trips</h3>
-            <div className="flex gap-4">
-              <ToggleGroup
-                type="single"
-                variant="outline"
-                value={activeView}
-                onValueChange={() => {
-                  setActiveView(activeView === 'cards' ? 'list' : 'cards');
-                }}
-              >
-                <ToggleGroupItem value="cards">
-                  <LayoutGrid size={16} />
-                </ToggleGroupItem>
-                <ToggleGroupItem value="list">
-                  <List size={16} />
-                </ToggleGroupItem>
-              </ToggleGroup>
-              <Button onClick={open.onTrue}>
-                <Plus className="w-4 h-4 mr-1" /> Add Trip
-              </Button>
-            </div>
-          </div>
 
-          {activeView === 'cards' ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-              {/* {trips.map((trip, i) => renderCard(trip))} */}
-              {trips?.map((trip: any) => renderCard(trip))}
-            </div>
-          ) : (
-            <div className="flex flex-col gap-4">
-              {/* {trips.map((trip:any) => renderRow(trip))} */}
-              {trips?.map((trip: any) => renderRow(trip))}
-            </div>
-          )}
-
-          <div className="flex justify-center pt-5">
-            <Button variant="dashed" asChild>
-              <Link to="#">Show more Trips</Link>
+      <div className="flex flex-col gap-6">
+        <div className="flex justify-between items-center">
+          <h3 className="text-lg font-semibold">{trips?.length} Trips</h3>
+          <div className="flex gap-4">
+            <ToggleGroup
+              type="single"
+              variant="outline"
+              value={activeView}
+              onValueChange={() => {
+                setActiveView(activeView === 'cards' ? 'list' : 'cards');
+              }}
+            >
+              <ToggleGroupItem value="cards">
+                <LayoutGrid size={16} />
+              </ToggleGroupItem>
+              <ToggleGroupItem value="list">
+                <List size={16} />
+              </ToggleGroupItem>
+            </ToggleGroup>
+            <Button onClick={open.onTrue}>
+              <Plus className="w-4 h-4 mr-1" /> Add Trip
             </Button>
           </div>
-
-          <AddTripModal open={open.value} onClose={open.onFalse} />
         </div>
-      
+
+        {activeView === 'cards' ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+            {/* {trips.map((trip, i) => renderCard(trip))} */}
+            {trips?.map((trip: any) => renderCard(trip))}
+          </div>
+        ) : (
+          <div className="flex flex-col gap-4">
+            {/* {trips.map((trip:any) => renderRow(trip))} */}
+            {trips?.map((trip: any) => renderRow(trip))}
+          </div>
+        )}
+
+        <div className="flex justify-center pt-5">
+          <Button variant="dashed" asChild>
+            <Link to="#">Show more Trips</Link>
+          </Button>
+        </div>
+
+        <QuickAddEditTripModal open={open.value} onClose={open.onFalse} currentTrip={""} />
+      </div>
+
     </>
   );
 };

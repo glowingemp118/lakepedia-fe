@@ -1,87 +1,101 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import RHFSelect from "@/components/rhf/rhf-select";
 import { Button } from "@/components/ui/button";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
+import { Form } from "@/components/ui/form";
+import { SelectItem } from "@/components/ui/select";
+import { useUpdateUserStatusMutation } from "@/store/Reducer/users";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useMemo } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+import * as z from "zod";
 
 interface BusinessStatusModalProps {
-  business?: {
-    id: string;
-    name: string;
-    status: "Active" | "Pending" | "Rejected";
-  };
-  isOpen: boolean;
-  onClose: () => void;
-  onSave: (updatedStatus: string) => void;
+    business?: {
+        id: string;
+        name: string;
+        status: "active" | "inactive" | "deleted" | "blocked";
+    }| null;
+    isOpen: boolean;
+    onClose: () => void;
 }
 
 export function BusinessStatusModal({
-  business,
-  isOpen,
-  onClose,
-  onSave,
+    business,
+    isOpen,
+    onClose,
 }: BusinessStatusModalProps) {
-  const [status, setStatus] = useState<"Active" | "Pending" | "Rejected">(
-    "Pending"
-  );
 
-  useEffect(() => {
-    if (business) {
-      setStatus(business.status);
-    }
-  }, [business]);
+    const defaultValues = useMemo(() => ({
+        status: business?.status || "",
+    }), [business]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSave(status); // send updated status back to parent
-    onClose();
-  };
+    const [updateUserStatus] = useUpdateUserStatusMutation();
 
-  return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-lg">
-        <DialogHeader>
-          <DialogTitle>
-            Change Business Status
-          </DialogTitle>
-        </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Status</label>
-            <Select value={status} onValueChange={(val: any) => setStatus(val)}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Active">Active</SelectItem>
-                <SelectItem value="Pending">Pending</SelectItem>
-                <SelectItem value="Rejected">Rejected</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+    const schema = z.object({
+        status: z.string().nonempty("Status is required"),
+    });
 
-          <DialogFooter className="flex justify-end space-x-2 pt-2">
-            <Button type="button" variant="outline" onClick={onClose}>
-              Cancel
-            </Button>
-            <Button type="submit">Save</Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
-  );
+    const methods = useForm({
+        resolver: zodResolver(schema),
+        defaultValues
+    });
+
+    useEffect(() => {
+
+        methods.reset(defaultValues);
+
+    }, [defaultValues]);
+
+    const handleSubmit = async (data: any) => {
+        if (!business) return;
+
+        let response = await updateUserStatus({ id: business.id, status: data.status });
+        
+        if (!response.error) {
+            toast.success("Business status updated successfully");
+            onClose();
+            methods.reset(defaultValues);
+        }
+    
+    };
+
+    return (
+        <Dialog open={isOpen} onOpenChange={onClose}>
+            <DialogContent className="sm:max-w-lg" aria-describedby="business-status-modal">
+                <DialogHeader>
+                    <DialogTitle>Change Business Status </DialogTitle>
+                </DialogHeader>
+                <Form {...methods}>
+
+                    <form onSubmit={methods.handleSubmit(handleSubmit)} className="space-y-6">
+
+                        <div className="space-y-2">
+                            <RHFSelect name="status" placeholder="Select status" label="Select Status">
+                                {['active', 'inactive', 'deleted', 'blocked'].map((status) => (
+                                    <SelectItem key={status} value={status}>{status.charAt(0).toUpperCase() + status.slice(1)}</SelectItem>
+                                ))}
+                            </RHFSelect>
+                        </div>
+
+                        <DialogFooter className="flex justify-end space-x-2 pt-2 flex-row">
+                            <Button type="button" variant="outline" onClick={onClose}>
+                                Cancel
+                            </Button>
+                            <Button type="submit">Save</Button>
+                        </DialogFooter>
+                    </form>
+                </Form>
+            </DialogContent>
+        </Dialog>
+    );
 }

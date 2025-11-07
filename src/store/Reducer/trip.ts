@@ -28,10 +28,10 @@ export const tripApi = createApi({
             providesTags: ["Trip"],
         }),
             updateTrip: builder.mutation({
-                query: ({ tripId, ...trip }) => ({
-                    url: `/trips/${tripId}`,
+                query: ({ id, data }) => ({
+                    url: `/trip/${id}`,
                     method: "PUT",
-                    body: trip,
+                    body: data,
                 }),
                 invalidatesTags: ["Trip"],
             }),

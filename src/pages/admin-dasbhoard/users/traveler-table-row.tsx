@@ -5,7 +5,7 @@ import { TableCell, TableRow } from '@/components/ui/table';
 import { AvatarImage } from '@radix-ui/react-avatar';
 import { Eye, Pencil, Trash2 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { toAbsoluteUrl } from '@/lib/helpers';
+import { formatDate, toAbsoluteUrl } from '@/lib/helpers';
 
 interface IBusiness {
     id: string;
@@ -15,6 +15,7 @@ interface IBusiness {
     email: string;
     country: string;
     state: string;
+    createdAt: string;
     status: 'active' | 'inactive' | 'deleted' | 'blocked';
 }
 
@@ -24,7 +25,7 @@ interface PageProps {
     handleDelete?: (id: string) => void;
 }
 
-const UserTableRow: FC<PageProps> = ({ item, handleEdit, handleDelete }) => {
+const TravelerTableRow: FC<PageProps> = ({ item, handleEdit, handleDelete }) => {
     return (
         <TableRow className="transition-colors  hover:bg-muted/50">
             {/* Image + Name */}
@@ -51,9 +52,13 @@ const UserTableRow: FC<PageProps> = ({ item, handleEdit, handleDelete }) => {
                 {item.state || "--"}
 
             </TableCell>
+            {/* Created At */}
+            <TableCell align='center'>
+                {formatDate(item.createdAt)}
+            </TableCell>
 
             {/* Status */}
-            <TableCell className="text-center">
+            <TableCell align='center'>
                 <Badge variant={
                     (item.status === "active" && "success") ||
                     (item.status === "inactive" && "warning") ||
@@ -66,8 +71,7 @@ const UserTableRow: FC<PageProps> = ({ item, handleEdit, handleDelete }) => {
                 >{item.status}</Badge>
             </TableCell>
 
-            <TableCell className="text-end">
-                <div className="flex gap-2 ">
+            <TableCell align='center' className='flex gap-2 items-center justify-center'>
 
                     <button
                         title="View Details"
@@ -120,10 +124,9 @@ const UserTableRow: FC<PageProps> = ({ item, handleEdit, handleDelete }) => {
                             </Tooltip>
                         </TooltipProvider>
                     </button>
-                </div>
             </TableCell>
         </TableRow>
     );
 };
 
-export default UserTableRow;
+export default TravelerTableRow;

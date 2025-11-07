@@ -4,6 +4,11 @@ interface DropdownOption {
   label: string;
 }
 
+interface Options {
+  id: number,
+  lake: string
+}
+
 interface Props {
   name: string;
   label?: string;
@@ -11,16 +16,25 @@ interface Props {
   options: DropdownOption[];
   onSearch: (query: string) => void;
   loading?: boolean;
-  chip?:boolean
+  chip?: boolean,
+  alreadySelected?: Options[]
 }
 import { X } from "lucide-react";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { Badge } from "../ui/badge";
 import { useFormContext } from "react-hook-form";
 import { Input } from "../ui/input";
 
 
-const AutocompleteTags: FC<Props> = ({ loading, options, onSearch,chip,name }) => {
+const AutocompleteTags: FC<Props> = ({ loading, options, onSearch, chip, name, alreadySelected }) => {
+
+
+  const defaultValues = useMemo(() => (alreadySelected?.map((item) => {
+    return {
+      value: item.id,
+      label: item.lake
+    }
+  })), [alreadySelected]);
 
   const [search, setSearch] = useState("");
 
@@ -28,7 +42,7 @@ const AutocompleteTags: FC<Props> = ({ loading, options, onSearch,chip,name }) =
 
   const [showOptions, setShowOptions] = useState(false);
 
-  const {setValue}=useFormContext();
+  const { setValue } = useFormContext();
 
   const filteredOptions = options.filter(
     (opt) => !selected.find((sel) => sel.value === opt.value)
@@ -51,10 +65,16 @@ const AutocompleteTags: FC<Props> = ({ loading, options, onSearch,chip,name }) =
   useEffect(() => {
     if (onSearch) onSearch(debouncedSearch);
 
-    if(selected){
-      setValue(name,selected.map((s) => s.value),{shouldValidate:true})
+    if (selected) {
+      setValue(name, selected.map((s) => s.value), { shouldValidate: true })
     }
-  }, [debouncedSearch,selected]);
+  }, [selected]);
+
+  useEffect(() => {
+    if (defaultValues) {
+      setSelected(defaultValues);
+    }
+  }, [defaultValues])
 
 
   const handleSelect = (option: DropdownOption) => {

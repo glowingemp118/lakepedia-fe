@@ -13,8 +13,8 @@ interface ConfirmDialogProps {
 const ConfirmDialog: FC<ConfirmDialogProps> = ({ open, title, content, onClose, onConfirm,action }) => {
   return (
     <div>
-      <Dialog open={open} onOpenChange={onClose}>
-        <DialogOverlay className="fixed inset-0 flex items-center justify-center">
+      <Dialog open={open} onOpenChange={onClose} >
+        <DialogOverlay className="fixed inset-0 flex items-center justify-center" onClick={(e)=>e.stopPropagation()}>
           <DialogContent className=" p-6 rounded-lg shadow-lg max-w-md w-full dark:bg-secondary">
             <DialogHeader>
               <DialogTitle className="text-lg font-semibold">{title || "Confirm Action"}</DialogTitle>

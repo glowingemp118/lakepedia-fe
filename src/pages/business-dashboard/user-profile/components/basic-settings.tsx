@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import { useBoolean } from '@/hooks/use-boolean';
-import { toAbsoluteUrl } from '@/lib/helpers';
+import { formatDate, toAbsoluteUrl } from '@/lib/helpers';
 import { Mail } from 'lucide-react';
 import { Link } from 'react-router';
 import QuickUpdatePassword from '../quick-update-password';
@@ -36,7 +36,7 @@ const BasicSettings = ({ title, basicSettings }: IBasicSettingsProps) => {
                 Last email login
               </TableCell>
               <TableCell className="py-2 text-secondary-foreground font-normal">
-                {basicSettings.lastEmailLogin}
+                {formatDate(basicSettings.lastEmailLogin)}
               </TableCell>
               <TableCell className="py-2 text-end">
 

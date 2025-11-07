@@ -23,32 +23,32 @@ import { ReactNode } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router';
 
-const I18N_LANGUAGES = [
-  {
-    label: 'English',
-    code: 'en',
-    direction: 'ltr',
-    flag: toAbsoluteUrl('/media/flags/united-states.svg'),
-  },
-  {
-    label: 'Arabic (Saudi)',
-    code: 'ar',
-    direction: 'rtl',
-    flag: toAbsoluteUrl('/media/flags/saudi-arabia.svg'),
-  },
-  {
-    label: 'French',
-    code: 'fr',
-    direction: 'ltr',
-    flag: toAbsoluteUrl('/media/flags/france.svg'),
-  },
-  {
-    label: 'Chinese',
-    code: 'zh',
-    direction: 'ltr',
-    flag: toAbsoluteUrl('/media/flags/china.svg'),
-  },
-];
+// const I18N_LANGUAGES = [
+//   {
+//     label: 'English',
+//     code: 'en',
+//     direction: 'ltr',
+//     flag: toAbsoluteUrl('/media/flags/united-states.svg'),
+//   },
+//   {
+//     label: 'Arabic (Saudi)',
+//     code: 'ar',
+//     direction: 'rtl',
+//     flag: toAbsoluteUrl('/media/flags/saudi-arabia.svg'),
+//   },
+//   {
+//     label: 'French',
+//     code: 'fr',
+//     direction: 'ltr',
+//     flag: toAbsoluteUrl('/media/flags/france.svg'),
+//   },
+//   {
+//     label: 'Chinese',
+//     code: 'zh',
+//     direction: 'ltr',
+//     flag: toAbsoluteUrl('/media/flags/china.svg'),
+//   },
+// ];
 
 export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
 
@@ -58,7 +58,7 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
 
   const navigage = useNavigate();
 
-  const currenLanguage = I18N_LANGUAGES[0];
+  // const currenLanguage = I18N_LANGUAGES[0];
 
   const { theme, setTheme } = useTheme();
 
@@ -69,12 +69,12 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
   const handleLogout = () => {
 
     dispatch(logout());
-    navigage(user?.role==="admin" && paths.adminDashboard.root || user?.role==="traveler" && paths.travelerDashboard.root || 
-      user?.role==="business" && paths.businessDashboard.root || '/auth/signin');
+    navigage(user?.role === "admin" && paths.adminDashboard.root || user?.role === "traveler" && paths.travelerDashboard.root ||
+      user?.role === "business" && paths.businessDashboard.root || '/signin');
   };
 
   const handleGoToProfile = () => {
-    navigage(user?.role==="admin" && paths.adminDashboard.profile || user?.role==="traveler" && paths.travelerDashboard.settings || user?.role==="business" && paths.businessDashboard.settings || '/auth/signin');
+    navigage(user?.role === "admin" && paths.adminDashboard.profile || user?.role === "traveler" && paths.travelerDashboard.settings || user?.role === "business" && paths.businessDashboard.settings || '/signin');
   }
 
   return (
@@ -86,7 +86,7 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
           <div className="flex items-center gap-2">
             <img
               className="size-9 rounded-full border-2 border-green-500"
-              src={user?.image?.url as string || toAbsoluteUrl('/media/avatars/300-2.png') }
+              src={(user?.image as { url: string })?.url as string || toAbsoluteUrl('/media/avatars/300-2.png')}
               alt="User avatar"
             />
             <div className="flex flex-col">
@@ -118,7 +118,7 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
         ○ For businesses, an extra button called "My subscription";
         ○ Sign out. */}
 
-        {(user?.role==="traveler" || user?.role==="business") && <>
+        {(user?.role === "traveler" || user?.role === "business") && <>
           <DropdownMenuItem asChild>
             <div
               onClick={handleGoToProfile}
@@ -147,7 +147,7 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
             </Link>
           </DropdownMenuItem>
           {
-            user?.role==="business" && <DropdownMenuItem asChild>
+            user?.role === "business" && <DropdownMenuItem asChild>
               <Link
                 to={paths.businessDashboard.subscription}
                 className="flex items-center gap-2"
@@ -157,6 +157,7 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
               </Link>
             </DropdownMenuItem>
           }
+          <DropdownMenuSeparator />
 
         </>
         }
@@ -274,7 +275,7 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
           </DropdownMenuSubContent>
         </DropdownMenuSub> */}
 
-        <DropdownMenuSeparator />
+
 
         {/* Footer */}
         <DropdownMenuItem

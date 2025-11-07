@@ -13,7 +13,7 @@ export function AuthRouting() {
 
       {authRoutes.map((route) => {
         // Extract auth/ from the path to avoid double prefixing
-        const basePath = route.path?.replace('auth/', '') || '';
+        const basePath = route.path?.replace('/', '') || '';
 
         return (
           <Route key={route.path} path={basePath} element={route.element}>

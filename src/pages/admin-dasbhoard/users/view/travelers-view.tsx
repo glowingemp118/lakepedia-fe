@@ -11,8 +11,8 @@ import { useBoolean } from '@/hooks/use-boolean';
 import { useGetAllUsersQuery } from '@/store/Reducer/users';
 import { useState } from 'react';
 import { AdminHeroWithProfile } from '../../profile/profile-hero';
-import { BusinessStatusModal } from '../business-status-modal';
-import BusinessTableRow from '../business-table-row';
+import { TravelerStatusModal } from '../traveler-status-modal';
+import TravelerTableRow from '../traveler-table-row';
 
 const headLabel = [
   { id: 'name', label: 'Name', align: 'left' },
@@ -25,23 +25,22 @@ const headLabel = [
 
 
 
-const BusinessesView = () => {
+const TravelersView = () => {
 
   const open = useBoolean();
 
   const deleteModal = useBoolean();
 
-  const [currentBusiness, setCurrentBusiness] = useState(null);
+  const [currentTraveler, setCurrentTraveler] = useState(null);
 
   const [page, setPage] = useState(1);
 
   const [globalFilter, setGlobalFilter] = useState('');
 
-  const { data: businessData, isLoading, isFetching } = useGetAllUsersQuery({
+  const { data: travelerData, isLoading, isFetching } = useGetAllUsersQuery({
     page,
     limit: 10,
     search: globalFilter,
-    role: 'business',
   });
   return (
 
@@ -55,11 +54,11 @@ const BusinessesView = () => {
           className='dark:bg-secondary col-span-12 mt-5 mb-5 px-2 shadow-md md:px-8 lg:col-span-12'
         >
           <div className='flex justify-start items-center flex-row gap-4'>
-            <h3 className='text-xl font-semibold md:ml-0 ml-2 my-5'>Businesses List</h3>
+            <h3 className='text-xl font-semibold md:ml-0 ml-2 my-5'>Travelers List</h3>
           </div>
           <div className='w-full '>
             <Input
-              placeholder="Search Business"
+              placeholder="Search Traveler"
               value={globalFilter}
               onChange={(e) => setGlobalFilter(e.target.value)}
               className="w-full h-10 "
@@ -72,21 +71,21 @@ const BusinessesView = () => {
 
                 <TableDataLoading loading={isLoading || isFetching} colSpan={headLabel.length} />
 
-                {businessData?.data?.users?.map((item: any, index: number) => (
-                  <BusinessTableRow key={index} item={item}
+                {travelerData?.data?.users?.map((item: any, index: number) => (
+                  <TravelerTableRow key={index} item={item}
                     handleEdit={() => {
-                      setCurrentBusiness(item);
+                      setCurrentTraveler(item);
                       open.onTrue();
                     }}
                     handleDelete={() => {
-                      setCurrentBusiness(item);
+                      setCurrentTraveler(item);
                       deleteModal.onTrue();
                     }}
                   />
                 ))}
                 {!(isLoading || isFetching) && <TableNoData
                   colSpan={headLabel.length}
-                  dataLength={businessData?.data?.users?.length || 0}
+                  dataLength={travelerData?.data?.users?.length || 0}
                 />}
               </TableBody>
             </Table>
@@ -95,21 +94,21 @@ const BusinessesView = () => {
           <div className='mb-5'>
             <PaginationControls
               currentPage={page}
-              totalPages={businessData?.data?.meta?.pages || 1}
-              totalRecords={businessData?.data?.meta?.total || 0}
+              totalPages={travelerData?.data?.meta?.pages || 1}
+              totalRecords={travelerData?.data?.meta?.total || 0}
               limit={10}
               onPageChange={(p: number) => setPage(p)}
             />
           </div>
 
         </Card >
-        <BusinessStatusModal isOpen={open.value} onClose={open.onFalse} business={currentBusiness} />
+        <TravelerStatusModal isOpen={open.value} onClose={open.onFalse} traveler={currentTraveler} />
 
         <ConfirmDialog
           open={deleteModal.value}
           onClose={deleteModal.onFalse}
-          title="Delete Business"
-          content="Are you sure you want to delete this Business?"
+          title="Delete Traveler"
+          content="Are you sure you want to delete this traveler?"
           action={
             <Button
               variant="destructive"
@@ -126,6 +125,6 @@ const BusinessesView = () => {
   )
 }
 
-export default BusinessesView
+export default TravelersView
 
 

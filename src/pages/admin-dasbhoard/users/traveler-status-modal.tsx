@@ -18,8 +18,8 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import * as z from "zod";
 
-interface UserStatusModalProps {
-    user?: {
+interface TravelerStatusModalProps {
+    traveler?: {
         id: string;
         name: string;
         status: "active" | "inactive" | "deleted" | "blocked";
@@ -28,15 +28,15 @@ interface UserStatusModalProps {
     onClose: () => void;
 }
 
-export function UserStatusModal({
-    user,
+export function TravelerStatusModal({
+    traveler,
     isOpen,
     onClose,
-}: UserStatusModalProps) {
+}: TravelerStatusModalProps) {
 
     const defaultValues = useMemo(() => ({
-        status: user?.status || "",
-    }), [user]);
+        status: traveler?.status || "",
+    }), [traveler]);
 
     const [updateUserStatus] = useUpdateUserStatusMutation();
 
@@ -57,12 +57,12 @@ export function UserStatusModal({
     }, [defaultValues]);
 
     const handleSubmit = async (data: any) => {
-        if (!user) return;
+        if (!traveler) return;
 
-        let response = await updateUserStatus({ id: user.id, status: data.status });
+        let response = await updateUserStatus({ id: traveler.id, status: data.status });
         
         if (!response.error) {
-            toast.success("User status updated successfully");
+            toast.success("Traveler status updated successfully");
             onClose();
             methods.reset(defaultValues);
         }
@@ -71,10 +71,10 @@ export function UserStatusModal({
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-lg">
+            <DialogContent className="sm:max-w-lg" aria-describedby="traveler-status-modal">
                 <DialogHeader>
                     <DialogTitle>
-                        Change User Status
+                        Change Traveler Status
                     </DialogTitle>
                 </DialogHeader>
                 <Form {...methods}>
@@ -89,7 +89,7 @@ export function UserStatusModal({
                             </RHFSelect>
                         </div>
 
-                        <DialogFooter className="flex justify-end space-x-2 pt-2">
+                        <DialogFooter className="flex justify-end space-x-2 pt-2 flex-row">
                             <Button type="button" variant="outline" onClick={onClose}>
                                 Cancel
                             </Button>

@@ -28,13 +28,16 @@ export const userApi = createApi({
       invalidatesTags: ["User"],
     }),
     getAllUsers: builder.query({
-      query: ({ page, limit, search }) => {
+      query: ({ page, limit, search,role }) => {
         let url = `/admin/app/users?page=${page}`
         if (limit) {
           url += `&limit=${limit}`
         }
         if (search) {
           url += `&search=${search}`
+        }
+        if(role){
+          url += `&role=${role}`
         }
         return url
       },
