@@ -288,7 +288,7 @@ export function SignInPage() {
             loginWithRedirect({
               authorizationParams: {
                 connection: "google-oauth2",
-                redirect_uri: "http://localhost:5173/auth/signin",
+                redirect_uri: import.meta.env.VITE_AUTH_REDIRECT_URI,
               }
             })
           }}
@@ -314,7 +314,7 @@ export function SignInPage() {
             loginWithRedirect({
               authorizationParams: {
                 connection: "facebook",
-                redirect_uri: "http://localhost:5173/auth/signin",
+                redirect_uri: import.meta.env.VITE_AUTH_REDIRECT_URI,
               }
             })
           }}
