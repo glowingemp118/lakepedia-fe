@@ -47,26 +47,26 @@ export function SignInPage() {
   const { loginWithRedirect, user, isAuthenticated } = useAuth0();
 
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    const pathname = window.location.pathname;
+  //   const pathname = window.location.pathname;
 
-    const userType = pathname.includes('?user=business') ? 'business' : 'traveler';
+  //   const userType = pathname.includes('?user=business') ? 'business' : 'traveler';
     
-    if (userType === 'traveler' || userType === 'business') {
-      setCurrentTab(userType);
-    }
-  }, []);
+  //   if (userType === 'traveler' || userType === 'business') {
+  //     setCurrentTab(userType);
+  //   }
+  // }, []);
 
-  useEffect(() => {
-    if (currentTab) {
+  // useEffect(() => {
+  //   if (currentTab) {
       
-      const pathname = currentTab === "business" ? "/signin?user=business" : "/signin?user-traveler";
+  //     const pathname = currentTab === "business" ? "/signin?user=business" : "/signin?user-traveler";
 
-      navigate(pathname, { replace: true });
+  //     navigate(pathname, { replace: true });
      
-    }
-  }, [currentTab, navigate]);
+  //   }
+  // }, [currentTab, navigate]);
 
 
   useEffect(() => {
@@ -78,6 +78,8 @@ export function SignInPage() {
 
     if (!currentSocialTab || !savedRole) return;
 
+    setCurrentTab(savedRole);
+
     let userData: any = null;
 
     if (currentSocialTab === "google") {
@@ -85,7 +87,7 @@ export function SignInPage() {
         first_name: user.name,
         last_name: user.family_name,
         email: user.email,
-        image: user.picture,
+        // image: user.picture,
         role: savedRole === "traveler" ? "traveler" : "business",
         provider: user?.sub?.split("|")?.[0]?.split("-")?.[0],
         socialId: user?.sub?.split("|")?.[1],
@@ -98,7 +100,7 @@ export function SignInPage() {
         first_name: user.name,
         last_name: user.nickname,
         email: user.email,
-        image: user?.picture,
+        // image: user?.picture,
         role: savedRole === "traveler" ? "traveler" : "business",
         provider: user?.sub?.split("|")?.[0],
         socialId: user?.sub?.split("|")?.[1],
