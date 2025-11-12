@@ -14,7 +14,7 @@ interface PageProps {
     onClose: () => void;
 }
 const defaulValues = {
-    lake: []
+    lake: 0
 }
 const CreateLakeModal: FC<PageProps> = ({ open, onClose }) => {
 
@@ -30,7 +30,7 @@ const CreateLakeModal: FC<PageProps> = ({ open, onClose }) => {
 
 
     const schema = z.object({
-        lake: z.array(z.number().min(1, "Lake is required")),
+        lake: z.number().min(1, { message: "Please select a lake" })
     });
 
     useEffect(() => {
@@ -54,17 +54,16 @@ const CreateLakeModal: FC<PageProps> = ({ open, onClose }) => {
 
     const handleSubmit = async (data: any) => {
 
-        if(!data.lake.length) return ;
+        if (!data.lake) return;
 
         const response = await createLake({
-            lake_id: data.lake[0]
+            lake_id: data.lake
         });
         if (!response.error) {
             console.log("create lake response:", response);
             form.reset(defaulValues);
             onClose();
         }
-
     };
     return (
         <Dialog open={open} onOpenChange={onClose}>
@@ -87,7 +86,8 @@ const CreateLakeModal: FC<PageProps> = ({ open, onClose }) => {
                                 options={lakes}
                                 loading={isLoading || isFetching}
                                 onSearch={(v: string) => setLake(v)}
-                                chip={false}
+                                chip
+                                multiple={false}
                             />
                         </div>
 
@@ -95,9 +95,7 @@ const CreateLakeModal: FC<PageProps> = ({ open, onClose }) => {
                             <Button type="button" variant="outline" onClick={onClose}>
                                 Cancel
                             </Button>
-                            <Button type="submit" disabled={
-                                form.formState.isSubmitting
-                            }>{form.formState.isSubmitting ? <span className="flex items-center gap-2">
+                            <Button type="submit">{form.formState.isSubmitting ? <span className="flex items-center gap-2">
                                 <LoaderCircleIcon className="h-4 w-4 animate-spin" /> Loading...
                             </span> : "Save"}</Button>
                         </DialogFooter>
