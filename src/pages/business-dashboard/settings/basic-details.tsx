@@ -68,7 +68,9 @@ const BasicDetails: FC<PageProps> = ({ profileData }) => {
         }
         let response = await updateBusiness(updateBusinessProfile);
         if (!response.error) {
-            toast.success("Business profile created successfully");
+            toast.success("Business profile created successfully", {
+                autoClose: 2000
+            });
             methods.reset(defaultValues);
         }
 

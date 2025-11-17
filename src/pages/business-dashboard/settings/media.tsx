@@ -100,7 +100,6 @@ const MediaInformation: FC<PageProps> = ({ profileData }) => {
                 }
             })
         );
-        console.log("Gallery upload responses: ", uploadResponses);
 
         const mediaData = {
             ...(logo && { logo }),
@@ -111,7 +110,9 @@ const MediaInformation: FC<PageProps> = ({ profileData }) => {
         let response = await updateBusiness({ media: mediaData });
 
         if (!response.error) {
-            toast.success("Media information updated successfully");
+            toast.success("Media information updated successfully", {
+                autoClose: 2000
+            });
             methods.reset(defaultValues);
         }
     }

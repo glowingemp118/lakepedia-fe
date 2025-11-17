@@ -222,7 +222,6 @@ export function SignInPage() {
         
 
         const nextPath = searchParams.get('next') || (response?.data?.data?.user?.role === 'traveler' ? paths.travelerDashboard.root : paths.businessDashboard.root);
-        console.log("Next Path:", nextPath);
 
         navigate(nextPath);
       }
@@ -417,7 +416,7 @@ export function SignInPage() {
               )}
             />
             <Link
-              to="/auth/forgot-password"
+              to="/forgot-password"
               className="text-sm font-semibold text-foreground hover:text-primary"
             >
               Forgot Password?
@@ -437,7 +436,7 @@ export function SignInPage() {
           <div className="text-center text-sm text-muted-foreground">
             Don't have an account?{' '}
             <Link
-              to="/auth/signup"
+              to="/signup"
               className="text-sm font-semibold text-foreground hover:text-primary"
             >
               Sign Up

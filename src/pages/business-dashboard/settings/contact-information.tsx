@@ -1,8 +1,11 @@
+import RHFSelect from '@/components/rhf/rhf-select';
 import RHFTextField from '@/components/rhf/rhf-textfield';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
+import { SelectItem } from '@/components/ui/select';
 import { useUpdateBusinessMutation } from '@/store/Reducer/business';
+import { countries } from '@/utils/data';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircleIcon } from 'lucide-react';
 import { FC, useEffect, useMemo } from 'react';
@@ -73,7 +76,9 @@ const ContactInformation: FC<PageProps> = ({ profileData }) => {
         }
         let response = await updateBusiness(updateBusinessProfile);
         if (!response.error) {
-            toast.success("Contact information updated successfully");
+            toast.success("Contact information updated successfully", {
+                autoClose: 2000
+            });
             methods.reset(defaultValues);
         }
     }
@@ -129,7 +134,7 @@ const ContactInformation: FC<PageProps> = ({ profileData }) => {
                                     Address <span className='text-red-500'>*</span>
                                 </p>
                             </div>
-                            <div className='md:col-span-8 col-span-12 md:mb-4'>
+                            {/* <div className='md:col-span-8 col-span-12 md:mb-4'>
                                 <div className='grid md:grid-cols-2 gap-4 grid-cols-1'>
                                     <RHFTextField
                                         name="country"
@@ -143,6 +148,43 @@ const ContactInformation: FC<PageProps> = ({ profileData }) => {
                                         placeholder='State/Province'
                                         className='py-2 h-10'
                                     />
+                                </div>
+                            </div> */}
+                            <div className='md:col-span-8 col-span-12 mb-4'>
+                                <div className='grid md:grid-cols-2 grid-cols-1 gap-2'>
+
+                                    <RHFSelect name='country' label='Country' placeholder='Select your country'>
+                                        {countries.map((country: string) => (
+                                            <SelectItem key={country} value={country}>
+                                                {country}
+                                            </SelectItem>
+                                        ))}
+                                    </RHFSelect>
+
+                                    {/* {['United States', 'Canada', 'Australia'].includes(methods.watch("country") || "") && <RHFTextField name='usState' label='US State' placeholder='Your US state' className="py-2 h-10 " /> */}
+                                    {['United States', 'Canada', 'Australia'].includes(methods.watch("country") || "") &&
+                                        <RHFSelect
+                                            name="usState"
+                                            label={
+                                                (methods.watch("country") === "United States" && "State") ||
+                                                (methods.watch("country") === "Canada" && "Province or Territor") ||
+                                                (methods.watch("country") === "Australia" && "State or Territory") || "State"
+                                            }
+                                            placeholder={
+                                                (methods.watch("country") === "United States" && "Select your state") ||
+                                                (methods.watch("country") === "Canada" && "Select your province or territory") ||
+                                                (methods.watch("country") === "Australia" && "Select your state or territory") || "Select your state"
+                                            }
+
+                                        >
+                                            {['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia,  Washington', 'West Virginia', 'Wisconsin', 'Wyoming'].map((state) => {
+                                                return <SelectItem key={state} value={state}>{state}</SelectItem>
+
+                                            })
+                                            }
+
+                                        </RHFSelect>
+                                    }
                                 </div>
                             </div>
 

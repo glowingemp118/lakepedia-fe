@@ -27,13 +27,13 @@ export function NavbarMenu() {
 
   const TravelerSidebar = TravelerMemu.map((item) => item.title === "Dashboard" ? {
     ...item,
-    title: "Overview"
+    title: "Activity"
   } :
     item);
 
   const BusinessSidebar = BusinessMemu.map((item) => item.title === "Dashboard" ? {
     ...item,
-    title: "Overview"
+    title: "Activity"
   } :
     item);
 

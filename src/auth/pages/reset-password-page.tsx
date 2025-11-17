@@ -102,7 +102,7 @@ export function ResetPasswordPage() {
 
       if (!response?.error) {
         // toast.success("Password reset successfully");
-        navigate('/auth/signin');
+        navigate('/signin');
       }
 
 
@@ -255,7 +255,7 @@ export function ResetPasswordPage() {
 
           <div className="text-center text-sm">
             <Link
-              to="/auth/signin"
+              to="/signin"
               className="inline-flex items-center gap-2 text-sm font-semibold text-accent-foreground hover:underline hover:underline-offset-2"
             >
               <MoveLeft className="size-3.5 opacity-70" /> Back to Sign In

@@ -81,7 +81,9 @@ const Operations: FC<PageProps> = ({ profileData }) => {
         let response = await updateBusiness(updateBusinessProfile);
 
         if (!response.error) {
-            toast.success("Business operations updated successfully");
+            toast.success("Business operations updated successfully", {
+                autoClose: 2000
+            });
             methods.reset(defaultValues);
         }
     }

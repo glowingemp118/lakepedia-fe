@@ -41,7 +41,7 @@ export function ForgotPasswordPage() {
 
       if (!response?.error) {
         // toast.success("OTP sent to your email");
-        navigate('/auth/reset-password', { state: { email: values.email, otp: response?.data?.data?.otp } });
+        navigate('/reset-password', { state: { email: values.email, otp: response?.data?.data?.otp } });
       }
 
 
@@ -105,7 +105,7 @@ export function ForgotPasswordPage() {
 
           <div className="text-center text-sm">
             <Link
-              to="/auth/signin"
+              to="/signin"
               className="inline-flex items-center gap-2 text-sm font-semibold text-accent-foreground hover:underline hover:underline-offset-2"
             >
               <MoveLeft className="size-3.5 opacity-70" /> Back to Sign In

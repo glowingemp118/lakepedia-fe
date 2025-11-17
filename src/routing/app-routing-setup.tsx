@@ -48,7 +48,9 @@ export function AppRoutingSetup() {
 
         <Route element={<RequireAuth role={"traveler"} />}>
 
-          <Route path="/traveler" element={<UserProfileView />} />
+          {/* <Route path="/traveler" element={<UserProfileView />} /> */}
+
+          <Route path="/traveler" element={<ActivityView />} />
 
           <Route path="/traveler/settings" element={<SettingsView />} />
 
@@ -62,7 +64,7 @@ export function AppRoutingSetup() {
           <Route path="/traveler/to-do" element={<TodoView />} />
 
           {/* activity */}
-          <Route path="/traveler/activity" element={<ActivityView />} />
+          {/* <Route path="/traveler/activity" element={<ActivityView />} /> */}
 
           {/* Favorites */}
           {/* <Route path="/traveler-dashboard/edit-profile" element={<UserProfileView />} /> */}

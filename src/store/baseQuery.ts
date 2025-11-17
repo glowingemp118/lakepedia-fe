@@ -29,7 +29,7 @@ export const customFetchBaseQuery = (): BaseQueryFn<
   });
 
   return async (args, api, extraOptions) => {
-   
+
     const { dispatch } = api;
 
     dispatch(showLoader());
@@ -45,17 +45,19 @@ export const customFetchBaseQuery = (): BaseQueryFn<
         : errorData && typeof errorData === 'object' && 'message' in errorData
           ? (errorData as { message?: string }).message
           : 'Something went wrong';
-      toast.error(errorMessage);
+      toast.error(errorMessage, {
+        autoClose: 2000
+      });
     }
 
     if (
       'error' in result && ((result.error as FetchBaseQueryError).status === 403 || (result.error as FetchBaseQueryError).status === 401)
     ) {
       localStorage.clear();
-     
+
       setTimeout(() => {
-       window.location.href='/auth/signin?user=traveler';
-     }, 1500);
+        window.location.href = '/signin?user=traveler';
+      }, 1500);
     }
 
     return result;

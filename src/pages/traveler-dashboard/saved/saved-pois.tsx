@@ -41,10 +41,17 @@ const SavedPOIs = () => {
         },
     ];
 
+    const [data, setData] = useState<PoiItem[]>(pois);
+
     const handleFavoriteClick = (e: React.MouseEvent) => {
         e.stopPropagation();
         //console.log("Favorite clicked!");
     };
+
+    const handleDelete = (id: string) => {
+        const filteredPOIs = data.filter((poi) => poi.id !== id);
+        setData(filteredPOIs);
+    }
 
     const renderRow = (poi: PoiItem) => (
         <div
@@ -81,7 +88,7 @@ const SavedPOIs = () => {
         <div className="flex flex-col gap-6">
             {/* Header */}
             <div className="flex justify-between items-center">
-                <h3 className="text-lg font-semibold">{pois.length} POIs</h3>
+                <h3 className="text-lg font-semibold">{data.length} POIs</h3>
                 <div className="flex gap-4">
                     <ToggleGroup
                         type="single"
@@ -105,11 +112,13 @@ const SavedPOIs = () => {
             {/* Content */}
             {activeView === "cards" ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-                    {pois.map((poi) => (
+                    {data.map((poi) => (
                         <PoiCard
                             key={poi.id}
                             image={poi.image}
                             title={poi.title}
+                            id={poi.id}
+                            handleDelete={handleDelete}
                             description={poi.description}
                             onFavorite={() => console.log("Favorited:", poi.title)}
                         />
@@ -117,7 +126,7 @@ const SavedPOIs = () => {
                 </div>
             ) : (
                 <div className="flex flex-col gap-4">
-                    {pois.map((poi) => renderRow(poi))}
+                    {data.map((poi) => renderRow(poi))}
                 </div>
             )}
 

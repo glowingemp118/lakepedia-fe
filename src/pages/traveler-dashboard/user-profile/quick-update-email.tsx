@@ -50,7 +50,7 @@ const QuickUpdateEmail: FC<PageProps> = ({ open, onClose, email }) => {
 
         if (!response?.error) {
             toast.success("OTP sent to your email");
-            navigate("/auth/change-email");
+            navigate("/change-email");
         }
     };
 

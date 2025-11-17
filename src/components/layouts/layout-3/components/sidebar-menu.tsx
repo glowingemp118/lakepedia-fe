@@ -33,16 +33,12 @@ export const TravelerSidebar = [
     path: paths.travelerDashboard.root,
     title: 'Dashboard',
   },
-  {
-    icon: Settings,
-    path: paths.travelerDashboard.settings,
-    title: 'Settings'
-  },
-  {
-    icon: Bell,
-    path: paths.travelerDashboard.activity,
-    title: 'Activity'
-  },
+
+  // {
+  //   icon: Bell,
+  //   path: paths.travelerDashboard.activity,
+  //   title: 'Activity'
+  // },
   {
     icon: Plane,
     path: paths.travelerDashboard.trips,
@@ -59,6 +55,11 @@ export const TravelerSidebar = [
     title: 'To-Do'
 
   },
+  {
+    icon: Settings,
+    path: paths.travelerDashboard.settings,
+    title: 'Settings'
+  },
   // {
   //   icon: Users,
   //   path: paths.travelerDashboard.editProfile,
@@ -72,16 +73,12 @@ export const BusinessSidebar = [
     path: paths.businessDashboard.root,
     title: "Dashboard",
   },
-  {
-    icon: Settings,
-    path: paths.businessDashboard.settings,
-    title: 'Settings'
-  },
-  {
-    icon: Bell,
-    path: paths.businessDashboard.activity,
-    title: 'Activity'
-  },
+
+  // {
+  //   icon: Bell,
+  //   path: paths.businessDashboard.activity,
+  //   title: 'Activity'
+  // },
   {
     icon: Building2,
     path: paths.businessDashboard.lakes,
@@ -101,7 +98,12 @@ export const BusinessSidebar = [
     icon: Podcast,
     path: paths.businessDashboard.subscription,
     title: 'Subscription'
-  }
+  },
+  {
+    icon: Settings,
+    path: paths.businessDashboard.settings,
+    title: 'Settings'
+  },
 ];
 export const AdminSidebar = [
   {
@@ -110,7 +112,7 @@ export const AdminSidebar = [
     title: 'Dashboard',
   },
   {
-    icon:Building2 ,
+    icon: Building2,
     path: paths.adminDashboard.businessess,
     title: 'Businesses',
   },
@@ -164,10 +166,10 @@ export function SidebarMenu() {
 
     ...user?.role === "traveler" ? TravelerSidebar : [],
 
-    ...user?.role==="business" ? BusinessSidebar : [],
-    
-    ...user?.role==="admin" ? AdminSidebar : []
-  
+    ...user?.role === "business" ? BusinessSidebar : [],
+
+    ...user?.role === "admin" ? AdminSidebar : []
+
   ].map((item) => ({
     ...item,
     active: item.path === pathname

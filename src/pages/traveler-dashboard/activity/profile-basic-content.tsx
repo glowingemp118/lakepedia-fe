@@ -1,19 +1,24 @@
 
 
-import { useState } from "react";
-import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
+import ConfirmDialog from "@/components/comfirm-dialog/confirm-dialog";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { Edit, Star, Trash2 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Rating } from "@/partials/common/rating";
-import { RiStarFill } from "@remixicon/react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useBoolean } from "@/hooks/use-boolean";
+import { Rating } from "@/partials/common/rating";
+import { AnimatePresence, motion } from "framer-motion";
+import { Edit, Star, Trash2 } from "lucide-react";
+import { useState } from "react";
 
 function ProfileActivityContent() {
 
 
   const [editingReview, setEditingReview] = useState<number | null>(null);
+
+  const confirm = useBoolean();
+
+  const [currentReview, setCurrentReview] = useState<number | null>(null);
 
   const [reviews, setReviews] = useState([
     {
@@ -43,12 +48,18 @@ function ProfileActivityContent() {
   };
 
   // Handle delete
-  const handleDelete = (id: number) => {
-    setReviews((prev) => prev.filter((r) => r.id !== id));
+  const handleDelete = () => {
+    setReviews((prev) => prev.filter((r) => r.id !== currentReview));
+    confirm.onFalse();
   };
-  const handleShareReview = () => {
-    // Implement share functionality here
-    alert("Share functionality is not implemented yet.");
+  // const handleShareReview = () => {
+  //   // Implement share functionality here
+  //   alert("Share functionality is not implemented yet.");
+  // }
+
+  const onDeleteClick = (reviewId: number) => {
+    setCurrentReview(reviewId);
+    confirm.onTrue();
   }
 
   return (
@@ -96,7 +107,7 @@ function ProfileActivityContent() {
                         <Button
                           size="icon"
                           variant="destructive"
-                          onClick={() => handleDelete(review.id)}
+                          onClick={() => onDeleteClick(review.id)}
                         >
                           <Trash2 className="w-4 h-4" />
                         </Button>
@@ -140,44 +151,51 @@ function ProfileActivityContent() {
                         </Tooltip>
                       </TooltipProvider>
                     ))}
-                        <Textarea
-                          defaultValue={review.content}
-                          className="w-full"
-                          rows={3}
-                          autoFocus
-                        />
-                        <div className="mt-3 flex gap-2">
-                          <Button
-                            size="sm"
-                            onClick={(e) =>
-                              handleEdit(
-                                review.id,
-                                e.target?.parentElement.previousSibling.value
-                              )
-                            }
-                          >
-                            Save
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => setEditingReview(null)}
-                          >
-                            Cancel
-                          </Button>
-                        </div>
-                      </div>
-                    ) : (
-                    <p className="text-sm text-muted-foreground mt-2">
-                      {review.content}
-                    </p>
+                    <Textarea
+                      defaultValue={review.content}
+                      className="w-full"
+                      rows={3}
+                      autoFocus
+                    />
+                    <div className="mt-3 flex gap-2">
+                      <Button
+                        size="sm"
+                        onClick={(e) =>
+                          handleEdit(
+                            review.id,
+                            e.target?.parentElement.previousSibling.value
+                          )
+                        }
+                      >
+                        Save
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setEditingReview(null)}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground mt-2">
+                    {review.content}
+                  </p>
                 )}
-                  </CardContent>
+              </CardContent>
 
             </Card>
           </motion.div>
         ))}
       </AnimatePresence>
+      <ConfirmDialog
+        title="Delete View"
+        content="Are you sure you want to delete this review?"
+        open={confirm.value}
+        onClose={confirm.onFalse}
+        onConfirm={handleDelete}
+      />
 
       {
         reviews.length === 0 && (

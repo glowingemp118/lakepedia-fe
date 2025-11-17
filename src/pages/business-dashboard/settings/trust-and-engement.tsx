@@ -51,7 +51,9 @@ const TrustAndEngagement: FC<PageProps> = ({ profileData }) => {
         let response = await updateBusiness(updateBusinessProfile);
 
         if (!response.error) {
-            toast.success("Trust and Engagement details updated successfully");
+            toast.success("Trust and Engagement details updated successfully", {
+                autoClose: 2000
+            });
             methods.reset(defaultValues);
         }
     }

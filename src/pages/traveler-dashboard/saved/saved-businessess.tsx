@@ -54,11 +54,18 @@ export function SavedBusinesses() {
     },
   ];
 
+  const [data,setData]= useState<BusinessItem[]>(businesses);
+
+  const handleDelete=(id:string)=>{
+    const filteredBusinesses=data.filter((business)=>business.id!==id);
+    setData(filteredBusinesses);
+  }
+
   return (
     <div className="flex flex-col gap-6">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold">{businesses.length} Businesses</h3>
+        <h3 className="text-lg font-semibold">{data.length} Businesses</h3>
         <div className="flex gap-4">
           <ToggleGroup
             type="single"
@@ -81,14 +88,14 @@ export function SavedBusinesses() {
       {/* Card View */}
       {activeView === "cards" ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-          {businesses.map((business) => (
-            <BusinessCard key={business.id} {...business} />
+          {data.map((business) => (
+            <BusinessCard key={business.id} handleDelete={handleDelete}  {...business} />
           ))}
         </div>
       ) : (
         /* List View */
         <div className="flex flex-col gap-4">
-          {businesses.map((business) => (
+          {data.map((business) => (
             <div
               key={business.id}
               className="border p-4 rounded-lg hover:border-blue-400 transition cursor-pointer"

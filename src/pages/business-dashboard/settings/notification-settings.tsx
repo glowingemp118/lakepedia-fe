@@ -7,7 +7,7 @@ import { Bell, LoaderCircleIcon, Shield } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import RhfSwitch from '@/components/rhf/rhf-switch';
-import { FC, useMemo } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import { useUpdateProfileMutation } from '@/store/Reducer/users';
 import { toast } from 'react-toastify';
 
@@ -62,6 +62,8 @@ interface PageProps {
 
 const Settings: FC<PageProps> = ({ businessSettings }) => {
 
+
+
   const defaultValues = useMemo(() => ({
     //  Privacy settings
     profile_public: businessSettings?.privacy?.profile_public || true,
@@ -94,7 +96,12 @@ const Settings: FC<PageProps> = ({ businessSettings }) => {
     defaultValues,
   });
 
+  useEffect(()=>{
+    methods.reset(defaultValues);
+  },[defaultValues]);
+
   const onSubmit = async (data: any) => {
+
 
     //privacy settings
     const privacySettings = {
@@ -126,8 +133,10 @@ const Settings: FC<PageProps> = ({ businessSettings }) => {
       let res: any = await updateProfile({ notifications: notificationSettings, key: "notifications" });
 
       if (!res.error) {
-        toast.success("Business settings updated successfully");
-        methods.reset(defaultValues);
+        toast.success("Business settings updated successfully", {
+          autoClose: 2000
+        });
+        // methods.reset(defaultValues);
       }
 
     };

@@ -59,12 +59,21 @@ export function DropdownMenu2({ trigger, id, trip }: { trigger: ReactNode, id: s
               <span>Delete</span>
             </Link>
           </DropdownMenuItem>}
-          {user?.role === "traveler" && <DropdownMenuItem asChild onClick={handleEdit}>
-            <Link to="#" className='cursor-pointer flex items-center gap-2'>
-              <Pencil size={16} />
-              <span>Edit</span>
-            </Link>
-          </DropdownMenuItem>}
+          {user?.role === "traveler" && <>
+            <DropdownMenuItem asChild onClick={handleEdit}>
+              <Link to="#" className='cursor-pointer flex items-center gap-2'>
+                <Pencil size={16} />
+                <span>Edit</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild onClick={()=>{}}>
+              <Link to="#" className='cursor-pointer flex items-center gap-2'>
+                <Trash color='red' size={16} />
+                <span>Delete</span>
+              </Link>
+            </DropdownMenuItem>
+          </>
+          }
         </DropdownMenuContent>
       </DropdownMenu>
 

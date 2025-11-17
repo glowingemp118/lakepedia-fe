@@ -50,6 +50,7 @@ export default function QuickAddEditTripModal({ open, onClose, currentTrip }: Ad
         startDate: currentTrip?.start_date ? new Date(currentTrip?.start_date) : new Date(),
         endDate: currentTrip?.start_date ? new Date(currentTrip?.end_date) : new Date(),
         lakes: currentTrip?.lakes?.map((lake: any) => lake.id),
+        budget: currentTrip?.budget || '',
         tripType: currentTrip?.type || ''
     }), [currentTrip]);
 
@@ -75,7 +76,8 @@ export default function QuickAddEditTripModal({ open, onClose, currentTrip }: Ad
         groupOfPeople: z.string().min(1, "Group of people is required"),
         description: z.string().optional(),
         startDate: z.date(),
-        endDate: z.date()
+        endDate: z.date(),
+        budget: z.string().optional(),
     })
     type TripFormData = z.infer<typeof tripSchema>
 
@@ -189,8 +191,12 @@ export default function QuickAddEditTripModal({ open, onClose, currentTrip }: Ad
 
                                 chip={true}
                             />
+                             <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
+
 
                             <RHFTextField name="groupOfPeople" type="number" label="Group of People" placeholder="e.g. 2" />
+                            <RHFTextField name="budget" type="number" label="Budget" placeholder="e.g. $500" />
+                             </div>
 
                             <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
                                 <RHFDate name="startDate" label="Start Date" />

@@ -93,7 +93,7 @@ export function SignUpPage() {
         setSuccessMessage(
           'Registration successful! Please check your email to confirm your account.',
         );
-        navigate('/auth/verify-otp', { state: { email: response?.data?.data?.user?.email, otp: response?.data?.data?.otp } });
+        navigate('/verify-otp', { state: { email: response?.data?.data?.user?.email, otp: response?.data?.data?.otp } });
       }
 
 
@@ -239,7 +239,7 @@ export function SignUpPage() {
         <div className="text-center text-sm text-muted-foreground">
           Already have an account?{' '}
           <Link
-            to="/auth/signin"
+            to="/signin"
             className="text-sm font-semibold text-foreground hover:text-primary"
           >
             Sign In
