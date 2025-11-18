@@ -84,7 +84,7 @@ const Operations: FC<PageProps> = ({ profileData }) => {
             toast.success("Business operations updated successfully", {
                 autoClose: 2000
             });
-            methods.reset(defaultValues);
+            // methods.reset(defaultValues);
         }
     }
     return (

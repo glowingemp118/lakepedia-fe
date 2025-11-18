@@ -1,23 +1,34 @@
+import { Button } from '@/components/ui/button'
+import { useBoolean } from '@/hooks/use-boolean'
 import { motion } from 'framer-motion'
+import { Plus } from 'lucide-react'
 import { FC, Fragment } from 'react'
+import QucikAddEventModal from './quick-add-event-modal'
+import { useGetTripEventsQuery } from '@/store/Reducer/trip'
+import { useParams } from 'react-router'
 
 interface PageProps {
     trip: any
 }
 const TripItinerary: FC<PageProps> = ({ trip }) => {
+
+    const open = useBoolean();
+
+    const { id } = useParams();
+
+    const { data } = useGetTripEventsQuery(id);
+
+    console.log("itinerary data", data);
+
     return (
         <div className="space-y-8">
+            <div className='flex justify-end items-center'>
+                <Button onClick={open.onTrue}><Plus /> Add Event</Button>
+            </div>
             {trip.itinerary.map((day: any, i: number) => (
                 <Fragment key={i}>
                     <div className={`border-l-2
-                                                 ${i === 0 && 'border-green-500'}
-                                                 ${i === 1 && 'border-red-400'}
-                                                    ${i === 2 && 'border-yellow-400'}
-                                                    ${i === 3 && 'border-blue-400'}
-                                                    ${i === 4 && 'border-purple-400'}
-                                                    ${i === 5 && 'border-pink-400'}
-                                                    ${i === 6 && 'border-indigo-400'}
-                                                    ${i === 7 && 'border-teal-400'}
+                                           ${i % 2 === 0 ? 'border-blue-500' : 'border-green-500'} 
                                                   pl-5`}>
                         <div className="text-primary font-bold mb-2">
                             Day {day.day} — {new Date(day.date).toDateString()}
@@ -44,6 +55,7 @@ const TripItinerary: FC<PageProps> = ({ trip }) => {
                     </div>
                 </Fragment>
             ))}
+            <QucikAddEventModal open={open.value} onClose={open.onFalse} currentEvent="" />
         </div>
     )
 }

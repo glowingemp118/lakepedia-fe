@@ -51,7 +51,7 @@ const EmailPreference: FC<PageProps> = ({ emailPreferences }) => {
         }
         let response: any = await updateProfile(emailPreferences);
         if (!response.error) {
-            toast.success("Email preferences updated successfully");
+            toast.success("Email preferences updated successfully",{autoClose:1500});
         }
     }
 

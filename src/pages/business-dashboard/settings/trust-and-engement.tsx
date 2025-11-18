@@ -54,7 +54,7 @@ const TrustAndEngagement: FC<PageProps> = ({ profileData }) => {
             toast.success("Trust and Engagement details updated successfully", {
                 autoClose: 2000
             });
-            methods.reset(defaultValues);
+            // methods.reset(defaultValues);
         }
     }
     return (

@@ -73,7 +73,7 @@ const SocialMediaAccount: FC<PageProps> = ({ profileData }) => {
           autoClose: 2000
         });
 
-        methods.reset(defaultValues);
+        // methods.reset(defaultValues);
 
       }
     }

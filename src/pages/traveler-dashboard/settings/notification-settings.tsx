@@ -104,7 +104,7 @@ const Settings: FC<PageProps> = ({ travelerSettings }) => {
       display_social_links: data.display_social_links
     }
 
-    let response: any = await updateProfile({ privacy: privacySettings,   key: "privacy" });
+    let response: any = await updateProfile({ privacy: privacySettings, key: "privacy" });
 
     if (!response.error) {
       // notification settings
@@ -122,7 +122,7 @@ const Settings: FC<PageProps> = ({ travelerSettings }) => {
       let res: any = await updateProfile({ notifications: notificationSettings, key: "notifications" });
 
       if (!res.error) {
-        toast.success("Traveler settings updated successfully");
+        toast.success("Traveler settings updated successfully", { autoClose: 1500 });
       }
 
     };

@@ -36,11 +36,25 @@ export const tripApi = createApi({
                 invalidatesTags: ["Trip"],
             }),
             deleteTrip: builder.mutation({
-                query: (tripId) => ({
-                    url: `/trips/${tripId}`,
+                query: ({id}) => ({
+                    url: `/trip/${id}`,
                     method: "DELETE",
                 }),
                 invalidatesTags: ["Trip"],
+            }),
+            createTripEvent: builder.mutation({
+                query: ({ tripId, eventData }) => ({
+                    url: `/trip/${tripId}/schedule`,
+                    method: "POST",
+                    body: eventData,
+                }),
+                // invalidatesTags: ["Trip"],
+            }),
+            getTripEvents: builder.query({
+                query: (tripId) => ({
+                    url: `/trip/${tripId}/schedule`,
+                }),
+                providesTags: ["Trip"],
             }),
         }),
     });
@@ -50,5 +64,7 @@ export const tripApi = createApi({
         useGetAllTripsQuery,
         useUpdateTripMutation,
         useDeleteTripMutation,
-        useGetTripByIdQuery
+        useGetTripByIdQuery,
+        useCreateTripEventMutation,
+        useGetTripEventsQuery,
     } = tripApi;

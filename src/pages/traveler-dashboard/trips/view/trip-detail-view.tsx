@@ -16,13 +16,14 @@ import TripOverView from '../trip-overview';
 import TripRecommendations from '../trip-recommendations';
 import TripSummary from '../trip-summary';
 import Files from './trip-files';
+import { ScreenLoader } from '@/components/screen-loader';
 
 
 export const TripDetailView = () => {
 
     const { id } = useParams();
 
-    const { data: tripDetail } = useGetTripByIdQuery(id, {
+    const { data: tripDetail, isLoading, isFetching } = useGetTripByIdQuery(id, {
         skip: !id
     });
 
@@ -33,90 +34,95 @@ export const TripDetailView = () => {
 
     return (
         <div className="md:mx-10 mx-2 my-4 flex flex-col gap-6">
-            {/* Hero Section */}
-            <UserHeroWithProfile />
+            {isLoading || isFetching ?
+                <ScreenLoader />
+                :
+                <>
+                    <UserHeroWithProfile />
 
-            <Container>
-                <Navbar />
-            </Container>
+                    <Container>
+                        <Navbar />
+                    </Container>
 
-            {/* Trip Header */}
-            <Container className='flex flex-col gap-6'>
-                <Card className="p-6 shadow-lg border rounded-2xl">
-                    <div className="flex flex-col md:flex-row justify-between gap-4">
-                        <div>
-                            <h1 className="text-xl font-bold">{trip?.name || "Not Added"}</h1>
-                            <p className="text-gray-500 mt-2">{trip?.description || "Not Added"}</p>
-                        </div>
-                        <div className="flex gap-3">
-                            <Badge>{trip?.type === 'adult' ? 'Adult Trip' : 'Family Trip'}</Badge>
-                            <Badge appearance={"light"}
-                                variant={(trip?.status === 'in_progress' && 'primary') ||
-                                    (trip?.status === 'completed' && 'success') ||
-                                    (trip?.status === 'upcoming' && 'warning') ||
-                                    (trip?.status === 'planned' && 'destructive') ||
-                                    "secondary"}
-                            >
-                                {trip?.status}
-                            </Badge>
-                        </div>
-                    </div>
-                </Card>
-
-                {/* Main Layout */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div className="col-span-1 space-y-6">
-
-                        <TripSummary trip={trip} />
-
-                        {/* <TripGroupMember trip={trip} /> */}
-                    </div>
-
-                    {/* Main Content Tabs */}
-                    <div className="col-span-2">
-                        {/* Tabs */}
-                        <ScrollArea>
-
-                            <div className="flex border-b mb-4">
-                                {[
-                                    { key: 'overview', label: 'Overview', icon: Map },
-                                    { key: 'itinerary', label: 'Itinerary', icon: Clock },
-                                    { key: 'files', label: 'Files', icon: FileText },
-                                    { key: 'activity', label: 'Activity Log', icon: Calendar },
-                                    { key: "recommendations", label: "Recommendations", icon: MapPin }
-                                ].map((tab) => (
-                                    <button
-                                        key={tab.key}
-                                        onClick={() => setActiveTab(tab.key as any)}
-                                        className={`flex items-center gap-2 px-4 py-2 border-b-2 transition-all cursor-pointer ${activeTab === tab.key
-                                            ? 'border-primary text-primary font-medium'
-                                            : 'border-transparent text-gray-500 hover:text-primary'
-                                            }`}
+                    {/* Trip Header */}
+                    <Container className='flex flex-col gap-6'>
+                        <Card className="p-6 shadow-lg border rounded-2xl">
+                            <div className="flex flex-col md:flex-row justify-between gap-4">
+                                <div>
+                                    <h1 className="text-xl font-bold">{trip?.name || "Not Added"}</h1>
+                                    <p className="text-gray-500 mt-2">{trip?.description || "Not Added"}</p>
+                                </div>
+                                <div className="flex gap-3">
+                                    <Badge>{trip?.type === 'adult' ? 'Adult Trip' : 'Family Trip'}</Badge>
+                                    <Badge appearance={"light"}
+                                        variant={(trip?.status === 'in_progress' && 'primary') ||
+                                            (trip?.status === 'completed' && 'success') ||
+                                            (trip?.status === 'upcoming' && 'warning') ||
+                                            (trip?.status === 'planned' && 'destructive') ||
+                                            "secondary"}
                                     >
-                                        <tab.icon size={16} /> {tab.label}
-                                    </button>
-                                ))}
+                                        {trip?.status}
+                                    </Badge>
+                                </div>
                             </div>
-                            <ScrollBar orientation="horizontal" />
-                        </ScrollArea>
+                        </Card>
 
-                        {/* Tab Content */}
-                        <div className="p-4  rounded-xl border shadow-sm">
+                        {/* Main Layout */}
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <div className="col-span-1 space-y-6">
 
-                            {activeTab === 'overview' && <TripOverView trip={trip}/>}
+                                <TripSummary trip={trip} />
 
-                            {activeTab === 'itinerary' && <Itinerary trip={sampleTripData} />}
+                                {/* <TripGroupMember trip={trip} /> */}
+                            </div>
 
-                            {activeTab === 'files' && <Files trip={sampleTripData} />}
+                            {/* Main Content Tabs */}
+                            <div className="col-span-2">
+                                {/* Tabs */}
+                                <ScrollArea>
 
-                            {activeTab === 'activity' && <TripActivity trip={sampleTripData} />}
+                                    <div className="flex border-b mb-4">
+                                        {[
+                                            { key: 'overview', label: 'Overview', icon: Map },
+                                            { key: 'itinerary', label: 'Itinerary', icon: Clock },
+                                            { key: 'files', label: 'Files', icon: FileText },
+                                            { key: 'activity', label: 'Activity Log', icon: Calendar },
+                                            { key: "recommendations", label: "Recommendations", icon: MapPin }
+                                        ].map((tab) => (
+                                            <button
+                                                key={tab.key}
+                                                onClick={() => setActiveTab(tab.key as any)}
+                                                className={`flex items-center gap-2 px-4 py-2 border-b-2 transition-all cursor-pointer ${activeTab === tab.key
+                                                    ? 'border-primary text-primary font-medium'
+                                                    : 'border-transparent text-gray-500 hover:text-primary'
+                                                    }`}
+                                            >
+                                                <tab.icon size={16} /> {tab.label}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <ScrollBar orientation="horizontal" />
+                                </ScrollArea>
 
-                            {activeTab === "recommendations" && <TripRecommendations trip={sampleTripData} />}
+                                {/* Tab Content */}
+                                <div className="p-4  rounded-xl border shadow-sm">
 
+                                    {activeTab === 'overview' && <TripOverView trip={trip} />}
+
+                                    {activeTab === 'itinerary' && <Itinerary trip={sampleTripData} />}
+
+                                    {activeTab === 'files' && <Files trip={sampleTripData} />}
+
+                                    {activeTab === 'activity' && <TripActivity trip={sampleTripData} />}
+
+                                    {activeTab === "recommendations" && <TripRecommendations trip={sampleTripData} />}
+
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </Container>
+                    </Container>
+                </>
+            }
         </div >
     );
 };

@@ -9,6 +9,7 @@ import {
 import { useBoolean } from '@/hooks/use-boolean';
 import QuickAddEditTripModal from '@/pages/traveler-dashboard/trips/quick-add-edit-trip-modal';
 import { useDeleteLakeMutation } from '@/store/Reducer/lake';
+import { useDeleteTripMutation } from '@/store/Reducer/trip';
 import { selectUser } from '@/store/slices/userSlice';
 import { LoaderCircleIcon, Pencil, Trash } from 'lucide-react';
 import React, { ReactNode } from 'react';
@@ -42,10 +43,11 @@ export function DropdownMenu2({ trigger, id, trip }: { trigger: ReactNode, id: s
     let response = await deleteLake(id);
 
     if (!response.error) {
-      toast.success("Lake deleted successfully");
+      toast.success("Lake deleted successfully", { autoClose: 1500 });
       open.onFalse();
     }
   }
+
 
   return (
 
@@ -66,12 +68,15 @@ export function DropdownMenu2({ trigger, id, trip }: { trigger: ReactNode, id: s
                 <span>Edit</span>
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem asChild onClick={()=>{}}>
+            {/* <DropdownMenuItem asChild onClick={(e) => {
+              e.stopPropagation();
+              confirm.onTrue();
+            }}>
               <Link to="#" className='cursor-pointer flex items-center gap-2'>
                 <Trash color='red' size={16} />
                 <span>Delete</span>
               </Link>
-            </DropdownMenuItem>
+            </DropdownMenuItem> */}
           </>
           }
         </DropdownMenuContent>
@@ -89,6 +94,7 @@ export function DropdownMenu2({ trigger, id, trip }: { trigger: ReactNode, id: s
             </span> : "Delete Lake"}</Button>
         }
       />
+     
     </div>
   );
 }

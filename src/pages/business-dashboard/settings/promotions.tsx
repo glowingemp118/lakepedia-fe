@@ -49,7 +49,7 @@ const Promotions: FC<PageProps> = ({ profileData }) => {
             toast.success("Promotions details updated successfully", {
                 autoClose: 2000
             });
-            methods.reset(defaultValues);
+            // methods.reset(defaultValues);
         }
     }
     return (

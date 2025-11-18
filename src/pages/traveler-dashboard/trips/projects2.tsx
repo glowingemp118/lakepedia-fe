@@ -8,10 +8,13 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useBoolean } from '@/hooks/use-boolean';
 import { formatDate } from '@/lib/helpers';
 import { DropdownMenu2 } from '@/partials/dropdown-menu/dropdown-menu-2';
-import { EllipsisVertical, Heart, LayoutGrid, List, Plus } from 'lucide-react';
+import { EllipsisVertical, Heart, LayoutGrid, List, LoaderCircleIcon, Plus, Trash } from 'lucide-react';
 import { FC, useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
 import QuickAddEditTripModal from './quick-add-edit-trip-modal';
+import ConfirmDialog from '@/components/comfirm-dialog/confirm-dialog';
+import { toast } from 'react-toastify';
+import { useDeleteTripMutation } from '@/store/Reducer/trip';
 
 
 interface TripItem {
@@ -28,6 +31,7 @@ interface TripItem {
     variant: string;
     value: number;
   };
+  budget: string;
   number_of_people: number;
   // team: {
   //   size?: string;
@@ -57,7 +61,13 @@ const Projects2: FC<PageProps> = ({ trips }) => {
 
   const open = useBoolean();
 
+  const confirm = useBoolean();
+
+  const [currentTrip, setCurrentTrip] = useState<any>(null);
+
   const [activeView, setActiveView] = useState<'cards' | 'list'>('cards');
+
+  const [deleteTrip, { isLoading: deleteTripLoading }] = useDeleteTripMutation();
 
 
   useEffect(() => {
@@ -67,10 +77,18 @@ const Projects2: FC<PageProps> = ({ trips }) => {
     }
   }, [state]);
 
-  const handleFavoriteClick = (e: React.MouseEvent) => {
+
+  const onDeleteTrip = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    // Handle the favorite click logic here
+
+    let response = await deleteTrip({ id: currentTrip.id });
+
+    if (!response.error) {
+      toast.success("Trip deleted successfully", { autoClose: 1500 });
+      confirm.onFalse();
+    }
   }
+
 
   const renderCard = (trip: TripItem) => (
     <Card
@@ -109,6 +127,7 @@ const Projects2: FC<PageProps> = ({ trips }) => {
             })}
           </div> : "No lakes specified"
           }</p>
+          {trip.budget && <p className='text-sm text-gray-500 mt-1'><strong>Budget:</strong> {trip.budget}</p>}
           <p className='capitalize'><strong>Type:</strong> {trip.type}</p>
           <p><strong>Dates:</strong> {formatDate(trip.start_date)} → {formatDate(trip.end_date)}</p>
         </div>
@@ -143,10 +162,15 @@ const Projects2: FC<PageProps> = ({ trips }) => {
           size={'size-[30px]'}
           more={trip.number_of_people}
         /> */}
-        <div className='flex justify-end' onClick={handleFavoriteClick}>
-          <Heart size={24} className='hover:text-red-500 hover:size-[28px] transition-all p-1 rounded-full cursor-pointer' />
+        <div className='flex justify-end' onClick={(e) => {
+          e.stopPropagation();
+          confirm.onTrue();
+          setCurrentTrip(trip);
+        }}>
+          <Trash size={16} color="red" />
         </div>
       </div>
+
     </Card >
   );
 
@@ -218,12 +242,13 @@ const Projects2: FC<PageProps> = ({ trips }) => {
 
         <div className="flex items-center gap-2">
 
-
-          <Heart
-            onClick={handleFavoriteClick}
-            size={20}
-            className="hover:text-red-500 transition-all  rounded-full cursor-pointer"
-          />
+          <div className='flex justify-end' onClick={(e) => {
+            e.stopPropagation();
+            confirm.onTrue();
+            setCurrentTrip(trip);
+          }}>
+            <Trash size={16} color="red" />
+          </div>
         </div>
       </div>
     </div>
@@ -277,6 +302,17 @@ const Projects2: FC<PageProps> = ({ trips }) => {
         </div>
 
         <QuickAddEditTripModal open={open.value} onClose={open.onFalse} currentTrip={""} />
+
+        <ConfirmDialog open={confirm.value} onClose={confirm.onFalse}
+          title="Delete Trip"
+          content="Are you sure you want to delete this Trip?"
+          action={
+            <Button onClick={onDeleteTrip} disabled={deleteTripLoading} variant={"destructive"}>
+              {deleteTripLoading ? <span className="flex items-center gap-2">
+                <LoaderCircleIcon className="h-4 w-4 animate-spin" /> Loading...
+              </span> : "Delete Trip"}</Button>
+          }
+        />
       </div>
 
     </>

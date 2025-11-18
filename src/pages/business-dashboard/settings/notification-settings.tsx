@@ -122,12 +122,12 @@ const Settings: FC<PageProps> = ({ businessSettings }) => {
         notify_post_reply: data.notify_post_reply,
         notify_comment_reply: data.notify_comment_reply,
         notify_lake_reviewed: data.notify_lake_reviewed,
-        notify_messages: data.notify_messages,
+        notify_direct_message: data.notify_messages,
         notify_new_photo_on_followed_lake: data.notify_new_photo_on_followed_lake,
         // notify_trip_suggestions: data.notify_trip_suggestions,
         notify_announcements: data.notify_announcements,
         notify_mentions: data.notify_mentions,
-        booking_inquiry: data.booking_inquiry,
+        notify_booking_inquiry: data.booking_inquiry,
       }
 
       let res: any = await updateProfile({ notifications: notificationSettings, key: "notifications" });

@@ -12,6 +12,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { useBoolean } from '@/hooks/use-boolean';
 import {
     formatBytes,
     useFileUpload,
@@ -33,6 +34,7 @@ import {
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
 interface FileUploadItem extends FileWithPreview {
     progress: number;
@@ -53,17 +55,14 @@ interface ProgressUploadProps {
 }
 
 export function MultiImageUpload({
-    maxFiles = 5,
+    maxFiles = 10,
     maxSize = 10 * 1024 * 1024, // 10MB
     accept = '*',
     multiple = true,
     onFilesChange,
     onDrop,
-    simulateUpload = true,
     name
 }: ProgressUploadProps) {
-
-    // const defaultImages: FileMetadata[] = [];
 
     const defaultPhotos = useFormContext().getValues(name) || [];
 
@@ -74,6 +73,7 @@ export function MultiImageUpload({
         type: typeof photo === "string" ? photo.split(".").pop() : (photo as any).type || (photo as any)?.file?.type || 'image/jpeg',
         url: typeof photo === "string" ? photo : (photo as any).url || (photo as any).preview,
     })) || [];
+
     useEffect(() => {
         if (defaultPhotos.length === 0) {
             setUploadFiles([]);
@@ -85,6 +85,7 @@ export function MultiImageUpload({
                     size: image.size,
                     type: image.type,
                 } as File,
+                name: image.name,
                 preview: image.url,
                 progress: 100,
                 status: 'completed' as const,
@@ -102,6 +103,7 @@ export function MultiImageUpload({
             size: image.size,
             type: image.type,
         } as File,
+        name: image.name,
         preview: image.url,
         progress: 100,
         status: 'completed' as const,
@@ -113,6 +115,7 @@ export function MultiImageUpload({
     const { setValue, getValues, } = useFormContext();
 
     const currentPhotos = getValues(name) || [];
+
     const [
         { isDragging, errors },
         {
@@ -133,19 +136,12 @@ export function MultiImageUpload({
         initialFiles: defaultImages,
         onFilesChange: (newFiles) => {
 
-            // onDrop(newFiles as );
-            // Convert to upload items when files change, preserving existing status
             onDrop?.(newFiles);
 
-
             const newUploadFiles = newFiles.map((file) => {
-                // Check if this file already exists in uploadFiles
                 const existingFile = uploadFiles.find((existing) => existing.id === file.id);
 
-
-
                 if (existingFile) {
-                    // Preserve existing file status and progress
                     return {
                         ...existingFile,
                         ...file, // Update any changed properties from the file
@@ -163,47 +159,6 @@ export function MultiImageUpload({
             onFilesChange?.(newFiles);
         },
     });
-
-    // Simulate upload progress
-    // useEffect(() => {
-    //     if (!simulateUpload) return;
-
-    //     const interval = setInterval(() => {
-    //         setUploadFiles((prev) =>
-    //             prev.map((file) => {
-    //                 if (file.status !== 'uploading') return file;
-
-    //                 const increment = Math.random() * 15 + 5; // 5-20% increment
-    //                 const newProgress = Math.min(file.progress + increment, 100);
-
-    //                 // Simulate occasional errors (10% chance when progress > 50%)
-    //                 if (newProgress > 50 && Math.random() < 0.1) {
-    //                     return {
-    //                         ...file,
-    //                         status: 'error' as const,
-    //                         error: 'Upload failed. Please try again.',
-    //                     };
-    //                 }
-
-    //                 // Complete when progress reaches 100%
-    //                 if (newProgress >= 100) {
-    //                     return {
-    //                         ...file,
-    //                         progress: 100,
-    //                         status: 'completed' as const,
-    //                     };
-    //                 }
-
-    //                 return {
-    //                     ...file,
-    //                     progress: newProgress,
-    //                 };
-    //             }),
-    //         );
-    //     }, 500);
-
-    //     return () => clearInterval(interval);
-    // }, [simulateUpload]);
 
     const retryUpload = (fileId: string) => {
         setUploadFiles((prev) =>
@@ -310,7 +265,10 @@ export function MultiImageUpload({
                             </div>
                         </div>
 
-                        <Button onClick={() => { clearFiles(); setValue(name, []); setUploadFiles([]) }} variant="outline" size="sm">
+                        <Button onClick={() => {
+                            clearFiles(); setValue(name, []);
+                            setUploadFiles([])
+                        }} variant="outline" size="sm">
                             Clear all
                         </Button>
                     </div >

@@ -17,13 +17,14 @@ import Promotions from "../promotions";
 import SignInMethod from "../signin-method";
 import SocialMediaAccount from "../social-media-account";
 import TrustAndEngagement from "../trust-and-engement";
+import { ScreenLoader } from "@/components/screen-loader";
 
 
 const BusinessSettingsView = () => {
 
-    const { data: profileData } = useGetProfileQuery({});
+    const { data: profileData, isLoading: isProfileLoading } = useGetProfileQuery({});
 
-    const { data: businessProfileData } = useGetBusinessQuery({});
+    const { data: businessProfileData, isLoading: isBusinessLoading } = useGetBusinessQuery({});
 
     const user = useSelector(selectUser);
 
@@ -66,7 +67,7 @@ const BusinessSettingsView = () => {
         businessName: (businessProfileData as any)?.business?.name || '',
         businessType: (businessProfileData as any)?.business?.business_type || '',
         description: (businessProfileData as any)?.business?.description || '',
-        services_offered:(businessProfileData as any)?.business?.services_offered || [],
+        services_offered: (businessProfileData as any)?.business?.services_offered || [],
     }), [businessProfileData]);
 
     const contactInformation = useMemo(() => ({
@@ -106,29 +107,29 @@ const BusinessSettingsView = () => {
     return (
         <div className='md:mx-10 mx-2 my-4 flex flex-col gap-6'>
 
-            {/* {isLoading ?
+            {isProfileLoading || isBusinessLoading ?
                 <ScreenLoader />
                 :
-                <> */}
-            <BusinessHeroWithProfile />
-            <Container>
-                <Navbar />
-            </Container>
-            <Container className='flex flex-col gap-6'>
-                <BasicDetails profileData={businessProfile} />
-                <ContactInformation profileData={contactInformation} />
-                <SocialMediaAccount profileData={socialMediaDetails} />
-                <Operations profileData={operations} />
-                <MediaInformation profileData={media} />
-                <TrustAndEngagement profileData={trustAndEngagement} />
-                <Promotions profileData={promotions} />
-                <SignInMethod email={user?.email as string || "jenny@kteam.com"} />
-                {/* <ConnectAccount /> */}
-                <EmailPreference emailPreferences={emailPreference} />
-                <Settings businessSettings={businessSettings} />
-                <DeactiveCard />
-            </Container>
-            {/* </>} */}
+                <>
+                    <BusinessHeroWithProfile />
+                    <Container>
+                        <Navbar />
+                    </Container>
+                    <Container className='flex flex-col gap-6'>
+                        <BasicDetails profileData={businessProfile} />
+                        <ContactInformation profileData={contactInformation} />
+                        <SocialMediaAccount profileData={socialMediaDetails} />
+                        <Operations profileData={operations} />
+                        <MediaInformation profileData={media} />
+                        <TrustAndEngagement profileData={trustAndEngagement} />
+                        <Promotions profileData={promotions} />
+                        <SignInMethod email={user?.email as string || "jenny@kteam.com"} />
+                        {/* <ConnectAccount /> */}
+                        <EmailPreference emailPreferences={emailPreference} />
+                        <Settings businessSettings={businessSettings} />
+                        <DeactiveCard />
+                    </Container>
+                </>}
         </div>
     )
 }

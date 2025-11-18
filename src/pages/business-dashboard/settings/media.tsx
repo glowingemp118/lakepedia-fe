@@ -26,7 +26,6 @@ interface PageProps {
 
 const MediaInformation: FC<PageProps> = ({ profileData }) => {
 
-
     const defaultValues = useMemo(() => ({
         logo: (profileData?.logo as { url: string })?.url || "",
         thumbnail: (profileData?.thumbnail as { url: string })?.url || "",
@@ -71,7 +70,6 @@ const MediaInformation: FC<PageProps> = ({ profileData }) => {
     }, [defaultValues]);
 
     const onSubmit = async (data: z.infer<typeof schema>) => {
-        console.log("Submitted data: ", data);
 
         let logo = "";
 
@@ -96,7 +94,7 @@ const MediaInformation: FC<PageProps> = ({ profileData }) => {
                     const uploadResponse: any = await uploadFile((file as { file: File })?.file as File);
                     return uploadResponse?.data?.data[0]?.id;
                 } else {
-                    return file;
+                    return profileData?.gallery_photos?.find((photo: any) => photo.url === file as string)?.id;
                 }
             })
         );
@@ -113,19 +111,17 @@ const MediaInformation: FC<PageProps> = ({ profileData }) => {
             toast.success("Media information updated successfully", {
                 autoClose: 2000
             });
-            methods.reset(defaultValues);
+            // methods.reset(defaultValues);
         }
     }
 
-    const currentPhotos = methods.getValues("galleryPhotos") || [];
 
     const onDrop = useCallback((acceptedFiles: any) => {
 
-        methods.setValue("galleryPhotos", [...currentPhotos, ...acceptedFiles], { shouldValidate: true });
+        methods.setValue("galleryPhotos", [...acceptedFiles], { shouldValidate: true });
 
     }, [methods.setValue]);
-
-
+    
     return (
         <Card >
             <CardHeader>
@@ -147,7 +143,11 @@ const MediaInformation: FC<PageProps> = ({ profileData }) => {
                             </div>
                             <div className='md:col-span-8 col-span-12 md:mb-4'>
                                 <AvatarInput name='logo' />
-
+                                {methods.formState.errors.logo &&
+                                    <p className="text-sm text-red-500 mt-1">
+                                        Logo is required
+                                    </p>
+                                }
                             </div>
 
 
@@ -158,6 +158,11 @@ const MediaInformation: FC<PageProps> = ({ profileData }) => {
                             </div>
                             <div className='md:col-span-8 col-span-12 md:mb-4'>
                                 <AvatarInput name='thumbnail' />
+                                {methods.formState.errors.thumbnail &&
+                                    <p className="text-sm text-red-500 mt-1">
+                                        Thumbnail is required
+                                    </p>
+                                }
                             </div>
 
 
@@ -167,7 +172,7 @@ const MediaInformation: FC<PageProps> = ({ profileData }) => {
                                 </p>
                             </div>
                             <div className='md:col-span-8 col-span-12 md:mb-4'>
-                                <RhfMultipleImages name='galleryPhotos' onDrop={onDrop} />
+                                <RhfMultipleImages name='galleryPhotos' onDrop={onDrop} accept="image/*" />
                             </div>
                             <div className='md:col-span-4 col-span-12 md:block hidden'>
                                 <p className='flex items-center gap-1.5 leading-none font-medium text-sm text-mono'>

@@ -123,16 +123,16 @@ export default function QuickAddEditTripModal({ open, onClose, currentTrip }: Ad
                     type: data.tripType,
                     description: data.description,
                     is_private: data.privacySetting,
+                    budget: data.budget,
                 }
             });
             if (!response.error) {
-                toast.success("Trip updated successfully!");
+                toast.success("Trip updated successfully!", { autoClose: 1500 });
                 reset()
                 onClose()
             }
 
         } else {
-
 
             let response = await createTrip({
                 name: data.name,
@@ -143,9 +143,10 @@ export default function QuickAddEditTripModal({ open, onClose, currentTrip }: Ad
                 type: data.tripType,
                 description: data.description,
                 is_private: data.privacySetting,
+                budget: data.budget,
             });
             if (!response.error) {
-                toast.success("Trip created successfully!");
+                toast.success("Trip created successfully!", { autoClose: 1500 });
                 reset()
                 onClose()
             }
@@ -191,12 +192,12 @@ export default function QuickAddEditTripModal({ open, onClose, currentTrip }: Ad
 
                                 chip={true}
                             />
-                             <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
+                            <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
 
 
-                            <RHFTextField name="groupOfPeople" type="number" label="Group of People" placeholder="e.g. 2" />
-                            <RHFTextField name="budget" type="number" label="Budget" placeholder="e.g. $500" />
-                             </div>
+                                <RHFTextField name="groupOfPeople" type="number" label="Group of People" placeholder="e.g. 2" />
+                                <RHFTextField name="budget" type="number" label="Budget" placeholder="e.g. $500" />
+                            </div>
 
                             <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
                                 <RHFDate name="startDate" label="Start Date" />

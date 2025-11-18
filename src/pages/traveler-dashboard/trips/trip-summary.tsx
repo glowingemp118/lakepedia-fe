@@ -23,7 +23,7 @@ const TripSummary: FC<PageProps> = ({ trip }) => {
                 <li className="flex justify-between"><span>Duration:</span> <span>{
                     Math.ceil((new Date(trip?.end_date).getTime() - new Date(trip?.start_date).getTime()) / (1000 * 60 * 60 * 24))
                     + " " + "Days"}</span></li>
-                <li className="flex justify-between"><span>Budget:</span> <span>{trip?.costBudget?.toLocaleString() ? `PKR ${trip?.costBudget?.toLocaleString()}` : <Button onClick={open.onTrue}>Add Badget</Button>}</span></li>
+                <li className="flex justify-between"><span>Budget:</span> <span>{trip?.budget?.toLocaleString() ? `PKR ${trip?.budget?.toLocaleString()}` : <Button onClick={open.onTrue}>Add Badget</Button>}</span></li>
                 <li className="flex justify-between"><span>Spent:</span> <span> {trip?.costSpent?.toLocaleString() ? `PKR ${trip?.costSpent?.toLocaleString()}` : "Not Added"}</span></li>
             </ul>
             <QuickAddEditTripModal open={open.value} onClose={open.onFalse} currentTrip={trip} />

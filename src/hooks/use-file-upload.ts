@@ -15,6 +15,7 @@ export type FileWithPreview = {
   file: File | FileMetadata;
   id: string;
   preview?: string;
+  name:string
 };
 
 export type FileUploadOptions = {
@@ -65,6 +66,7 @@ export const useFileUpload = (options: FileUploadOptions = {}): [FileUploadState
       file,
       id: file.id,
       preview: file.url,
+      name: file.name
     })),
     isDragging: false,
     errors: [],
@@ -203,6 +205,7 @@ export const useFileUpload = (options: FileUploadOptions = {}): [FileUploadState
             file,
             id: generateUniqueId(file),
             preview: createPreview(file),
+            name: file instanceof File ? file.name : ""
           });
         }
       });

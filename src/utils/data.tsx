@@ -230,3 +230,448 @@ export const countries = [
   "Zambia",
   "Zimbabwe"
 ];
+
+export const stateData=[
+  {
+    "region": "Alabama",
+    "abbreviation": "AL",
+    "type": "State",
+    "country": "United States",
+    "slug": "alabama"
+  },
+  {
+    "region": "Alaska",
+    "abbreviation": "AK",
+    "type": "State",
+    "country": "United States",
+    "slug": "alaska"
+  },
+  {
+    "region": "Arizona",
+    "abbreviation": "AZ",
+    "type": "State",
+    "country": "United States",
+    "slug": "arizona"
+  },
+  {
+    "region": "Arkansas",
+    "abbreviation": "AR",
+    "type": "State",
+    "country": "United States",
+    "slug": "arkansas"
+  },
+  {
+    "region": "California",
+    "abbreviation": "CA",
+    "type": "State",
+    "country": "United States",
+    "slug": "california"
+  },
+  {
+    "region": "Colorado",
+    "abbreviation": "CO",
+    "type": "State",
+    "country": "United States",
+    "slug": "colorado"
+  },
+  {
+    "region": "Connecticut",
+    "abbreviation": "CT",
+    "type": "State",
+    "country": "United States",
+    "slug": "connecticut"
+  },
+  {
+    "region": "Delaware",
+    "abbreviation": "DE",
+    "type": "State",
+    "country": "United States",
+    "slug": "delaware"
+  },
+  {
+    "region": "Florida",
+    "abbreviation": "FL",
+    "type": "State",
+    "country": "United States",
+    "slug": "florida"
+  },
+  {
+    "region": "Georgia",
+    "abbreviation": "GA",
+    "type": "State",
+    "country": "United States",
+    "slug": "georgia"
+  },
+  {
+    "region": "Hawaii",
+    "abbreviation": "HI",
+    "type": "State",
+    "country": "United States",
+    "slug": "hawaii"
+  },
+  {
+    "region": "Idaho",
+    "abbreviation": "ID",
+    "type": "State",
+    "country": "United States",
+    "slug": "idaho"
+  },
+  {
+    "region": "Illinois",
+    "abbreviation": "IL",
+    "type": "State",
+    "country": "United States",
+    "slug": "illinois"
+  },
+  {
+    "region": "Indiana",
+    "abbreviation": "IN",
+    "type": "State",
+    "country": "United States",
+    "slug": "indiana"
+  },
+  {
+    "region": "Iowa",
+    "abbreviation": "IA",
+    "type": "State",
+    "country": "United States",
+    "slug": "iowa"
+  },
+  {
+    "region": "Kansas",
+    "abbreviation": "KS",
+    "type": "State",
+    "country": "United States",
+    "slug": "kansas"
+  },
+  {
+    "region": "Kentucky",
+    "abbreviation": "KY",
+    "type": "State",
+    "country": "United States",
+    "slug": "kentucky"
+  },
+  {
+    "region": "Louisiana",
+    "abbreviation": "LA",
+    "type": "State",
+    "country": "United States",
+    "slug": "louisiana"
+  },
+  {
+    "region": "Maine",
+    "abbreviation": "ME",
+    "type": "State",
+    "country": "United States",
+    "slug": "maine"
+  },
+  {
+    "region": "Maryland",
+    "abbreviation": "MD",
+    "type": "State",
+    "country": "United States",
+    "slug": "maryland"
+  },
+  {
+    "region": "Massachusetts",
+    "abbreviation": "MA",
+    "type": "State",
+    "country": "United States",
+    "slug": "massachusetts"
+  },
+  {
+    "region": "Michigan",
+    "abbreviation": "MI",
+    "type": "State",
+    "country": "United States",
+    "slug": "michigan"
+  },
+  {
+    "region": "Minnesota",
+    "abbreviation": "MN",
+    "type": "State",
+    "country": "United States",
+    "slug": "minnesota"
+  },
+  {
+    "region": "Mississippi",
+    "abbreviation": "MS",
+    "type": "State",
+    "country": "United States",
+    "slug": "mississipppi"
+  },
+  {
+    "region": "Missouri",
+    "abbreviation": "MO",
+    "type": "State",
+    "country": "United States",
+    "slug": "missouri"
+  },
+  {
+    "region": "Montana",
+    "abbreviation": "MT",
+    "type": "State",
+    "country": "United States",
+    "slug": "montana"
+  },
+  {
+    "region": "Nebraska",
+    "abbreviation": "NE",
+    "type": "State",
+    "country": "United States",
+    "slug": "nebraska"
+  },
+  {
+    "region": "Nevada",
+    "abbreviation": "NV",
+    "type": "State",
+    "country": "United States",
+    "slug": "nevada"
+  },
+  {
+    "region": "New Hampshire",
+    "abbreviation": "NH",
+    "type": "State",
+    "country": "United States",
+    "slug": "new-hampshire"
+  },
+  {
+    "region": "New Jersey",
+    "abbreviation": "NJ",
+    "type": "State",
+    "country": "United States",
+    "slug": "new-jersey"
+  },
+  {
+    "region": "New Mexico",
+    "abbreviation": "NM",
+    "type": "State",
+    "country": "United States",
+    "slug": "new-mexico"
+  },
+  {
+    "region": "New York",
+    "abbreviation": "NY",
+    "type": "State",
+    "country": "United States",
+    "slug": "new-york"
+  },
+  {
+    "region": "North Carolina",
+    "abbreviation": "NC",
+    "type": "State",
+    "country": "United States",
+    "slug": "north-carolina"
+  },
+  {
+    "region": "North Dakota",
+    "abbreviation": "ND",
+    "type": "State",
+    "country": "United States",
+    "slug": "north-dakota"
+  },
+  {
+    "region": "Ohio",
+    "abbreviation": "OH",
+    "type": "State",
+    "country": "United States",
+    "slug": "ohio"
+  },
+  {
+    "region": "Oklahoma",
+    "abbreviation": "OK",
+    "type": "State",
+    "country": "United States",
+    "slug": "oklahoma"
+  },
+  {
+    "region": "Oregon",
+    "abbreviation": "OR",
+    "type": "State",
+    "country": "United States",
+    "slug": "oregon"
+  },
+  {
+    "region": "Pennsylvania",
+    "abbreviation": "PA",
+    "type": "State",
+    "country": "United States",
+    "slug": "pennsylvania"
+  },
+  {
+    "region": "Rhode Island",
+    "abbreviation": "RI",
+    "type": "State",
+    "country": "United States",
+    "slug": "rhode-island"
+  },
+  {
+    "region": "South Carolina",
+    "abbreviation": "SC",
+    "type": "State",
+    "country": "United States",
+    "slug": "south-carolina"
+  },
+  {
+    "region": "South Dakota",
+    "abbreviation": "SD",
+    "type": "State",
+    "country": "United States",
+    "slug": "south-dakota"
+  },
+  {
+    "region": "Tennessee",
+    "abbreviation": "TN",
+    "type": "State",
+    "country": "United States",
+    "slug": "tennessee"
+  },
+  {
+    "region": "Northwest Territories",
+    "abbreviation": "NT",
+    "type": "Territory",
+    "country": "Canada",
+    "slug": "northwest-territories"
+  },
+  {
+    "region": "Yukon",
+    "abbreviation": "YT",
+    "type": "Territory",
+    "country": "Canada",
+    "slug": "yukon"
+  },
+  {
+    "region": "Ontario",
+    "abbreviation": "ON",
+    "type": "Province",
+    "country": "Canada",
+    "slug": "ontario"
+  },
+  {
+    "region": "Quebec",
+    "abbreviation": "QC",
+    "type": "Province",
+    "country": "Canada",
+    "slug": "quebec"
+  },
+  {
+    "region": "Nova Scotia",
+    "abbreviation": "NS",
+    "type": "Province",
+    "country": "Canada",
+    "slug": "nova-scotia"
+  },
+  {
+    "region": "New Brunswick",
+    "abbreviation": "NB",
+    "type": "Province",
+    "country": "Canada",
+    "slug": "new-brunswick"
+  },
+  {
+    "region": "Manitoba",
+    "abbreviation": "MB",
+    "type": "Province",
+    "country": "Canada",
+    "slug": "manitoba"
+  },
+  {
+    "region": "British Columbia",
+    "abbreviation": "BC",
+    "type": "Province",
+    "country": "Canada",
+    "slug": "british-columbia"
+  },
+  {
+    "region": "Prince Edward Island",
+    "abbreviation": "PE",
+    "type": "Province",
+    "country": "Canada",
+    "slug": "prince-edward-island"
+  },
+  {
+    "region": "Saskatchewan",
+    "abbreviation": "SK",
+    "type": "Province",
+    "country": "Canada",
+    "slug": "saskatchewan"
+  },
+  {
+    "region": "Alberta",
+    "abbreviation": "AB",
+    "type": "Province",
+    "country": "Canada",
+    "slug": "alberta"
+  },
+  {
+    "region": "Newfoundland and Labrador",
+    "abbreviation": "NL",
+    "type": "Province",
+    "country": "Canada",
+    "slug": "newfoundland-and-labrador"
+  },
+ 
+  {
+    "region": "Nunavut",
+    "abbreviation": "NU",
+    "type": "Territory",
+    "country": "Canada",
+    "slug": "nunavut"
+  },
+  {
+    "region": "New South Wales",
+    "abbreviation": "NSW",
+    "type": "State",
+    "country": "Australia",
+    "slug": "new-south-wales"
+  },
+  {
+    "region": "Victoria",
+    "abbreviation": "VIC",
+    "type": "State",
+    "country": "Australia",
+    "slug": "victoria"
+  },
+  {
+    "region": "Queensland",
+    "abbreviation": "QLD",
+    "type": "State",
+    "country": "Australia",
+    "slug": "queensland"
+  },
+  {
+    "region": "Western Australia",
+    "abbreviation": "WA",
+    "type": "State",
+    "country": "Australia",
+    "slug": "western-australia"
+  },
+  {
+    "region": "South Australia",
+    "abbreviation": "SA",
+    "type": "State",
+    "country": "Australia",
+    "slug": "south-australia"
+  },
+  {
+    "region": "Tasmania",
+    "abbreviation": "TAS",
+    "type": "State",
+    "country": "Australia",
+    "slug": "tasmania"
+  },
+  {
+    "region": "Northern Territory",
+    "abbreviation": "NT",
+    "type": "Territory",
+    "country": "Australia",
+    "slug": "northern-territory"
+  },
+  {
+    "region": "Australian Capital Territory",
+    "abbreviation": "ACT",
+    "type": "Territory",
+    "country": "Australia",
+    "slug": "australian-capital-territory"
+  }
+]

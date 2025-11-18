@@ -10,34 +10,53 @@ import {
 } from '@/components/ui/tooltip';
 import { ImageInput, ImageInputFile } from '@/components/image-input';
 import { useFormContext } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
 interface AvatarInputProps {
   name: string;
   className?: string;
   [key: string]: any;
 }
-export const AvatarInput: FC<AvatarInputProps> = ({ name,className,...other }) => {
+export const AvatarInput: FC<AvatarInputProps> = ({ name, className, ...other }) => {
 
   const { setValue, getValues } = useFormContext();
 
   const [avatar, setAvatar] = useState<ImageInputFile[]>([
     {
-      dataURL: typeof getValues(name) === "string" ? getValues(name): getValues(name)?.dataURL || toAbsoluteUrl(`/media/app/default.webp`)
+      dataURL: typeof getValues(name) === "string" ? getValues(name) : getValues(name)?.dataURL || toAbsoluteUrl(`/media/app/default.webp`)
     },
   ]);
 
-  useEffect(()=>{
-    if(getValues(name)){
+  useEffect(() => {
+    if (getValues(name)) {
       setAvatar([{
-        dataURL: typeof getValues(name) === "string" ? getValues(name): getValues(name)?.dataURL || toAbsoluteUrl(`/media/app/default.webp`)
+        dataURL: typeof getValues(name) === "string" ? getValues(name) : getValues(name)?.dataURL || toAbsoluteUrl(`/media/app/default.webp`)
       }])
     }
   }, [getValues(name)])
 
+  const checkFileExtension = (fileName: string) => {
+    const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
+    const fileExtension = fileName.split('.').pop()?.toLowerCase();
+    return allowedExtensions.includes(fileExtension || '');
+  }
+
   return (
     <ImageInput
       value={avatar}
-      onChange={(selectedAvatar) => { setAvatar(selectedAvatar); setValue(name, selectedAvatar[0] as ImageInputFile); }}
+      onChange={(selectedAvatar) => {
+        if (selectedAvatar.length > 0) {
+          if (checkFileExtension(selectedAvatar[0]?.file?.name || '')) {
+            setAvatar(selectedAvatar);
+            setValue(name, selectedAvatar[0]);
+          } else {
+            toast.error("Invalid file type. Please select an image file (jpg, jpeg, png, gif, bmp, webp).", {
+              autoClose: 1500
+            });
+          }
+        }
+      }
+      }
     >
       {({ onImageUpload }) => (
         <div

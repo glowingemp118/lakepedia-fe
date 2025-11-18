@@ -92,7 +92,7 @@ const BasicDetails: FC<PageProps> = ({ profileData }) => {
         let response: any = await updateProfile(profile);
 
         if (!response?.error) {
-            toast.success("Profile updated successfully");
+            toast.success("Profile updated successfully",{autoClose:1500});
 
             dispatch(setUser({
                 ...response?.data?.data?.user,

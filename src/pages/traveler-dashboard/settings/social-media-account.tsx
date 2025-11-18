@@ -64,7 +64,7 @@ const SocialMediaAccount: FC<PageProps> = ({ profileData }) => {
     }
     let response: any = await updateProfile(accountProfile);
     if (!response.error) {
-      toast.success("Social media accounts updated successfully");
+      toast.success("Social media accounts updated successfully",{autoClose:1500});
     }
   }
   const handleReset = () => {
