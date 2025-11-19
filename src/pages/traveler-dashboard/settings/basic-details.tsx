@@ -8,7 +8,7 @@ import { AvatarInput } from '@/partials/common/avatar-input';
 import { useUploadFileMutation } from '@/store/Reducer/file';
 import { useUpdateProfileMutation } from '@/store/Reducer/users';
 import { setUser } from '@/store/slices/userSlice';
-import { countries } from '@/utils/data';
+import { countries,stateData } from '@/utils/data';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircleIcon } from 'lucide-react';
 import { FC, useEffect, useMemo } from 'react';
@@ -104,6 +104,10 @@ const BasicDetails: FC<PageProps> = ({ profileData }) => {
         methods.reset(defaultValues);
     }
 
+    const getStates = (country: string) => {
+         const states=  [...stateData.filter((item) => item.country === country).map((item) => item.region)];
+         return states;
+    }
     return (
         <Card >
             <CardHeader>
@@ -169,7 +173,7 @@ const BasicDetails: FC<PageProps> = ({ profileData }) => {
                                             }
 
                                         >
-                                            {['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia,  Washington', 'West Virginia', 'Wisconsin', 'Wyoming'].map((state) => {
+                                            {getStates(methods.watch("country") || "").map((state) => {
                                                 return <SelectItem key={state} value={state}>{state}</SelectItem>
 
                                             })
