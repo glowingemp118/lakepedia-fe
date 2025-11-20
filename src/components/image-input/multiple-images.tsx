@@ -12,7 +12,6 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { useBoolean } from '@/hooks/use-boolean';
 import {
     formatBytes,
     useFileUpload,
@@ -34,7 +33,6 @@ import {
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { toast } from 'react-toastify';
 
 interface FileUploadItem extends FileWithPreview {
     progress: number;
@@ -57,7 +55,7 @@ interface ProgressUploadProps {
 export function MultiImageUpload({
     maxFiles = 10,
     maxSize = 10 * 1024 * 1024, // 10MB
-    accept = '*',
+    accept = 'image/*',
     multiple = true,
     onFilesChange,
     onDrop,
@@ -66,6 +64,9 @@ export function MultiImageUpload({
 
     const defaultPhotos = useFormContext().getValues(name) || [];
 
+    // console.log("defaultPhotos===>", defaultPhotos);
+
+
     const defaultImages: FileMetadata[] = defaultPhotos.map((photo: any) => ({
         id: (photo as any).id,
         name: typeof photo === "string" ? photo.split("/").pop() : (photo as any).name || (photo as any).file?.name || 'existing_image',
@@ -73,6 +74,8 @@ export function MultiImageUpload({
         type: typeof photo === "string" ? photo.split(".").pop() : (photo as any).type || (photo as any)?.file?.type || 'image/jpeg',
         url: typeof photo === "string" ? photo : (photo as any).url || (photo as any).preview,
     })) || [];
+
+    console.log("defaultImages===>", defaultImages);
 
     useEffect(() => {
         if (defaultPhotos.length === 0) {
@@ -90,10 +93,13 @@ export function MultiImageUpload({
                 progress: 100,
                 status: 'completed' as const,
             }));
+            // console.log("defaultUploadFiles===>", defaultUploadFiles);
 
             setUploadFiles(defaultUploadFiles);
         }
     }, [defaultPhotos]);
+
+  
 
 
     const defaultUploadFiles: FileUploadItem[] = defaultImages.map((image) => ({
@@ -135,6 +141,7 @@ export function MultiImageUpload({
         multiple,
         initialFiles: defaultImages,
         onFilesChange: (newFiles) => {
+
 
             onDrop?.(newFiles);
 
@@ -302,7 +309,7 @@ export function MultiImageUpload({
                                         <div className="flex items-center justify-between mt-0.75">
                                             <p className="inline-flex flex-col justify-center gap-1 truncate font-medium">
                                                 <span className="text-sm">{fileItem.file.name}</span>
-                                                <span className="text-xs text-muted-foreground">{formatBytes(fileItem.file.size)}</span>
+                                                {/* <span className="text-xs text-muted-foreground">{formatBytes(fileItem.file.size)}</span> */}
                                             </p>
                                             <div className="flex items-center gap-2">
                                                 {/* Remove Button */}
