@@ -13,8 +13,6 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import z from 'zod';
 
-
-
 interface PageProps {
     profileData: {
         logo?: object;
@@ -26,12 +24,19 @@ interface PageProps {
 
 const MediaInformation: FC<PageProps> = ({ profileData }) => {
 
+
     const defaultValues = useMemo(() => ({
         logo: (profileData?.logo as { url: string })?.url || "",
         thumbnail: (profileData?.thumbnail as { url: string })?.url || "",
-        galleryPhotos: profileData?.gallery_photos?.map((photo) => (photo as { url: string })?.url) || [],
+        galleryPhotos: profileData?.gallery_photos?.map((photo) => {
+            return {
+                url: (photo as any)?.url,
+                id: (photo as any)?.id
+            }
+        }) || [],
         youtubeVideo: profileData?.youtube_video || "",
     }), [profileData]);
+
 
     const [updateBusiness] = useUpdateBusinessMutation();
 
@@ -46,9 +51,12 @@ const MediaInformation: FC<PageProps> = ({ profileData }) => {
             file: z.instanceof(File).optional(),
             url: z.string().optional(),
             id: z.string().optional(),
-
+        }),
+        z.object({
+            url: z.string().optional(),
+            id: z.string().optional(),
+            file: z.object().optional(),
         })
-
     ]);
 
     const schema = z.object({
@@ -90,11 +98,11 @@ const MediaInformation: FC<PageProps> = ({ profileData }) => {
 
         const uploadResponses = await Promise.all(
             data?.galleryPhotos?.map(async (file) => {
-                if (typeof file !== 'string') {
+                if (file.file instanceof File) {
                     const uploadResponse: any = await uploadFile((file as { file: File })?.file as File);
                     return uploadResponse?.data?.data[0]?.id;
                 } else {
-                    return profileData?.gallery_photos?.find((photo: any) => photo.url === file as string)?.id;
+                    return profileData?.gallery_photos?.find((photo: any) => photo.id === file.id as string)?.id;
                 }
             })
         );
@@ -121,7 +129,7 @@ const MediaInformation: FC<PageProps> = ({ profileData }) => {
         methods.setValue("galleryPhotos", [...acceptedFiles], { shouldValidate: true });
 
     }, [methods.setValue]);
-    
+
     return (
         <Card >
             <CardHeader>
