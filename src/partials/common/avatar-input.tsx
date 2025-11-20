@@ -71,6 +71,7 @@ export const AvatarInput: FC<AvatarInputProps> = ({ name, className, ...other })
                   variant="outline"
                   mode="icon"
                   className="shadow-xs text-secondary-foreground/80 hover:text-foreground absolute z-1 size-5 -top-0.5 -end-0.5 rounded-full"
+                  type='button'
                   onClick={(e) => {
                     e.stopPropagation();
                     setAvatar([]);
