@@ -1,4 +1,4 @@
-import RhfMultipleImages from '@/components/rhf/rhf-multiple-images';
+import RhfMultipleImages from '@/components/rhf/rhf-multiple-images1';
 import RHFTextField from '@/components/rhf/rhf-textfield';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

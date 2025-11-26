@@ -1,4 +1,4 @@
-import RhfMultipleImages from "@/components/rhf/rhf-multiple-images";
+import RhfMultipleImages from "@/components/rhf/rhf-multiple-images2";
 import RHFTextArea from "@/components/rhf/rhf-textarea";
 import RHFTextField from "@/components/rhf/rhf-textfield";
 import { Button } from "@/components/ui/button";

@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import {
   FormControl,
   FormField,
@@ -19,6 +18,7 @@ import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { FC } from "react";
 import { useFormContext } from "react-hook-form";
+import { Calendar } from "../ui/calendar";
 
 interface RHFDateTimeProps {
   name: string;
@@ -39,7 +39,7 @@ const RHFTimePicker: FC<RHFDateTimeProps> = ({
     <FormField
       control={control}
       name={name}
-      render={({ field, formState: {} }) => (
+      render={({ field, formState: { } }) => (
         <FormItem className={"flex-1"}>
           {label && <FormLabel>{label}</FormLabel>}
           <FormControl>
@@ -65,11 +65,11 @@ const RHFTimePicker: FC<RHFDateTimeProps> = ({
                 className="w-auto p-0 dark:bg-secondary"
                 align="start"
               >
-                {/* <Calendar
+                <Calendar
                   mode="single"
                   selected={field.value}
                   onSelect={field.onChange}
-                /> */}
+                />
               </PopoverContent>
             </Popover>
           </FormControl>
@@ -80,4 +80,4 @@ const RHFTimePicker: FC<RHFDateTimeProps> = ({
   );
 };
 
-export default RHFDatePicker;
+export default RHFTimePicker;

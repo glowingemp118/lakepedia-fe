@@ -15,9 +15,9 @@ const ActivityView = () => {
                 <Navbar />
             </Container>
             <Container>
-                <div className="flex flex-wrap items-center gap-5 justify-between mb-7.5">
+                {/* <div className="flex flex-wrap items-center gap-5 justify-between mb-7.5">
                     <h3 className="text-lg text-mono font-semibold">Activity</h3>
-                </div>
+                </div> */}
                 <ProfileBasicPage />
             </Container>
         </div>

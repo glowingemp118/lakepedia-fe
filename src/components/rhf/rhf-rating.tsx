@@ -1,26 +1,35 @@
 import { Rating } from '@/partials/common/rating';
 import { FC } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 
 interface PageProps {
     name: string;
+    label?: string;
     [x: string]: any;
 }
-const RhfRating:FC<PageProps> = ({name,...other}) => {
+const RhfRating: FC<PageProps> = ({ name, label, ...other }) => {
 
     const { control } = useFormContext();
     return (
-        <Controller
+        <FormField
             control={control}
             name={name}
             render={({ field }) => (
-                <Rating
-                    rating={field.value}
-                    round={0}
-                    {...field}
-                    {...other}
-                    onChange={field.onChange}
-                />
+                <FormItem>
+                    {label && <FormLabel>{label}</FormLabel>}
+
+                    <FormControl>
+                        <Rating
+                            rating={field.value}
+                            round={0}
+                            {...field}
+                            {...other}
+                            onChange={field.onChange}
+                        />
+                    </FormControl>
+                    <FormMessage />
+                </FormItem>
             )}
         />
     )

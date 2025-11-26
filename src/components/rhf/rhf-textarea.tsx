@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { FormControl, FormItem, FormLabel, FormMessage } from '../ui/form';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { Textarea } from '../ui/textarea';
 
 interface RHFTextAreaProps {
@@ -12,14 +12,14 @@ interface RHFTextAreaProps {
 const RHFTextArea: FC<RHFTextAreaProps> = ({ name, label, placeholder, ...other }) => {
     const { control } = useFormContext();
     return (
-        <Controller
+        <FormField
             name={name}
             control={control}
             render={({ field, fieldState }) => (
                 <FormItem>
                     <FormLabel>{label}</FormLabel>
                     <FormControl>
-                        <Textarea  placeholder={placeholder} {...field} {...other} />
+                        <Textarea placeholder={placeholder} {...field} {...other} />
                     </FormControl>
                     <FormMessage />
                 </FormItem>
