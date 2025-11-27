@@ -25,10 +25,6 @@ export const authRoutes: RouteObject[] = [
         path: 'signin',
         element: <SignInPage />,
       },
-      // {
-      //   path: 'signin/business',
-      //   element: <SignInPage />,
-      // },
       {
         path: 'admin/signin',
         element: <AdminSignInPage />,

@@ -5,9 +5,10 @@ import { toAbsoluteUrl } from '@/lib/helpers';
 import { selectUser } from '@/store/slices/userSlice';
 import { EllipsisVertical, Heart } from 'lucide-react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { DropdownMenu3 } from '../dropdown-menu/dropdown-menu-3';
 import { ICampaignProps } from './card-campaign';
+import { paths } from '@/components/layouts/layout-3/components/paths';
 
 const CardCampaignRow = ({
   id,
@@ -22,6 +23,8 @@ const CardCampaignRow = ({
 }: ICampaignProps) => {
 
   const user = useSelector(selectUser);
+
+  const navigate = useNavigate();
 
   // const renderItem = (statistic: ICampaignItem, index: number) => {
   //   return (
@@ -38,9 +41,14 @@ const CardCampaignRow = ({
   //     </div>
   //   );
   // };
+  const handleClick = (e: React.MouseEvent) => {
+    // e.preventDefault();
+
+      navigate(paths.businessDashboard.lakeDetail(user?.first_name as string + user?.last_name as string, id));
+  }
 
   return (
-    <Card className="p-5 lg:p-7.5">
+    <Card className="p-5 lg:p-7.5 cursor-pointer" onClick={handleClick}>
       <div className="flex items-center flex-wrap justify-between gap-5">
         <div className="flex items-center gap-3.5">
           <div className="flex items-center justify-center w-[50px] ">

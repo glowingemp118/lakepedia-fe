@@ -20,8 +20,8 @@ interface PageProps {
         phone_number: string;
         country: string;
         state: string;
-        lat: number | null;
-        long: number | null;
+        lat: string | null;
+        long: string | null;
     },
 }
 
@@ -161,7 +161,7 @@ const ContactInformation: FC<PageProps> = ({ profileData }) => {
                                             }
 
                                         >
-                                            {stateData.map((state) => {
+                                            {stateData?.map((state) => {
                                                 return <SelectItem key={state.region} value={state.region}>{state.region}</SelectItem>
 
                                             })

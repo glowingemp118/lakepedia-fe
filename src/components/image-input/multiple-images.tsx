@@ -75,7 +75,6 @@ export function MultiImageUpload({
         url: typeof photo === "string" ? photo : (photo as any).url || (photo as any).preview,
     })) || [];
 
-    console.log("defaultImages===>", defaultImages);
 
     useEffect(() => {
         if (defaultPhotos.length === 0) {

@@ -40,3 +40,8 @@
 .content-full-width-collapsed {
   width: calc(100vw - var(--sidebar-collapsed-width));
 }
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  display: none;
+}

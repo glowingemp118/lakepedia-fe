@@ -158,7 +158,7 @@ export default function QuickAddEditTripModal({ open, onClose, currentTrip }: Ad
         <Dialog open={open} onOpenChange={onClose} >
             <DialogOverlay className="fixed inset-0 flex items-center justify-center " onClick={(e) => e.stopPropagation()}>
 
-                <DialogContent className="max-w-lg"
+                <DialogContent className="max-w-lg max-h-[95vh] overflow-y-auto " onClick={(e) => e.stopPropagation()}
                 >
                     <DialogHeader>
                         <DialogTitle>{currentTrip ? "Edit Trip" : "Add New Trip"}</DialogTitle>

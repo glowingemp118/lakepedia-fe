@@ -17,6 +17,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { getSignupSchema, SignupSchemaType } from '../forms/signup-schema';
+import { paths } from '@/components/layouts/layout-3/components/paths';
 
 export function SignUpPage() {
 
@@ -93,7 +94,7 @@ export function SignUpPage() {
         setSuccessMessage(
           'Registration successful! Please check your email to confirm your account.',
         );
-        navigate('/verify-otp', { state: { email: response?.data?.data?.user?.email, otp: response?.data?.data?.otp } });
+        navigate(paths.verifyOTP, { state: { email: response?.data?.data?.user?.email, otp: response?.data?.data?.otp } });
       }
 
 
@@ -239,7 +240,7 @@ export function SignUpPage() {
         <div className="text-center text-sm text-muted-foreground">
           Already have an account?{' '}
           <Link
-            to="/signin"
+            to={paths.signin}
             className="text-sm font-semibold text-foreground hover:text-primary"
           >
             Sign In

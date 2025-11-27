@@ -22,12 +22,12 @@ const QuickFishingReportModal: FC<QuickFishingReportModalProps> = ({ currentFish
     const defaultValues = useMemo(() => ({
         title: currentFishingReport?.title || '',
         description: currentFishingReport?.description || '',
-        date: currentFishingReport?.date || '',
+        date: currentFishingReport?.date ? new Date(currentFishingReport?.date) : new Date(),
         spot: currentFishingReport?.spot || '',
-        fishCount: currentFishingReport?.count || 0,
+        fishCount: parseInt(currentFishingReport?.count) || 0,
         rating: currentFishingReport?.rating || 0,
         fishSpecies: currentFishingReport?.fishSpecies || [],
-        method: currentFishingReport?.method || [],
+        method: currentFishingReport?.method || "",
         photos: currentFishingReport?.photos || [],
         lure: currentFishingReport?.lure || [],
 
@@ -36,14 +36,17 @@ const QuickFishingReportModal: FC<QuickFishingReportModalProps> = ({ currentFish
     const schema = z.object({
         title: z.string().min(3, "Title must be at least 3 characters").max(100),
         description: z.string().min(10, "Description must be at least 10 characters").max(1000),
-        date: z.string().min(1, "Date is required"),
+        date: z.date().min(1, "Date is required"),
         spot: z.string().min(3, "Spot must be at least 3 characters").max(100),
         fishCount: z.number().min(0, "Fish count cannot be negative"),
         rating: z.number().min(1, "Rating must be at least 1").max(5, "Rating cannot exceed 5"),
-        fishSpecies: z.array(z.string().min(1, "Fish species cannot be empty")),
-        method: z.array(z.string().min(1, "Method cannot be empty")),
-        lure: z.array(z.string().min(1, "Lure cannot be empty")),
-        photos: z.array(z.string().min(1, "Photos cannot be empty")),
+        fishSpecies: z.array(z.string()).min(1, "Select at least one fish species"),
+        method: z.string().min(1, "Method cannot be empty"),
+        lure: z.string().min(1, "Lure cannot be empty"),
+        photos: z.array(z.union([
+            z.instanceof(File),
+            z.string()
+        ])).min(1, "Photos cannot be empty"),
     });
 
     const form = useForm({
@@ -105,7 +108,7 @@ const QuickFishingReportModal: FC<QuickFishingReportModalProps> = ({ currentFish
                             { label: 'Mackerel', value: 'mackerel' },
                         ]} />
 
-                        <RHFTextField name="fishCount" label="Count and size of fish caught" placeholder="Enter Count and size" />
+                        <RHFTextField name="fishCount" label="Count and size of fish caught" type="number" placeholder="Enter Count and size" />
 
                         <RHFTextField name='method' label='Fishing method' placeholder='Enter Fishing method' />
 

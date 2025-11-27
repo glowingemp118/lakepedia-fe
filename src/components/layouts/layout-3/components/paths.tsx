@@ -1,41 +1,50 @@
 
-const TRAVELER_DASHBOARD = '/traveler';
+const TRAVELER_DASHBOARD = '/members/traveler';
 
-const BUSINESS_DASHBOARD = '/business';
+const BUSINESS_DASHBOARD = '/members/business';
 
 const ADMIN_DASHBOARD = '/admin';
 
 export const paths = {
+    home: '/',
+    signin: '/login',
+    AdminSignin: '/admin/login',
+    signup: '/signup',
+    signout: '/signout',
+    verifyOTP: '/verify-otp',
+    resetPassword: "/reset-password",
+
     travelerDashboard: {
-        root: TRAVELER_DASHBOARD,
-        activity: `${TRAVELER_DASHBOARD}/activity`,
-        settings: `${TRAVELER_DASHBOARD}/settings`,
-        trips: `${TRAVELER_DASHBOARD}/trips`,
-        tripDetail: (id: string) => `${TRAVELER_DASHBOARD}/trips/${id}`,
-        saved: `${TRAVELER_DASHBOARD}/saved`,
-        editProfile: `${TRAVELER_DASHBOARD}/edit-profile`,
-        todo: `${TRAVELER_DASHBOARD}/to-do`,
-        profile: `${TRAVELER_DASHBOARD}/profile`,
+        root: (userName: string) => `${TRAVELER_DASHBOARD}/${userName}`,
+        activity: (userName: string) => `${TRAVELER_DASHBOARD}/${userName}/activity`,
+        settings: (userName: string) => `${TRAVELER_DASHBOARD}/${userName}/settings`,
+        trips: (userName: string) => `${TRAVELER_DASHBOARD}/${userName}/trips`,
+        tripDetail: (userName: string, id: string) => `${TRAVELER_DASHBOARD}/${userName}/trips/${id}`,
+        saved: (userName: string) => `${TRAVELER_DASHBOARD}/${userName}/saved`,
+        editProfile: (userName: string) => `${TRAVELER_DASHBOARD}/${userName}/edit-profile`,
+        todo: (userName: string) => `${TRAVELER_DASHBOARD}/${userName}/to-do`,
+        profile: (userName: string) => `${TRAVELER_DASHBOARD}/${userName}/profile`,
     },
 
     businessDashboard: {
-        root: BUSINESS_DASHBOARD,
-        profile: `${BUSINESS_DASHBOARD}/profile`,
-        settings: `${BUSINESS_DASHBOARD}/settings`,
-        activity: `${BUSINESS_DASHBOARD}/activity`,
-        lakes: `${BUSINESS_DASHBOARD}/lakes`,
-        createLake: `${BUSINESS_DASHBOARD}/lakes/create`,
-        lakeDetail: (id: string) => `${BUSINESS_DASHBOARD}/lakes/${id}`,
-        editBusiness: `${BUSINESS_DASHBOARD}/edit-business`,
-        stats: `${BUSINESS_DASHBOARD}/stats`,
-        subscription: `${BUSINESS_DASHBOARD}/subscription`,
-
+        root: (businessUserName: string) => `${BUSINESS_DASHBOARD}/${businessUserName}`,
+        profile: (businessUserName: string) => `${BUSINESS_DASHBOARD}/${businessUserName}/profile`,
+        settings: (businessUserName: string) => `${BUSINESS_DASHBOARD}/${businessUserName}/settings`,
+        activity: (businessUserName: string) => `${BUSINESS_DASHBOARD}/${businessUserName}/activity`,
+        lakes: (businessUserName: string) => `${BUSINESS_DASHBOARD}/${businessUserName}/lakes`,
+        createLake: (businessUserName: string) => `${BUSINESS_DASHBOARD}/${businessUserName}/lakes/create`,
+        lakeDetail: (businessUserName: string, id: string) => `${BUSINESS_DASHBOARD}/${businessUserName}/lakes/${id}`,
+        editBusiness: (businessUserName: string) => `${BUSINESS_DASHBOARD}/${businessUserName}/edit-business`,
+        stats: (businessUserName: string) => `${BUSINESS_DASHBOARD}/${businessUserName}/stats`,
+        subscription: (businessUserName: string) => `${BUSINESS_DASHBOARD}/${businessUserName}/subscription`,
+        upgradeSubscription: (businessUserName: string) => `${BUSINESS_DASHBOARD}/${businessUserName}/upgrade-subscription`,
     },
     adminDashboard: {
         root: ADMIN_DASHBOARD,
         profile: `${ADMIN_DASHBOARD}/profile`,
         businessess: `${ADMIN_DASHBOARD}/businesses`,
         travelers: `${ADMIN_DASHBOARD}/travelers`,
+        reviews: `${ADMIN_DASHBOARD}/reviews`,
         account: `${ADMIN_DASHBOARD}/account`,
         network: `${ADMIN_DASHBOARD}/network`,
         plans: `${ADMIN_DASHBOARD}/plans`,

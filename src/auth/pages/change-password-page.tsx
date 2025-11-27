@@ -19,6 +19,7 @@ import {
   getNewPasswordSchema,
   NewPasswordSchemaType,
 } from '../forms/reset-password-schema';
+import { paths } from '@/components/layouts/layout-3/components/paths';
 
 export function ChangePasswordPage() {
   const navigate = useNavigate();
@@ -107,7 +108,7 @@ export function ChangePasswordPage() {
 
       // Redirect to login page after a successful password reset
       setTimeout(() => {
-        navigate('/auth/signin');
+        navigate(paths.signin);
       }, 2000);
     } catch (err) {
       console.error('Password reset error:', err);

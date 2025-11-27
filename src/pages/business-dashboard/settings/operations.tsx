@@ -1,4 +1,3 @@
-import { RHFMultiSelect } from "@/components/rhf/rhf-multi-select";
 import RHFSwitch from "@/components/rhf/rhf-switch";
 import RHFTextArea from "@/components/rhf/rhf-textarea";
 import RHFTextField from "@/components/rhf/rhf-textfield";
@@ -105,7 +104,7 @@ const Operations: FC<PageProps> = ({ profileData }) => {
                                 </p>
                             </div>
                             <div className="space-y-3 md:col-span-8 col-span-12">
-                                {defaultValues.open_hours.map((schedule, index) => (
+                                {defaultValues?.open_hours?.map((schedule, index) => (
                                     <div
                                         key={index}
                                         className="flex items-center justify-between py-0.5 last:border-b-0 "
@@ -134,7 +133,7 @@ const Operations: FC<PageProps> = ({ profileData }) => {
                             </div>
                             <div className="space-y-3 md:col-span-8 col-span-12 ">
                                 <div className="grid md:grid-cols-2 gap-4 grid-cols-1">
-                                    {defaultValues.months_of_operation.map((schedule, index) => (
+                                    {defaultValues?.months_of_operation?.map((schedule, index) => (
 
                                         <div
                                             key={index}

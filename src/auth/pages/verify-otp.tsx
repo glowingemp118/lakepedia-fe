@@ -174,7 +174,7 @@ const VerifyOTP = () => {
       <Button className="grow" type="submit">Continue</Button>
 
       <Link
-        to="/signin"
+        to={paths.signin}
         className="gap-2.5 flex items-center justify-center text-sm font-semibold text-foreground hover:text-primary"
       >
         <MoveLeft className="size-3.5 opacity-70" />

@@ -14,6 +14,7 @@ import {
   getResetRequestSchema,
   ResetRequestSchemaType,
 } from '../forms/reset-password-schema';
+import { paths } from '@/components/layouts/layout-3/components/paths';
 
 export function ForgotPasswordPage() {
 
@@ -41,7 +42,7 @@ export function ForgotPasswordPage() {
 
       if (!response?.error) {
         // toast.success("OTP sent to your email");
-        navigate('/reset-password', { state: { email: values.email, otp: response?.data?.data?.otp } });
+        navigate(paths.resetPassword, { state: { email: values.email, otp: response?.data?.data?.otp } });
       }
 
 
@@ -105,7 +106,7 @@ export function ForgotPasswordPage() {
 
           <div className="text-center text-sm">
             <Link
-              to="/signin"
+              to={paths.signin}
               className="inline-flex items-center gap-2 text-sm font-semibold text-accent-foreground hover:underline hover:underline-offset-2"
             >
               <MoveLeft className="size-3.5 opacity-70" /> Back to Sign In

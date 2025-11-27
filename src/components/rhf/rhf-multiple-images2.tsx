@@ -29,7 +29,6 @@ const RhfMultipleImages: FC<PageProps> = ({ name, label, onDrop }) => {
       control={control}
       render={({ field: { value = [], onChange } }) => {
 
-        console.log("RHF Multiple Images - Current Value:", value);
         // ADD IMAGES
         const handleFiles = (files: FileList | null) => {
 

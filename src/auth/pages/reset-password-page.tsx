@@ -1,3 +1,4 @@
+import { paths } from '@/components/layouts/layout-3/components/paths';
 import { Alert, AlertIcon, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import {
@@ -46,10 +47,10 @@ export function ResetPasswordPage() {
     },
   });
 
-  const {formState:{errors}}=form;
+  const { formState: { errors } } = form;
 
 
- const email = (state as { email: string })?.email || "";
+  const email = (state as { email: string })?.email || "";
 
   // const otp = (state as { otp: string })?.otp || "";
 
@@ -102,7 +103,7 @@ export function ResetPasswordPage() {
 
       if (!response?.error) {
         // toast.success("Password reset successfully");
-        navigate('/signin');
+        navigate(paths.signin);
       }
 
 
@@ -255,7 +256,7 @@ export function ResetPasswordPage() {
 
           <div className="text-center text-sm">
             <Link
-              to="/signin"
+              to={paths.signin}
               className="inline-flex items-center gap-2 text-sm font-semibold text-accent-foreground hover:underline hover:underline-offset-2"
             >
               <MoveLeft className="size-3.5 opacity-70" /> Back to Sign In

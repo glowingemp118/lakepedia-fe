@@ -69,12 +69,15 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
   const handleLogout = () => {
 
     dispatch(logout());
-    navigage(user?.role === "admin" && paths.adminDashboard.root || user?.role === "traveler" && paths.travelerDashboard.root ||
-      user?.role === "business" && paths.businessDashboard.root || '/signin');
+
+    navigage(user?.role === "admin" ? paths.AdminSignin : paths.signin);
   };
 
   const handleGoToProfile = () => {
-    navigage(user?.role === "admin" && paths.adminDashboard.profile || user?.role === "traveler" && paths.travelerDashboard.settings || user?.role === "business" && paths.businessDashboard.settings || '/signin');
+    navigage(
+      (user?.role === "admin" && paths.adminDashboard.profile) ||
+      (user?.role === "traveler" && paths.travelerDashboard.settings(user?.first_name as string + user?.last_name as string)) ||
+      (user?.role === "business" && paths.businessDashboard.settings(user?.first_name as string + user?.last_name)) || paths.signin);
   }
 
   return (
@@ -110,13 +113,6 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
         </div>
 
         <DropdownMenuSeparator />
-        {/* User photo, that if you click on has the following items:
-        ○ Go to profile overview;
-        ○ Profile settings;
-        ○ My trips;
-        ○ My reviews;
-        ○ For businesses, an extra button called "My subscription";
-        ○ Sign out. */}
 
         {(user?.role === "traveler" || user?.role === "business") && <>
           <DropdownMenuItem asChild>
@@ -128,18 +124,29 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
               My Profile
             </div>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
+          {user?.role === "traveler" && <DropdownMenuItem asChild>
             <Link
-              to={paths.travelerDashboard.trips}
+              to={paths.travelerDashboard.trips(
+                user?.first_name as string + user?.last_name as string
+              )}
               className="flex items-center gap-2"
             >
               <Plane />
               My Trips
             </Link>
-          </DropdownMenuItem>
+          </DropdownMenuItem>}
+          {user?.role === "business" && <DropdownMenuItem asChild>
+            <Link
+              to={paths.businessDashboard.lakes(user?.first_name as string + user?.last_name as string)}
+              className="flex items-center gap-2"
+            >
+              <Plane />
+              My Lake
+            </Link>
+          </DropdownMenuItem>}
           <DropdownMenuItem asChild>
             <Link
-              to={paths.travelerDashboard.reviews}
+              to={user?.role === "traveler" ? paths.travelerDashboard.root(user?.first_name as string + user?.last_name as string) : paths.businessDashboard.root(user?.first_name as string + user?.last_name as string)}
               className="flex items-center gap-2"
             >
               <Star />
@@ -149,7 +156,7 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
           {
             user?.role === "business" && <DropdownMenuItem asChild>
               <Link
-                to={paths.businessDashboard.subscription}
+                to={paths.businessDashboard.subscription(user?.first_name as string + user?.last_name as string)}
                 className="flex items-center gap-2"
               >
                 <Podcast />

@@ -9,13 +9,9 @@ import { cn } from '@/lib/utils';
 import { selectUser } from '@/store/slices/userSlice';
 import {
   BarChart3,
-  Bell,
   Building2,
   CheckSquare,
   ClipboardCheck,
-  CreditCard,
-  Heart,
-  ImageIcon,
   Plane,
   Podcast,
   Settings,
@@ -33,12 +29,6 @@ export const TravelerSidebar = [
     path: paths.travelerDashboard.root,
     title: 'Dashboard',
   },
-
-  // {
-  //   icon: Bell,
-  //   path: paths.travelerDashboard.activity,
-  //   title: 'Activity'
-  // },
   {
     icon: Plane,
     path: paths.travelerDashboard.trips,
@@ -59,12 +49,7 @@ export const TravelerSidebar = [
     icon: Settings,
     path: paths.travelerDashboard.settings,
     title: 'Settings'
-  },
-  // {
-  //   icon: Users,
-  //   path: paths.travelerDashboard.editProfile,
-  //   title: 'Edit Profile'
-  // }
+  }
 ]
 
 export const BusinessSidebar = [
@@ -73,22 +58,11 @@ export const BusinessSidebar = [
     path: paths.businessDashboard.root,
     title: "Dashboard",
   },
-
-  // {
-  //   icon: Bell,
-  //   path: paths.businessDashboard.activity,
-  //   title: 'Activity'
-  // },
   {
     icon: Building2,
     path: paths.businessDashboard.lakes,
     title: 'Lakes'
   },
-  // {
-  //   icon: Settings,
-  //   path: paths.businessDashboard.editBusiness,
-  //   title: 'Edit Business'
-  // },
   {
     icon: BarChart3,
     path: paths.businessDashboard.stats,
@@ -121,36 +95,17 @@ export const AdminSidebar = [
     path: paths.adminDashboard.travelers,
     title: 'Travelers',
   },
-  // {
-  //   icon: Plane,
-  //   path: "#",
-  //   title: 'Trips',
-  // },
-  // {
-  //   icon: ImageIcon,
-  //   path: "#",
-  //   title: 'Photos',
-  // },
-  // {
-  //   icon: Star,
-  //   path: "#",
-  //   title: 'Reviews',
-  // },
-  // {
-  //   icon: Heart,
-  //   path: "#",
-  //   title: 'Favorites',
-  // },
-  // {
-  //   icon: ImageIcon,
-  //   path: "#",
-  //   title: 'Media',
-  // }
+  {
+    icon: Star,
+    path: paths.adminDashboard.reviews,
+    title: 'Reviews',
+  },
+
 ];
 
 export interface Item {
   icon: React.ComponentType<{ className?: string }>;
-  path: string;
+  path: string | ((userName: string) => string);
   title: string;
   newTab?: boolean;
   active?: boolean;
@@ -172,7 +127,10 @@ export function SidebarMenu() {
 
   ].map((item) => ({
     ...item,
-    active: item.path === pathname
+    active: 
+     typeof item.path === 'string'
+      ? pathname === item.path
+      : item.path(user?.first_name as string + user?.last_name as string) === pathname
   }));
 
   return (
@@ -192,7 +150,11 @@ export function SidebarMenu() {
                 )}
               >
                 <Link
-                  to={item.path || ''}
+                  to={
+                    typeof item.path === 'function'
+                      ? item.path(user?.first_name as string + user?.last_name as string)
+                      : item.path
+                      || ''}
                   {...(item.newTab
                     ? { target: '_blank', rel: 'noopener noreferrer' }
                     : {})}

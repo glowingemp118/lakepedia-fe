@@ -81,8 +81,6 @@ const Settings: FC<PageProps> = ({ businessSettings }) => {
     notify_messages: businessSettings?.notifications?.notify_messages || false,
     notify_new_photo_on_followed_lake:
       businessSettings?.notifications?.notify_new_photo_on_followed_lake || false,
-    // notify_trip_suggestions:
-    //   businessSettings?.notifications?.notify_trip_suggestions || false,
     notify_announcements: businessSettings?.notifications?.notify_announcements || true,
     notify_mentions: businessSettings?.notifications?.notify_mentions || false,
     booking_inquiry: businessSettings?.notifications?.booking_inquiry || false,

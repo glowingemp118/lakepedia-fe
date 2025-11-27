@@ -15,6 +15,8 @@ import QuickAddEditTripModal from './quick-add-edit-trip-modal';
 import ConfirmDialog from '@/components/comfirm-dialog/confirm-dialog';
 import { toast } from 'react-toastify';
 import { useDeleteTripMutation } from '@/store/Reducer/trip';
+import { useSelector } from 'react-redux';
+import { selectUser } from '@/store/slices/userSlice';
 
 
 interface TripItem {
@@ -63,12 +65,13 @@ const Projects2: FC<PageProps> = ({ trips }) => {
 
   const confirm = useBoolean();
 
+  const user = useSelector(selectUser)
+
   const [currentTrip, setCurrentTrip] = useState<any>(null);
 
   const [activeView, setActiveView] = useState<'cards' | 'list'>('cards');
 
   const [deleteTrip, { isLoading: deleteTripLoading }] = useDeleteTripMutation();
-
 
   useEffect(() => {
     if (state && state.from === 'todo') {
@@ -94,7 +97,11 @@ const Projects2: FC<PageProps> = ({ trips }) => {
     <Card
       key={trip.id}
       className="p-7.5 hover:border-blue-400 border transition-all duration-300 cursor-pointer"
-      onClick={() => { navigate(paths.travelerDashboard.tripDetail(trip.id)) }}
+      onClick={() => {
+        navigate(paths.travelerDashboard.tripDetail(
+          user?.first_name as string + user?.last_name as string
+          , trip.id))
+      }}
     >
       <div className="flex flex-col gap-2">
         <div className='flex justify-between items-center'>
@@ -178,7 +185,9 @@ const Projects2: FC<PageProps> = ({ trips }) => {
     <div
       key={trip.id}
       className="flex flex-col lg:flex-row lg:items-center justify-between rounded-xl p-5 hover:border-blue-400 border transition-all duration-300 cursor-pointer"
-      onClick={() => navigate(paths.travelerDashboard.tripDetail(trip.id))}
+      onClick={() => navigate(paths.travelerDashboard.tripDetail(
+        user?.first_name as string + user?.last_name as string
+        ,trip.id))}
     >
       {/* Left Side — Trip Info */}
       <div className="flex flex-col gap-1 w-full lg:w-2/3">

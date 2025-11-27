@@ -1,5 +1,10 @@
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router";
 
 const HomeView = () => {
+
+  const navigate = useNavigate();
+
   return (
     <div className=" w-full flex flex-col items-center justify-center min-h-screen  text-center px-4 ">
       <h1 className="text-5xl md:text-6xl font-bold mb-4">
@@ -11,6 +16,9 @@ const HomeView = () => {
       <div className="animate-bounce text-blue-700 text-lg font-medium">
         Stay tuned!
       </div>
+      <Button className="mt-10" variant={"primary"} size={"lg"} onClick={() => { navigate('/signin'); }}>
+        SignIn
+      </Button>
     </div>
   );
 };

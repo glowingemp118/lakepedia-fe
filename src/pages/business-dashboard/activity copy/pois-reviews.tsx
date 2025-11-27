@@ -16,10 +16,10 @@ import { CalendarDays, Edit, Tag, Trash2 } from "lucide-react";
 import { AnimatePresence } from "motion/react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import QuickEditLakeReviewModal from "./quick-edit-lake-review-modal";
+import QuickEditPOIReviewModal from "./quick-edit-pois-review-modal";
 
 
-const LakeReviews = () => {
+const POIsReview = () => {
 
   const user = useSelector(selectUser);
 
@@ -33,18 +33,16 @@ const LakeReviews = () => {
     {
       id: 1,
       country: "United State",
-      title: "Beautiful Lake View",
+      title: "Beautiful POI View",
       description: "Lorem ipsum dolor sit amet consectetur. Aliquet imperdiet metus eu purus aliquam consequat dictum tincidunt. Placerat elementum et sed at egestas. Lorem ipsum dolor sit amet consectetur. Aliquet imperdiet metus eu purus aliquam consequat dictum tincidunt. Placerat elementum et sed at egestas.",
       rating: 4,
-      activityRating: 5,
-
       date: "2025-03-25",
       tags: ["Clean Water", "Family Friendly"],
       photos: [
-        "/media/images/600x600/lake1.jpg",
-        "/media/images/600x600/lake2.jpg",
-        "/media/images/600x600/lake1.jpg",
-        "/media/images/600x600/lake2.jpg",
+        "/media/images/rakaposhi.jpg",
+        "/media/images/eagles-nest.jpg",
+        "/media/images/passu-cones.webp",
+        "/media/images/altit-fort.jpg",
       ]
     },
     {
@@ -57,11 +55,11 @@ const LakeReviews = () => {
       date: "2025-03-25",
       tags: ["Clean Water", "Family Friendly"],
       photos: [
-        "/media/images/600x600/lake1.jpg",
-        "/media/images/600x600/lake2.jpg",
-        "/media/images/600x600/lake1.jpg",
-        "/media/images/600x600/lake2.jpg",
-      ],
+        "/media/images/rakaposhi.jpg",
+        "/media/images/eagles-nest.jpg",
+        "/media/images/passu-cones.webp",
+        "/media/images/altit-fort.jpg",
+      ]
     },
   ]);
 
@@ -76,7 +74,7 @@ const LakeReviews = () => {
 
   // Handle delete
   const handleDelete = () => {
-    // setReviews((prev) => prev.filter((r) => r.id !== currentReview));
+    setReviews((prev) => prev.filter((r) => r.id !== currentReview));
     confirm.onFalse();
   };
   // const handleShareReview = () => {
@@ -85,7 +83,7 @@ const LakeReviews = () => {
   // }
 
   const onDeleteClick = (reviewId: number) => {
-    // setCurrentReview(reviewId);
+    setCurrentReview(reviewId);
     confirm.onTrue();
   }
   return (
@@ -175,10 +173,6 @@ const LakeReviews = () => {
                           ))}
                         </p>
                       </div>
-                      <div className="border rounded-2xl px-5 flex justify-center gap-2 items-center w-fit md:py-1 mb-4 text-sm whitespace-nowrap ">
-                        Rating to activities: <Rating rating={review.activityRating} />
-                      </div>
-
                     </div>
                     <ScrollBar orientation="horizontal" />
                   </ScrollArea>
@@ -205,16 +199,13 @@ const LakeReviews = () => {
                     <ScrollBar orientation="horizontal" />
                   </ScrollArea>
                 </div>
-
-
-
               </CardContent>
 
             </Card>
           </motion.div >
         ))}
       </AnimatePresence >
-      <QuickEditLakeReviewModal currentLakeReview={currentReview} open={edit.value} onClose={() => {
+      <QuickEditPOIReviewModal currentPOIsReview={currentReview} open={edit.value} onClose={() => {
         edit.onFalse();
         setCurrentReview(null);
       }} />
@@ -237,4 +228,4 @@ const LakeReviews = () => {
   )
 }
 
-export default LakeReviews
+export default POIsReview

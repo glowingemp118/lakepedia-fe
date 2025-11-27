@@ -3,6 +3,9 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
+import { paths } from '@/components/layouts/layout-3/components/paths';
+import { useSelector } from 'react-redux';
+import { selectUser } from '@/store/slices/userSlice';
 
 interface IPlanItem {
   total: string;
@@ -13,6 +16,8 @@ type IPlanItems = Array<IPlanItem>;
 const Plan = () => {
 
   const navigate = useNavigate();
+
+  const user=useSelector(selectUser);
 
   const statistics: IPlanItems = [
     {
@@ -47,7 +52,7 @@ const Plan = () => {
   };
 
   const handleUpgradePlan = () => {
-    navigate('/business-dashboard/upgrade-subscription');
+    navigate(paths.businessDashboard.upgradeSubscription(user?.first_name as string + user?.last_name as string));
   }
 
   return (

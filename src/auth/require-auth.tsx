@@ -27,7 +27,7 @@ export const RequireAuth: FC<RequireAuthProps> = ({ role }) => {
     return (
       <Navigate
         to={
-          `/${role === "admin" ? "admin/" : ""}signin${role === "traveler" || role === "business"
+          `/${role === "admin" ? "admin/" : ""}login${role === "traveler" || role === "business"
             ? ``
             : ""
           }`

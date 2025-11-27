@@ -107,7 +107,9 @@ export function AdminSignInPage() {
       const res = await login({ email: values.email, password: values.password });
       if (!res?.error) {
 
-      toast.success('Signed in successfully!');
+      toast.success('Signed in successfully!',{
+        autoClose:1500
+      });
 
       dispatch(setUser(res?.data?.data?.user));
 

@@ -1,3 +1,4 @@
+import { paths } from '@/components/layouts/layout-3/components/paths';
 import RHFTextField from '@/components/rhf/rhf-textfield';
 import { Alert, AlertIcon, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
@@ -90,14 +91,14 @@ export function ChangeEmailPage() {
 
       let response = await updateProfile({
         otp: codeInputs.join(""),
-        email:values.email,
+        email: values.email,
         key: "email"
       });
 
 
       if (!response?.error) {
         toast.success("Email changed successfully");
-        navigate('/auth/signin?user=traveler');
+        navigate(`${paths.signin}?user=traveler`);
         dispatch(logout());
       }
 
@@ -185,7 +186,7 @@ export function ChangeEmailPage() {
 
           <div className="text-center text-sm">
             <Link
-              to="/auth/signin"
+              to={paths.signin}
               className="inline-flex items-center gap-2 text-sm font-semibold text-accent-foreground hover:underline hover:underline-offset-2"
             >
               <MoveLeft className="size-3.5 opacity-70" /> Back to Sign In

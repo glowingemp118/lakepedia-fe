@@ -59,7 +59,7 @@ const BusinessReviews = () => {
 
   // Handle delete
   const handleDelete = () => {
-    setReviews((prev) => prev.filter((r) => r.id !== currentReview));
+    // setReviews((prev) => prev.filter((r) => r.id !== currentReview));
     confirm.onFalse();
   };
   // const handleShareReview = () => {
@@ -68,7 +68,7 @@ const BusinessReviews = () => {
   // }
 
   const onDeleteClick = (reviewId: number) => {
-    setCurrentReview(reviewId);
+    // setCurrentReview(reviewId);
     confirm.onTrue();
   }
   return (

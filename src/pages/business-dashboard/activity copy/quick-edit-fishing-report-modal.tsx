@@ -1,7 +1,8 @@
 import RHFDatePicker from '@/components/rhf/rhf-date';
+import RhfMultiCheckbox from '@/components/rhf/rhf-multi-checkbox';
 import RhfMultipleImages from '@/components/rhf/rhf-multiple-images2';
-import RHFTag from '@/components/rhf/rhf-tag';
 import RHFTextArea from '@/components/rhf/rhf-textarea';
+import RHFTextField from '@/components/rhf/rhf-textfield';
 import { Button } from '@/components/ui/button';
 import DialogContent, { Dialog, DialogClose, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Form, FormLabel, FormMessage } from '@/components/ui/form';
@@ -12,29 +13,36 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 interface QuickFishingReportModalProps {
-    currentPOIsReview: any;
+    currentFishingReport: any;
     open: boolean;
     onClose: () => void;
 }
-const QuickEditPOIReviewModal: FC<QuickFishingReportModalProps> = ({ currentPOIsReview, open, onClose }) => {
+const QuickFishingReportModal: FC<QuickFishingReportModalProps> = ({ currentFishingReport, open, onClose }) => {
 
     const defaultValues = useMemo(() => ({
-        title: currentPOIsReview?.title || '',
-        description: currentPOIsReview?.description || '',
-        date: currentPOIsReview?.date ? new Date(currentPOIsReview?.date) : new Date(),
-        rating: currentPOIsReview?.rating || 0,
-        activityRating: currentPOIsReview?.activityRating || 0,
-        tags: currentPOIsReview?.tags || [],
-        photos: currentPOIsReview?.photos || [],
-    }), [currentPOIsReview]);
+        title: currentFishingReport?.title || '',
+        description: currentFishingReport?.description || '',
+        date: currentFishingReport?.date ? new Date(currentFishingReport?.date) : new Date(),
+        spot: currentFishingReport?.spot || '',
+        fishCount: parseInt(currentFishingReport?.count) || 0,
+        rating: currentFishingReport?.rating || 0,
+        fishSpecies: currentFishingReport?.fishSpecies || [],
+        method: currentFishingReport?.method || "",
+        photos: currentFishingReport?.photos || [],
+        lure: currentFishingReport?.lure || [],
+
+    }), [currentFishingReport]);
 
     const schema = z.object({
         title: z.string().min(3, "Title must be at least 3 characters").max(100),
         description: z.string().min(10, "Description must be at least 10 characters").max(1000),
-        date: z.date().min(new Date(0), "Date is required"),
+        date: z.date().min(1, "Date is required"),
+        spot: z.string().min(3, "Spot must be at least 3 characters").max(100),
+        fishCount: z.number().min(0, "Fish count cannot be negative"),
         rating: z.number().min(1, "Rating must be at least 1").max(5, "Rating cannot exceed 5"),
-        activityRating: z.number().min(1, "Activity Rating must be at least 1").max(5, "Activity Rating cannot exceed 5"),
-        tags: z.array(z.string().min(1, "Tags cannot be empty")),
+        fishSpecies: z.array(z.string().min(1, "Fish species cannot be empty")),
+        method: z.string().min(1, "Method cannot be empty"),
+        lure: z.string().min(1, "Lure cannot be empty"),
         photos: z.array(z.union([
             z.instanceof(File),
             z.string()
@@ -60,13 +68,12 @@ const QuickEditPOIReviewModal: FC<QuickFishingReportModalProps> = ({ currentPOIs
 
     return (
         <Dialog open={open} onOpenChange={onClose}>
-            <DialogContent className='overflow-y-auto max-h-[95vh]'>
+            <DialogContent className="max-h-[95vh] overflow-y-auto ">
                 <DialogHeader>
-                    <DialogTitle>Edit POIs Review</DialogTitle>
+                    <DialogTitle>Edit Fishing Report</DialogTitle>
                 </DialogHeader>
                 <Form {...form}>
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-
 
                         <RhfMultipleImages name="photos" label="Upload Photos" />
 
@@ -91,25 +98,21 @@ const QuickEditPOIReviewModal: FC<QuickFishingReportModalProps> = ({ currentPOIs
 
                         <RHFDatePicker name="date" label="When did you go?" placeholder="Select date" />
 
-                        <div className='flex flex-col gap-2'>
-                            <FormLabel>How would you rate your Activity?</FormLabel>
-                            <div>
-                                {[1, 2, 3, 4, 5].map((num) => (
+                        <RHFTextField name="spot" label="Spot of fishing spot" placeholder="Enter fishing spot" />
 
-                                    <button
-                                        key={num}
-                                        type="button"
-                                        className={`text-xl cursor-pointer ${num <= form.watch("activityRating") ? 'text-yellow-400' : 'text-gray-300'
-                                            }`}
-                                        onClick={() => { form.setValue("activityRating", num) }}
-                                    >
-                                        <Star className={`w-5 h-5 ${num <= form.watch("activityRating") ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'} `} />
-                                    </button>
-                                ))}
-                            </div>
-                            <FormMessage />
-                        </div>
-                        <RHFTag name="tags" label="Tags" placeholder="Type and press Enter..." />
+                        <RhfMultiCheckbox name="fishSpecies" label="Fish Species" options={[
+                            { label: 'Salmon', value: 'salmon' },
+                            { label: 'Tuna', value: 'tuna' },
+                            { label: 'Trout', value: 'trout' },
+                            { label: 'Cod', value: 'cod' },
+                            { label: 'Mackerel', value: 'mackerel' },
+                        ]} />
+
+                        <RHFTextField name="fishCount" label="Count and size of fish caught" type="number" placeholder="Enter Count and size" />
+
+                        <RHFTextField name='method' label='Fishing method' placeholder='Enter Fishing method' />
+
+                        <RHFTextField name='lure' label='Lure/Bait used' placeholder='Enter Lure/Bait ' />
 
                         <RHFTextArea name="description" label="Write your review" placeholder="Share your experience..." textarea />
 
@@ -126,4 +129,4 @@ const QuickEditPOIReviewModal: FC<QuickFishingReportModalProps> = ({ currentPOIs
     )
 }
 
-export default QuickEditPOIReviewModal
+export default QuickFishingReportModal

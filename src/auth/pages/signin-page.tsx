@@ -14,13 +14,13 @@ import { Input } from '@/components/ui/input';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useBoolean } from '@/hooks/use-boolean';
 import { useLoginMutation, useSocailLoginMutation } from '@/store/Reducer/auth';
-import { setToken, setUser } from '@/store/slices/userSlice';
+import { selectUser, setToken, setUser } from '@/store/slices/userSlice';
 import { useAuth0 } from "@auth0/auth0-react";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AlertCircle, Check, Eye, EyeOff, LoaderCircleIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { getSigninSchema, SigninSchemaType } from '../forms/signin-schema';
 
@@ -46,13 +46,15 @@ export function SignInPage() {
 
   const { loginWithRedirect, user, isAuthenticated } = useAuth0();
 
+  const userData=useSelector(selectUser);
+
 
   // useEffect(() => {
 
   //   const pathname = window.location.pathname;
 
   //   const userType = pathname.includes('?user=business') ? 'business' : 'traveler';
-    
+
   //   if (userType === 'traveler' || userType === 'business') {
   //     setCurrentTab(userType);
   //   }
@@ -60,11 +62,11 @@ export function SignInPage() {
 
   // useEffect(() => {
   //   if (currentTab) {
-      
+
   //     const pathname = currentTab === "business" ? "/signin?user=business" : "/signin?user-traveler";
 
   //     navigate(pathname, { replace: true });
-     
+
   //   }
   // }, [currentTab, navigate]);
 
@@ -120,9 +122,9 @@ export function SignInPage() {
         localStorage.removeItem("currentTab");
 
         if (userData.role === "business") {
-          navigate(paths.businessDashboard.root);
+          navigate(paths.businessDashboard.root(userData.first_name + userData.last_name));
         } else {
-          navigate(paths.travelerDashboard.root);
+          navigate(paths.travelerDashboard.root(userData.first_name + userData.last_name));
         }
       }
     });
@@ -143,7 +145,7 @@ export function SignInPage() {
 
     if (pwdReset === 'success') {
       setSuccessMessage(
-        'Your password has been successfully reset. You can now sign in with your new password.',
+        'Your password has been successfully reset. You can now login with your new password.',
       );
     }
 
@@ -219,11 +221,17 @@ export function SignInPage() {
         dispatch(setUser(response?.data?.data?.user));
 
         dispatch(setToken(response?.data?.data?.token));
-        
 
-        const nextPath = searchParams.get('next') || (response?.data?.data?.user?.role === 'traveler' ? paths.travelerDashboard.root : paths.businessDashboard.root);
 
-        navigate(nextPath);
+        if ( response?.data?.data?.user) {
+
+          const nextPath = searchParams.get('next') ||
+            (response?.data?.data?.user.role === 'traveler' ?
+              paths.travelerDashboard.root(response?.data?.data?.user.first_name as string + response?.data?.data?.user.last_name as string)
+              : paths.businessDashboard.root(response?.data?.data?.user.first_name as string + response?.data?.data?.user.last_name as string));
+
+          navigate(nextPath);
+        }
       }
 
     } catch (err) {
@@ -249,7 +257,7 @@ export function SignInPage() {
         </TabsList>
       </Tabs>
       <div className="text-center space-y-1 pb-3">
-        <h1 className="text-2xl font-semibold tracking-tight">Sign In {currentTab === 'traveler' ? 'Traveler' : 'Business'}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Login {currentTab === 'traveler' ? 'Traveler' : 'Business'}</h1>
         <p className="text-sm text-muted-foreground">
           Welcome back! Log in with your credentials.
         </p>
@@ -429,7 +437,7 @@ export function SignInPage() {
                 <LoaderCircleIcon className="h-4 w-4 animate-spin" /> Loading...
               </span>
             ) : (
-              'Sign In'
+              'Login'
             )}
           </Button>
 

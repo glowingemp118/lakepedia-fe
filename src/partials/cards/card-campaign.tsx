@@ -68,9 +68,9 @@ const CardCampaign = ({
     // e.preventDefault();
     if (user?.role as string === "traveler" && e.currentTarget.id === "card-campaign") {
 
-      navigate(paths.travelerDashboard.tripDetail(id));
+      navigate(paths.travelerDashboard.tripDetail(user?.first_name as string + user?.last_name as string, id));
     } else {
-      navigate(paths.businessDashboard.lakeDetail(id));
+      navigate(paths.businessDashboard.lakeDetail(user?.first_name as string + user?.last_name as string, id));
     }
   }
 

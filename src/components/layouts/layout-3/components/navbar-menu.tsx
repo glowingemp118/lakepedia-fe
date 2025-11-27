@@ -1,3 +1,4 @@
+
 import {
   Menubar,
   MenubarContent,
@@ -57,9 +58,9 @@ export function NavbarMenu() {
     navbarMenu = MENU_SIDEBAR?.[5];
   } else {
     // navbarMenu = MENU_SIDEBAR?.[3];
-    navbarMenu = user?.role==="traveler" ? { ...MENU_SIDEBAR?.[3], children: TravelerSidebar } :
-      user?.role==="business" ? { ...MENU_SIDEBAR?.[3], children: BusinessSidebar } :
-        user?.role==="admin" ? { ...MENU_SIDEBAR?.[3], children: AdminSidebar } : MENU_SIDEBAR?.[3];
+    navbarMenu = user?.role === "traveler" ? { ...MENU_SIDEBAR?.[3], children: TravelerSidebar } :
+      user?.role === "business" ? { ...MENU_SIDEBAR?.[3], children: BusinessSidebar } :
+        user?.role === "admin" ? { ...MENU_SIDEBAR?.[3], children: AdminSidebar } : MENU_SIDEBAR?.[3];
   }
 
 
@@ -82,7 +83,12 @@ export function NavbarMenu() {
                 'data-[state=open]:bg-transparent data-[state=open]:text-mono',
                 'data-[here=true]:text-mono data-[here=true]:border-mono',
               )}
-              data-active={isActive(item.path) || undefined}
+              data-active={isActive(
+                typeof item.path === 'function'
+                  ? item.path(user?.first_name as string + user?.last_name as string)
+                  : item.path
+                  || ''
+              ) || undefined}
               data-here={hasActiveChild(item.children) || undefined}
             >
               {item.title}
@@ -107,15 +113,29 @@ export function NavbarMenu() {
               )}
             >
               <Link
-                to={item.path || ''}
-                data-active={isActive(item.path) || undefined}
+                to={
+                  typeof item.path === 'function'
+                    ? item.path(user?.first_name as string + user?.last_name as string)
+                    : item.path
+                    || ''}
+                data-active={isActive(
+                  typeof item.path === 'function'
+                    ? item.path(user?.first_name as string + user?.last_name as string)
+                    : item.path
+                    || ''
+                ) || undefined}
                 data-here={hasActiveChild(item.children) || undefined}
-                className={`${isActive(item.path) ? "!border-b-3 !border-b-primary font-bold text-primary text-[16px] transition-all " : ''}`}
+                className={`${isActive(
+                  typeof item.path === 'function'
+                    ? item.path(user?.first_name as string + user?.last_name as string)
+                    : item.path
+                    || ''
+                ) ? "!border-b-3 !border-b-primary font-bold text-primary text-[16px] transition-all " : ''}`}
               >
                 {item.title}
               </Link>
             </MenubarTrigger>
-          </MenubarMenu>
+          </MenubarMenu >
         );
       }
     });
@@ -127,7 +147,12 @@ export function NavbarMenu() {
         return (
           <MenubarSub key={index}>
             <MenubarSubTrigger
-              data-active={isActive(item.path) || undefined}
+              data-active={isActive(
+                typeof item.path === 'function'
+                  ? item.path(user?.first_name as string + user?.last_name as string)
+                  : item.path
+                  || ''
+              ) || undefined}
               data-here={hasActiveChild(item.children) || undefined}
             >
               <span>{item.title}</span>
@@ -142,10 +167,19 @@ export function NavbarMenu() {
           <MenubarItem
             key={index}
             asChild
-            data-active={isActive(item.path) || undefined}
+            data-active={isActive(
+              typeof item.path === 'function'
+                ? item.path(user?.first_name as string + user?.last_name as string)
+                : item.path
+                || ''
+            ) || undefined}
             data-here={hasActiveChild(item.children) || undefined}
           >
-            <Link to={item.path || ''}>{item.title}</Link>
+            <Link to={
+              typeof item.path === 'function'
+                ? item.path(user?.first_name as string + user?.last_name as string)
+                : item.path
+              || ''}>{item.title}</Link>
           </MenubarItem>
         );
       }

@@ -6,10 +6,11 @@ import { authRoutes } from './auth-routes';
  * This component is mounted at /auth/* in the main application router.
  */
 export function AuthRouting() {
+  console.log("Auth routing loaded");
   return (
     <Routes>
       {/* Index route to redirect to sign-in */}
-      <Route index element={<Navigate to="signin" replace />} />
+      <Route index element={<Navigate to="/signin" replace />} />
 
       {authRoutes.map((route) => {
         // Extract auth/ from the path to avoid double prefixing

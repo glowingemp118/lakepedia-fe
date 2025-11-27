@@ -53,7 +53,7 @@ const FishingReports = () => {
             rating: 5,
             date: "2025-03-25",
             spot: "Bridge Bay",
-            fishSpecies: ["salmon"],
+            fishSpecies: ["salmon", "cod"],
             count: 2,
             lure: "Apex Lures",
             photos: [
@@ -76,7 +76,7 @@ const FishingReports = () => {
 
     // Handle delete
     const handleDelete = () => {
-        // setReviews((prev) => prev.filter((r) => r.id !== currentReview));
+        setReviews((prev) => prev.filter((r) => r.id !== currentReview));
         confirm.onFalse();
     };
     // const handleShareReview = () => {
@@ -85,7 +85,7 @@ const FishingReports = () => {
     // }
 
     const onDeleteClick = (reviewId: number) => {
-        // setCurrentReview(reviewId);
+        setCurrentReview(reviewId);
         confirm.onTrue();
     }
     return (

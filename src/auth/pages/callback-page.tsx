@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/auth/context/auth-context';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { paths } from '@/components/layouts/layout-3/components/paths';
 
 /**
  * Callback page for OAuth authentication redirects.
@@ -22,7 +23,7 @@ export function CallbackPage() {
       // After a delay, redirect to signin page with error params
       setTimeout(() => {
         navigate(
-          `/auth/signin?error=${errorParam}&error_description=${encodeURIComponent(errorDescription || 'Authentication failed')}`,
+          `${paths.signin}?error=${errorParam}&error_description=${encodeURIComponent(errorDescription || 'Authentication failed')}`,
         );
       }, 1500);
       return;
