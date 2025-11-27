@@ -82,7 +82,10 @@ const ContactInformation: FC<PageProps> = ({ profileData }) => {
             // methods.reset(defaultValues);
         }
     }
-
+    const getStates = (country: string) => {
+        const states = [...stateData.filter((item) => item.country === country).map((item) => item.region)];
+        return states;
+    }
 
     return (
         <Card >
@@ -134,7 +137,7 @@ const ContactInformation: FC<PageProps> = ({ profileData }) => {
                                     Address <span className='text-red-500'>*</span>
                                 </p>
                             </div>
-                          
+
                             <div className='md:col-span-8 col-span-12 mb-4'>
                                 <div className='grid md:grid-cols-2 grid-cols-1 gap-2'>
 
@@ -161,8 +164,8 @@ const ContactInformation: FC<PageProps> = ({ profileData }) => {
                                             }
 
                                         >
-                                            {stateData?.map((state) => {
-                                                return <SelectItem key={state.region} value={state.region}>{state.region}</SelectItem>
+                                            {getStates(methods.watch("country") || "").map((statey) => {
+                                                return <SelectItem key={statey} value={statey}>{statey}</SelectItem>
 
                                             })
                                             }
