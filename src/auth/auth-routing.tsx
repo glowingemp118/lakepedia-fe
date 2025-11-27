@@ -10,7 +10,7 @@ export function AuthRouting() {
   return (
     <Routes>
       {/* Index route to redirect to sign-in */}
-      <Route index element={<Navigate to="/signin" replace />} />
+      <Route index element={<Navigate to="/login" replace />} />
 
       {authRoutes.map((route) => {
         // Extract auth/ from the path to avoid double prefixing

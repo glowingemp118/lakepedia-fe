@@ -63,7 +63,7 @@ export function SignInPage() {
   // useEffect(() => {
   //   if (currentTab) {
 
-  //     const pathname = currentTab === "business" ? "/signin?user=business" : "/signin?user-traveler";
+  //     const pathname = currentTab === "business" ? "/login?user=business" : "/login?user-traveler";
 
   //     navigate(pathname, { replace: true });
 

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { toAbsoluteUrl } from '@/lib/helpers';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { paths } from '@/components/layouts/layout-3/components/paths';
 
 const TwoFactorAuth = () => {
   const [codeInputs, setCodeInputs] = useState(Array(6).fill(''));
@@ -70,7 +71,7 @@ const TwoFactorAuth = () => {
       <Button className="grow">Continue</Button>
 
       <Link
-        to="/auth/signin"
+        to={paths.signin}
         className="gap-2.5 flex items-center justify-center text-sm font-semibold text-foreground hover:text-primary"
       >
         <MoveLeft className="size-3.5 opacity-70" />

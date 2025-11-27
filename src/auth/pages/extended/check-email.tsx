@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { toAbsoluteUrl } from '@/lib/helpers';
+import { paths } from '@/components/layouts/layout-3/components/paths';
 
 const CheckEmail = () => {
   return (
@@ -43,7 +44,7 @@ const CheckEmail = () => {
           Didn’t receive an email?
         </span>
         <Link
-          to="/auth/signin"
+          to={paths.signin}
           className="text-sm font-semibold text-foreground hover:text-primary"
         >
           Resend

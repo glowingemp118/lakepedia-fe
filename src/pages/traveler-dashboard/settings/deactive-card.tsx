@@ -1,4 +1,5 @@
 import ConfirmDialog from "@/components/comfirm-dialog/confirm-dialog"
+import { paths } from "@/components/layouts/layout-3/components/paths"
 import RhfCheckbox from "@/components/rhf/rhf-checkbox"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -42,7 +43,7 @@ const DeactiveCard = () => {
         if (!response.error) {
             toast.success("Account deactivated successfully");
             open.onTrue();
-            navigate('/auth/signin?user=traveler');
+            navigate(`${paths.signin}?user=traveler`);
         }
     }
 

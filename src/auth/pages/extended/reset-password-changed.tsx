@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { toAbsoluteUrl } from '@/lib/helpers';
 
 import { Button } from '@/components/ui/button';
+import { paths } from '@/components/layouts/layout-3/components/paths';
 
 const ResetPasswordChanged = () => {
   const settings={
@@ -36,7 +37,7 @@ const ResetPasswordChanged = () => {
         <Link
           to={
             settings?.layout === 'auth-branded'
-              ? '/auth/signin'
+              ? paths.signin
               : '/auth/classic/signin'
           }
         >

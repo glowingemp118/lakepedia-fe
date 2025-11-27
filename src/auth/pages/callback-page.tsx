@@ -71,7 +71,7 @@ export function CallbackPage() {
         // Redirect to login page after showing error
         setTimeout(() => {
           navigate(
-            '/auth/signin?error=auth_callback_error&error_description=Failed to complete authentication',
+            `${paths.signin}?error=auth_callback_error&error_description=Failed to complete authentication`,
           );
         }, 1500);
       }

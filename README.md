@@ -79,7 +79,7 @@ Start the development server:
 npm run dev
 ```
 
-Visit `http://localhost:5173/auth/signin` to test the login functionality.
+Visit `http://localhost:5173/login` to test the login functionality.
 
 ### Testing Login
 

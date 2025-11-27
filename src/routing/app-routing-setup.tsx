@@ -84,28 +84,28 @@ export function AppRoutingSetup() {
 
         <Route element={<RequireAuth role={"business"} />}>
 
-          <Route path="/members/business/:businessUserName" element={<BusinessActivityView />} />
+          <Route path="members/business/:businessUserName" element={<BusinessActivityView />} />
 
-          <Route path="/members/business/:businessUserName/settings" element={<BusinessSettingsView />} />
+          <Route path="members/business/:businessUserName/settings" element={<BusinessSettingsView />} />
 
-          <Route path="/members/business/:businessUserName/activity" element={<BusinessActivityView />} />
+          <Route path="members/business/:businessUserName/activity" element={<BusinessActivityView />} />
           {/* Photos */}
-          <Route path="/members/business/:businessUserName/lakes" element={<LakesView />} />
+          <Route path="members/business/:businessUserName/lakes" element={<LakesView />} />
 
-          <Route path='/members/business/:businessUserName/lakes/create' element={<CreateLakePage />} />
+          <Route path='members/business/:businessUserName/lakes/create' element={<CreateLakePage />} />
 
-          <Route path="/members/business/:businessUserName/lakes/:id" element={<LakeDetailView />} />
+          <Route path="members/business/:businessUserName/lakes/:id" element={<LakeDetailView />} />
 
           {/* Reviews */}
-          <Route path="/members/business/:businessUserName/subscription" element={<SubscriptionView />} />
+          <Route path="members/business/:businessUserName/subscription" element={<SubscriptionView />} />
 
-          <Route path="/members/business/:businessUserName/upgrade-subscription" element={<UpgradeSubscriptionView />} />
+          <Route path="members/business/:businessUserName/upgrade-subscription" element={<UpgradeSubscriptionView />} />
 
           {/* <Route path="/business-dashboard/edit-business" element={<BusinessAccountProfilePage />} /> */}
 
-          <Route path="/members/business/:businessUserName/stats" element={<StatsView />} />
+          <Route path="members/business/:businessUserName/stats" element={<StatsView />} />
 
-          <Route path="/members/business/:businessUserName/profile" element={<ProfileView />} />
+          <Route path="members/business/:businessUserName/profile" element={<ProfileView />} />
         </Route>
 
         <Route element={<RequireAuth role={"admin"} />}>
@@ -158,8 +158,8 @@ export function AppRoutingSetup() {
 
       {/* <Route element={<Layout3 />}></Route> */}
       {/* <Route path="/*" element={<AuthRouting />} /> */}
-      {/* <Route path="error/*" element={<ErrorRouting />} /> */}
-      {/* <Route path="*" element={<Navigate to="/error/404" />} /> */}
+      <Route path="error/*" element={<ErrorRouting />} />
+      <Route path="*" element={<Navigate to="/error/404" />} />
     </Routes>
   );
 }

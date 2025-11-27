@@ -26,7 +26,7 @@ export const authRoutes: RouteObject[] = [
         element: <SignInPage />,
       },
       {
-        path: 'admin/signin',
+        path: 'admin/login',
         element: <AdminSignInPage />,
       },
       {

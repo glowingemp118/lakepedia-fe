@@ -1,3 +1,4 @@
+import { paths } from "@/components/layouts/layout-3/components/paths";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router";
 
@@ -16,7 +17,7 @@ const HomeView = () => {
       <div className="animate-bounce text-blue-700 text-lg font-medium">
         Stay tuned!
       </div>
-      <Button className="mt-10" variant={"primary"} size={"lg"} onClick={() => { navigate('/signin'); }}>
+      <Button className="mt-10" variant={"primary"} size={"lg"} onClick={() => { navigate(paths.signin); }}>
         SignIn
       </Button>
     </div>

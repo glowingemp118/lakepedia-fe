@@ -148,7 +148,7 @@ export function ChangePasswordPage() {
 
         <div className="text-center text-sm">
           <span className="text-muted-foreground">Remember your password?</span>{' '}
-          <Link to="/auth/signin" className="text-primary hover:underline">
+          <Link to={paths.signin} className="text-primary hover:underline">
             Sign In
           </Link>
         </div>
@@ -266,7 +266,7 @@ export function ChangePasswordPage() {
           </Button>
 
           <div className="text-center text-sm">
-            <Link to="/auth/signin" className="text-primary hover:underline">
+            <Link to={paths.signin} className="text-primary hover:underline">
               Back to Sign In
             </Link>
           </div>

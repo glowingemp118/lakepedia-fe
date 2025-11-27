@@ -8,6 +8,7 @@ import {
 import type { RootState } from './store';
 import { toast } from 'react-toastify';
 import { hideLoader, showLoader } from './slices/loaderSlice';
+import { paths } from '@/components/layouts/layout-3/components/paths';
 
 // Custom base query wrapper
 export const customFetchBaseQuery = (): BaseQueryFn<
@@ -56,7 +57,7 @@ export const customFetchBaseQuery = (): BaseQueryFn<
       localStorage.clear();
 
       setTimeout(() => {
-        window.location.href = '/signin?user=traveler';
+        window.location.href = `/${paths.signin}?user=traveler`;
       }, 1500);
     }
 
