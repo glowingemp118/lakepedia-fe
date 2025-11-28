@@ -13,7 +13,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useRegisterMutation, useSocailLoginMutation } from '@/store/Reducer/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AlertCircle, Check, Eye, EyeOff, LoaderCircleIcon } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { getSignupSchema, SignupSchemaType } from '../forms/signup-schema';
@@ -31,6 +31,8 @@ export function SignUpPage() {
   const navigate = useNavigate();
 
   const loading = useBoolean();
+
+  const hasLoggedInRef = useRef(false);
 
   const [passwordVisible, setPasswordVisible] = useState(false);
 
@@ -70,55 +72,16 @@ export function SignUpPage() {
   //   }
   // }, [currentTab, navigate]);
 
-
-  useEffect(() => {
-    if (!user || !isAuthenticated) return;
-
-    const currentSocialTab = localStorage.getItem("currentSocialTab");
-
-    const savedRole = localStorage.getItem("currentTab");
-
-    if (!currentSocialTab || !savedRole) return;
-
-    setCurrentTab(savedRole);
-
-    let userData: any = null;
-
-    if (currentSocialTab === "google") {
-      userData = {
-        first_name: user.name,
-        last_name: user.family_name,
-        email: user.email,
-        // image: user.picture,
-        role: savedRole === "traveler" ? "traveler" : "business",
-        provider: user?.sub?.split("|")?.[0]?.split("-")?.[0],
-        socialId: user?.sub?.split("|")?.[1],
-      };
-    }
-
-    if (currentSocialTab === "facebook") {
-
-      userData = {
-        first_name: user.name,
-        last_name: user.nickname,
-        email: user.email,
-        // image: user?.picture,
-        role: savedRole === "traveler" ? "traveler" : "business",
-        provider: user?.sub?.split("|")?.[0],
-        socialId: user?.sub?.split("|")?.[1],
-      };
-    }
-
-    if (!userData) return;
-
-    let isMounted = true;
+  const socialLoginFun = (userData: any) => {
 
     loading.onTrue();
 
     socailLogin(userData).then(async (res: any) => {
-      if (!isMounted) return;
+
       if (!res.error) {
+
         dispatch(setUser(res?.data?.data?.user));
+
         dispatch(setToken(res?.data?.data?.token));
 
         localStorage.removeItem("currentSocialTab");
@@ -137,11 +100,61 @@ export function SignUpPage() {
           loading.onFalse();
         }
       }
-    });
+    }).finally(() => {
 
-    return () => {
-      isMounted = false;
-    };
+      loading.onFalse();
+    })
+  };
+
+
+  useEffect(() => {
+    if (!user || !isAuthenticated) return;
+
+    if (hasLoggedInRef.current) return; // Prevent multiple calls
+
+    hasLoggedInRef.current = true;
+
+    const currentSocialTab = localStorage.getItem("currentSocialTab");
+
+    const savedRole = localStorage.getItem("currentTab");
+
+    if (!currentSocialTab || !savedRole) return;
+
+    setCurrentTab(savedRole);
+
+    let userData: any = null;
+
+    if (currentSocialTab === "google") {
+      userData = {
+        first_name: user.name?.split(" ")?.[0] || "",
+        last_name: user.name?.split(" ")?.slice(1).join(" ") || "",
+        email: user.email,
+        // image: user.picture,
+        role: savedRole === "traveler" ? "traveler" : "business",
+        provider: user?.sub?.split("|")?.[0]?.split("-")?.[0],
+        socialId: user?.sub?.split("|")?.[1],
+      };
+    }
+
+    if (currentSocialTab === "facebook") {
+
+      userData = {
+        first_name: user.name?.split(" ")?.[0] || "",
+        last_name: user.name?.split(" ")?.slice(1).join(" ") || "",
+        email: user.email,
+        // image: user?.picture,
+        role: savedRole === "traveler" ? "traveler" : "business",
+        provider: user?.sub?.split("|")?.[0],
+        socialId: user?.sub?.split("|")?.[1],
+      };
+    }
+
+    if (!userData) return;
+
+    socialLoginFun(userData);
+
+
+
   }, [user, isAuthenticated, dispatch, navigate]);
 
 

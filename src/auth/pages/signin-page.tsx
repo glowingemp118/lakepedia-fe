@@ -19,7 +19,7 @@ import { selectUser, setToken, setUser } from '@/store/slices/userSlice';
 import { useAuth0 } from "@auth0/auth0-react";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AlertCircle, Check, Eye, EyeOff, LoaderCircleIcon } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
@@ -38,6 +38,8 @@ export function SignInPage() {
 
   const loading = useBoolean();
 
+  const hasLoggedInRef = useRef(false);
+
   const [login] = useLoginMutation();
 
   let [socailLogin] = useSocailLoginMutation();
@@ -50,52 +52,11 @@ export function SignInPage() {
 
   const { loginWithRedirect, user, isAuthenticated } = useAuth0();
 
-  useEffect(() => {
-    if (!user || !isAuthenticated) return;
-
-    const currentSocialTab = localStorage.getItem("currentSocialTab");
-
-    const savedRole = localStorage.getItem("currentTab");
-
-    if (!currentSocialTab || !savedRole) return;
-
-    setCurrentTab(savedRole);
-
-    let userData: any = null;
-
-    if (currentSocialTab === "google") {
-      userData = {
-        first_name: user.name,
-        last_name: user.family_name,
-        email: user.email,
-        // image: user.picture,
-        role: savedRole === "traveler" ? "traveler" : "business",
-        provider: user?.sub?.split("|")?.[0]?.split("-")?.[0],
-        socialId: user?.sub?.split("|")?.[1],
-      };
-    }
-
-    if (currentSocialTab === "facebook") {
-
-      userData = {
-        first_name: user.name,
-        last_name: user.nickname,
-        email: user.email,
-        // image: user?.picture,
-        role: savedRole === "traveler" ? "traveler" : "business",
-        provider: user?.sub?.split("|")?.[0],
-        socialId: user?.sub?.split("|")?.[1],
-      };
-    }
-
-    if (!userData) return;
-
-    let isMounted = true;
-
+  const socialLoginFun = (userData: any) => {
+    
     loading.onTrue();
-
+    
     socailLogin(userData).then(async (res: any) => {
-      if (!isMounted) return;
       if (!res.error) {
         dispatch(setUser(res?.data?.data?.user));
         dispatch(setToken(res?.data?.data?.token));
@@ -118,14 +79,67 @@ export function SignInPage() {
 
           navigate(paths.travelerDashboard.root(LowerCaseWithUserId(res?.data?.data?.user)));
 
-          loading.onFalse();
+          // loading.onFalse();
         }
       }
+    }).finally(() => {
+      loading.onFalse();
     });
 
-    return () => {
-      isMounted = false;
-    };
+
+  }
+
+  useEffect(() => {
+
+    if (!user || !isAuthenticated) return;
+
+    if (hasLoggedInRef.current) return; // Prevent multiple calls
+
+    hasLoggedInRef.current = true;
+
+    const currentSocialTab = localStorage.getItem("currentSocialTab");
+
+    const savedRole = localStorage.getItem("currentTab");
+
+    if (!currentSocialTab || !savedRole) return;
+
+    setCurrentTab(savedRole);
+
+    let userData: any = null;
+
+    if (currentSocialTab === "google") {
+      userData = {
+        first_name: user.name?.split(" ")[0],
+        last_name: user.name?.split(" ")?.slice(1).join(" "),
+        email: user.email,
+        // image: user.picture,
+        role: savedRole === "traveler" ? "traveler" : "business",
+        provider: user?.sub?.split("|")?.[0]?.split("-")?.[0],
+        socialId: user?.sub?.split("|")?.[1],
+      };
+    }
+
+    if (currentSocialTab === "facebook") {
+
+      userData = {
+        first_name: user.name?.split(" ")[0],
+        last_name: user.name?.split(" ")?.slice(1).join(" "),
+        email: user.email,
+        // image: user?.picture,
+        role: savedRole === "traveler" ? "traveler" : "business",
+        provider: user?.sub?.split("|")?.[0],
+        socialId: user?.sub?.split("|")?.[1],
+      };
+    }
+
+    if (!userData) return;
+
+
+    socialLoginFun(userData);
+
+    // loading.onTrue();
+
+
   }, [user, isAuthenticated, dispatch, navigate]);
 
 
