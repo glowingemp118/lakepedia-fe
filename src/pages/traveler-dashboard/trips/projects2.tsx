@@ -6,7 +6,7 @@ import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useBoolean } from '@/hooks/use-boolean';
-import { formatDate } from '@/lib/helpers';
+import { formatDate, LowerCaseWithUserId } from '@/lib/helpers';
 import { DropdownMenu2 } from '@/partials/dropdown-menu/dropdown-menu-2';
 import { EllipsisVertical, Heart, LayoutGrid, List, LoaderCircleIcon, Plus, Trash } from 'lucide-react';
 import { FC, useEffect, useState } from 'react';
@@ -99,7 +99,7 @@ const Projects2: FC<PageProps> = ({ trips }) => {
       className="p-7.5 hover:border-blue-400 border transition-all duration-300 cursor-pointer"
       onClick={() => {
         navigate(paths.travelerDashboard.tripDetail(
-          user?.first_name as string + user?.last_name as string
+          LowerCaseWithUserId(user)
           , trip.id))
       }}
     >
@@ -186,8 +186,8 @@ const Projects2: FC<PageProps> = ({ trips }) => {
       key={trip.id}
       className="flex flex-col lg:flex-row lg:items-center justify-between rounded-xl p-5 hover:border-blue-400 border transition-all duration-300 cursor-pointer"
       onClick={() => navigate(paths.travelerDashboard.tripDetail(
-        user?.first_name as string + user?.last_name as string
-        ,trip.id))}
+        LowerCaseWithUserId(user)
+        , trip.id))}
     >
       {/* Left Side — Trip Info */}
       <div className="flex flex-col gap-1 w-full lg:w-2/3">

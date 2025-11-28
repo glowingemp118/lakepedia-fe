@@ -9,11 +9,10 @@ import { formatDate, toAbsoluteUrl } from "@/lib/helpers";
 import { Rating } from "@/partials/common/rating";
 import { selectUser } from "@/store/slices/userSlice";
 import { motion } from "framer-motion";
-import { CalendarDays, Edit, Fish, MountainSnow, Shrimp, Trash2 } from "lucide-react";
+import { CalendarDays, Edit, Trash2 } from "lucide-react";
 import { AnimatePresence } from "motion/react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import QuickFishingReportModal from "./quick-edit-fishing-report-modal";
 import QuickBusinessReviewModal from "./quick-edit-business-review-modal";
 
 
@@ -59,7 +58,7 @@ const BusinessReviews = () => {
 
   // Handle delete
   const handleDelete = () => {
-    setReviews((prev) => prev.filter((r) => r.id !== currentReview));
+    // setReviews((prev) => prev.filter((r) => r.id !== currentReview));
     confirm.onFalse();
   };
   // const handleShareReview = () => {
@@ -68,7 +67,7 @@ const BusinessReviews = () => {
   // }
 
   const onDeleteClick = (reviewId: number) => {
-    setCurrentReview(reviewId);
+    // setCurrentReview(reviewId);
     confirm.onTrue();
   }
   return (

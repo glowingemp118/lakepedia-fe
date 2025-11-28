@@ -5,7 +5,7 @@ import RHFTextArea from '@/components/rhf/rhf-textarea';
 import RHFTextField from '@/components/rhf/rhf-textfield';
 import { Button } from '@/components/ui/button';
 import DialogContent, { Dialog, DialogClose, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Form, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormLabel } from '@/components/ui/form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Star } from 'lucide-react';
 import { FC, useEffect, useMemo } from 'react';
@@ -19,12 +19,14 @@ interface QuickFishingReportModalProps {
 }
 const QuickFishingReportModal: FC<QuickFishingReportModalProps> = ({ currentFishingReport, open, onClose }) => {
 
+
+
     const defaultValues = useMemo(() => ({
         title: currentFishingReport?.title || '',
         description: currentFishingReport?.description || '',
         date: currentFishingReport?.date ? new Date(currentFishingReport?.date) : new Date(),
         spot: currentFishingReport?.spot || '',
-        fishCount: parseInt(currentFishingReport?.count) || 0,
+        fishCount: Number(currentFishingReport?.count) || 0,
         rating: currentFishingReport?.rating || 0,
         fishSpecies: currentFishingReport?.fishSpecies || [],
         method: currentFishingReport?.method || "",
@@ -66,6 +68,7 @@ const QuickFishingReportModal: FC<QuickFishingReportModalProps> = ({ currentFish
 
     const { handleSubmit } = form;
 
+
     return (
         <Dialog open={open} onOpenChange={onClose}>
             <DialogContent className="max-h-[95vh] overflow-y-auto ">
@@ -93,7 +96,9 @@ const QuickFishingReportModal: FC<QuickFishingReportModalProps> = ({ currentFish
                                     </button>
                                 ))}
                             </div>
-                            <FormMessage />
+                            {form.watch("rating") === 0 && (
+                                <p className="-mt-0.5 text-xs font-normal text-destructive">{form.formState.errors.rating && form.formState.errors.rating.message as string}</p>
+                            )}
                         </div>
 
                         <RHFDatePicker name="date" label="When did you go?" placeholder="Select date" />

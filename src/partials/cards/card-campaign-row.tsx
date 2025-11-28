@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { toAbsoluteUrl } from '@/lib/helpers';
+import { LowerCaseWithUserId, toAbsoluteUrl } from '@/lib/helpers';
 import { selectUser } from '@/store/slices/userSlice';
 import { EllipsisVertical, Heart } from 'lucide-react';
 import { useSelector } from 'react-redux';
@@ -44,7 +44,7 @@ const CardCampaignRow = ({
   const handleClick = (e: React.MouseEvent) => {
     // e.preventDefault();
 
-      navigate(paths.businessDashboard.lakeDetail(user?.first_name as string + user?.last_name as string, id));
+      navigate(paths.businessDashboard.lakeDetail(LowerCaseWithUserId(user), id));
   }
 
   return (

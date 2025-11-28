@@ -18,6 +18,7 @@ import { ChevronDown } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import { TravelerSidebar as TravelerMemu, BusinessSidebar as BusinessMemu, AdminSidebar as AdminMemu } from './sidebar-menu';
+import { LowerCaseWithUserId } from '@/lib/helpers';
 
 export function NavbarMenu() {
 
@@ -25,6 +26,10 @@ export function NavbarMenu() {
   const { pathname } = useLocation();
 
   const user = useSelector(selectUser);
+
+  console.log("USER IN NAVBAR MENU", user);
+
+  const slug = LowerCaseWithUserId(user);
 
   const TravelerSidebar = TravelerMemu.map((item) => item.title === "Dashboard" ? {
     ...item,
@@ -85,7 +90,7 @@ export function NavbarMenu() {
               )}
               data-active={isActive(
                 typeof item.path === 'function'
-                  ? item.path(user?.first_name as string + user?.last_name as string)
+                  ? item.path(slug)
                   : item.path
                   || ''
               ) || undefined}
@@ -115,19 +120,17 @@ export function NavbarMenu() {
               <Link
                 to={
                   typeof item.path === 'function'
-                    ? item.path(user?.first_name as string + user?.last_name as string)
-                    : item.path
-                    || ''}
+                    ? item.path(slug)
+                    : (item.path || '')}
                 data-active={isActive(
                   typeof item.path === 'function'
-                    ? item.path(user?.first_name as string + user?.last_name as string)
-                    : item.path
-                    || ''
+                    ? item.path(slug)
+                    : (item.path || '')
                 ) || undefined}
                 data-here={hasActiveChild(item.children) || undefined}
                 className={`${isActive(
                   typeof item.path === 'function'
-                    ? item.path(user?.first_name as string + user?.last_name as string)
+                    ? item.path(slug)
                     : item.path
                     || ''
                 ) ? "!border-b-3 !border-b-primary font-bold text-primary text-[16px] transition-all " : ''}`}
@@ -149,7 +152,7 @@ export function NavbarMenu() {
             <MenubarSubTrigger
               data-active={isActive(
                 typeof item.path === 'function'
-                  ? item.path(user?.first_name as string + user?.last_name as string)
+                  ? item.path(slug)
                   : item.path
                   || ''
               ) || undefined}
@@ -169,7 +172,7 @@ export function NavbarMenu() {
             asChild
             data-active={isActive(
               typeof item.path === 'function'
-                ? item.path(user?.first_name as string + user?.last_name as string)
+                ? item.path(slug)
                 : item.path
                 || ''
             ) || undefined}
@@ -177,9 +180,9 @@ export function NavbarMenu() {
           >
             <Link to={
               typeof item.path === 'function'
-                ? item.path(user?.first_name as string + user?.last_name as string)
+                ? item.path(slug)
                 : item.path
-              || ''}>{item.title}</Link>
+                || ''}>{item.title}</Link>
           </MenubarItem>
         );
       }

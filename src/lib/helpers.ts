@@ -115,3 +115,20 @@ export function formatDateTime(input: Date | string | number): string {
     hour12: true,
   });
 }
+
+export const LowerCaseWithUserId = (user: any):any => {
+
+  if (!user) return '';
+
+  const { first_name, last_name, id } = user;
+
+  if(!first_name || !last_name || !id) return '';
+
+
+  if (first_name && last_name && id) {
+
+    return first_name.split(' ')[0].toLowerCase() +
+      "-" + last_name.split(' ')[0].toLowerCase() +
+      "-" + id.split('-')[0];
+  }
+}

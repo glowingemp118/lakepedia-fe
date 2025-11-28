@@ -5,7 +5,7 @@ import RHFTextArea from '@/components/rhf/rhf-textarea';
 import RHFTextField from '@/components/rhf/rhf-textfield';
 import { Button } from '@/components/ui/button';
 import DialogContent, { Dialog, DialogClose, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Form, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormLabel } from '@/components/ui/form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Star } from 'lucide-react';
 import { FC, useEffect, useMemo } from 'react';
@@ -40,7 +40,7 @@ const QuickFishingReportModal: FC<QuickFishingReportModalProps> = ({ currentFish
         spot: z.string().min(3, "Spot must be at least 3 characters").max(100),
         fishCount: z.number().min(0, "Fish count cannot be negative"),
         rating: z.number().min(1, "Rating must be at least 1").max(5, "Rating cannot exceed 5"),
-        fishSpecies: z.array(z.string().min(1, "Fish species cannot be empty")),
+        fishSpecies: z.array(z.string()).min(1, "At least one fish species must be selected"),
         method: z.string().min(1, "Method cannot be empty"),
         lure: z.string().min(1, "Lure cannot be empty"),
         photos: z.array(z.union([
@@ -93,7 +93,9 @@ const QuickFishingReportModal: FC<QuickFishingReportModalProps> = ({ currentFish
                                     </button>
                                 ))}
                             </div>
-                            <FormMessage />
+                            {form.watch("rating") === 0 && (
+                                <p className="-mt-0.5 text-xs font-normal text-destructive">{form.formState.errors.rating && form.formState.errors.rating.message as string}</p>
+                            )}
                         </div>
 
                         <RHFDatePicker name="date" label="When did you go?" placeholder="Select date" />

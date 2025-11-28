@@ -17,6 +17,7 @@ import { AnimatePresence } from "motion/react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import QuickEditPOIReviewModal from "./quick-edit-pois-review-modal";
+import Lightbox from "@/components/ui/lightbox";
 
 
 const POIsReview = () => {
@@ -26,6 +27,10 @@ const POIsReview = () => {
   const confirm = useBoolean();
 
   const edit = useBoolean();
+  
+  const lightbox = useBoolean();
+
+  const [index, setIndex] = useState(0);
 
   const [currentReview, setCurrentReview] = useState<object | null>(null);
 
@@ -51,7 +56,6 @@ const POIsReview = () => {
       title: "Amazing Experience!",
       description: "Lorem ipsum dolor sit amet consectetur. Aliquet imperdiet metus eu purus aliquam consequat dictum tincidunt. Placerat elementum et sed at egestas. Lorem ipsum dolor sit amet consectetur. Aliquet imperdiet metus eu purus aliquam consequat dictum tincidunt. Placerat elementum et sed at egestas.",
       rating: 5,
-      activityRating: 4,
       date: "2025-03-25",
       tags: ["Clean Water", "Family Friendly"],
       photos: [
@@ -192,7 +196,12 @@ const POIsReview = () => {
                           initial={{ opacity: 0, y: 15 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: i * 0.1 }}
-                          className="rounded-xl w-[150px] h-[150px] object-cover border shadow-md hover:shadow-lg transition-all"
+                          onClick={() => {
+                            setIndex(i);
+                            lightbox.onTrue();
+                            setCurrentReview(review);
+                          }}
+                          className="rounded-xl cursor-pointer w-[100px] h-[100px] object-cover border shadow-md hover:shadow-lg transition-all"
                         />
                       ))}
                     </div>
@@ -215,6 +224,12 @@ const POIsReview = () => {
         open={confirm.value}
         onClose={confirm.onFalse}
         onConfirm={handleDelete}
+      />
+      <Lightbox
+        images={currentReview ? (currentReview as { photos: string[] }).photos : []}
+        open={lightbox.value}
+        onClose={lightbox.onFalse}
+        currentIndex={index}
       />
 
       {

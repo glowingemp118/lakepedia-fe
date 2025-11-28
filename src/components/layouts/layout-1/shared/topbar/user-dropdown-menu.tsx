@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Switch } from '@/components/ui/switch';
-import { toAbsoluteUrl } from '@/lib/helpers';
+import { LowerCaseWithUserId, toAbsoluteUrl } from '@/lib/helpers';
 import { logout, selectUser } from '@/store/slices/userSlice';
 import {
   Moon,
@@ -76,8 +76,8 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
   const handleGoToProfile = () => {
     navigage(
       (user?.role === "admin" && paths.adminDashboard.profile) ||
-      (user?.role === "traveler" && paths.travelerDashboard.settings(user?.first_name as string + user?.last_name as string)) ||
-      (user?.role === "business" && paths.businessDashboard.settings(user?.first_name as string + user?.last_name)) || paths.signin);
+      (user?.role === "traveler" && paths.travelerDashboard.settings(LowerCaseWithUserId(user))) ||
+      (user?.role === "business" && paths.businessDashboard.settings(LowerCaseWithUserId(user))) || paths.signin);
   }
 
   return (
@@ -127,7 +127,7 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
           {user?.role === "traveler" && <DropdownMenuItem asChild>
             <Link
               to={paths.travelerDashboard.trips(
-                user?.first_name as string + user?.last_name as string
+                LowerCaseWithUserId(user)
               )}
               className="flex items-center gap-2"
             >
@@ -137,7 +137,7 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
           </DropdownMenuItem>}
           {user?.role === "business" && <DropdownMenuItem asChild>
             <Link
-              to={paths.businessDashboard.lakes(user?.first_name as string + user?.last_name as string)}
+              to={paths.businessDashboard.lakes(LowerCaseWithUserId(user))}
               className="flex items-center gap-2"
             >
               <Plane />
@@ -146,7 +146,8 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
           </DropdownMenuItem>}
           <DropdownMenuItem asChild>
             <Link
-              to={user?.role === "traveler" ? paths.travelerDashboard.root(user?.first_name as string + user?.last_name as string) : paths.businessDashboard.root(user?.first_name as string + user?.last_name as string)}
+              to={user?.role === "traveler" ?
+                paths.travelerDashboard.root(LowerCaseWithUserId(user)) : paths.businessDashboard.root(LowerCaseWithUserId(user))}
               className="flex items-center gap-2"
             >
               <Star />
@@ -156,7 +157,7 @@ export function UserDropdownMenu({ trigger }: { trigger: ReactNode }) {
           {
             user?.role === "business" && <DropdownMenuItem asChild>
               <Link
-                to={paths.businessDashboard.subscription(user?.first_name as string + user?.last_name as string)}
+                to={paths.businessDashboard.subscription(LowerCaseWithUserId(user))}
                 className="flex items-center gap-2"
               >
                 <Podcast />

@@ -47,6 +47,7 @@ import AdminProfileView from '@/pages/admin-dasbhoard/profile/view/user-profile-
 import ReviewsView from '@/pages/admin-dasbhoard/reviews/view/reviews-view';
 import TravelersView from '@/pages/admin-dasbhoard/users/view/travelers-view';
 import { SignUpPage } from '@/auth/pages/signup-page';
+import AuthCallback from '@/auth/pages/authcallback';
 
 
 export function AppRoutingSetup() {
@@ -125,6 +126,8 @@ export function AppRoutingSetup() {
       </Route>
 
       <Route path="/" element={<BrandedLayout />}>
+
+        <Route path="/auth/callback" element={<AuthCallback />} />
 
         {/* Default route → /signin */}
         <Route index element={<SignInPage />} />

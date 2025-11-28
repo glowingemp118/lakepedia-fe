@@ -14,6 +14,7 @@ import { AnimatePresence } from "motion/react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import QuickFishingReportModal from "./quick-edit-fishing-report-modal";
+import Lightbox from "@/components/ui/lightbox";
 
 
 const FishingReports = () => {
@@ -23,6 +24,10 @@ const FishingReports = () => {
     const confirm = useBoolean();
 
     const edit = useBoolean();
+
+    const lightbox = useBoolean();
+
+    const [index, setIndex] = useState(0);
 
     const [currentReview, setCurrentReview] = useState<object | null>(null);
 
@@ -76,7 +81,7 @@ const FishingReports = () => {
 
     // Handle delete
     const handleDelete = () => {
-        setReviews((prev) => prev.filter((r) => r.id !== currentReview));
+        // setReviews((prev) => prev.filter((r) => r.id !== currentReview));
         confirm.onFalse();
     };
     // const handleShareReview = () => {
@@ -85,7 +90,7 @@ const FishingReports = () => {
     // }
 
     const onDeleteClick = (reviewId: number) => {
-        setCurrentReview(reviewId);
+        // setCurrentReview(reviewId);
         confirm.onTrue();
     }
     return (
@@ -199,7 +204,12 @@ const FishingReports = () => {
                                                     initial={{ opacity: 0, y: 15 }}
                                                     animate={{ opacity: 1, y: 0 }}
                                                     transition={{ delay: i * 0.1 }}
-                                                    className="rounded-xl w-[150px] h-[150px] object-cover border shadow-md hover:shadow-lg transition-all"
+                                                    onClick={() => {
+                                                        setIndex(i);
+                                                        lightbox.onTrue();
+                                                        setCurrentReview(review);
+                                                    }}
+                                                    className="rounded-xl cursor-pointer w-[100px] h-[100px] object-cover border shadow-md hover:shadow-lg transition-all"
                                                 />
                                             ))}
                                         </div>
@@ -221,6 +231,12 @@ const FishingReports = () => {
                 open={confirm.value}
                 onClose={confirm.onFalse}
                 onConfirm={handleDelete}
+            />
+            <Lightbox
+                images={currentReview ? (currentReview as { photos: string[] }).photos : []}
+                open={lightbox.value}
+                onClose={lightbox.onFalse}
+                currentIndex={index}
             />
 
             {

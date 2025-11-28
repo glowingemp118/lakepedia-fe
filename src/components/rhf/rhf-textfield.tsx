@@ -7,10 +7,11 @@ interface RHFTextFieldProps {
     name: string;
     label: string;
     placeholder?: string;
+    type?: string;
     [key: string]: any;
 }
-const RHFTextField: FC<RHFTextFieldProps> = ({ type="text",name, label, placeholder, ...other }) => {
-    
+const RHFTextField: FC<RHFTextFieldProps> = ({ type = "text", name, label, placeholder, ...other }) => {
+
     const { control } = useFormContext();
 
     return (
@@ -21,7 +22,16 @@ const RHFTextField: FC<RHFTextFieldProps> = ({ type="text",name, label, placehol
                 <FormItem>
                     <FormLabel>{label}</FormLabel>
                     <FormControl>
-                        <Input placeholder={placeholder} type={type} {...field} {...other} />
+                        <Input
+                            placeholder={placeholder}
+                            type={type}
+                            {...field}
+                            value={field.value || ''}
+                            onChange={(e) => field.onChange(
+                                type === "number" ? e.target.valueAsNumber :
+                                e.target.value)}
+                            {...other}
+                        />
                     </FormControl>
                     <FormMessage />
                 </FormItem>

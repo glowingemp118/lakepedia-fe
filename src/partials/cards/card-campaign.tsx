@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { toAbsoluteUrl } from '@/lib/helpers';
+import { LowerCaseWithUserId, toAbsoluteUrl } from '@/lib/helpers';
 import { selectUser } from '@/store/slices/userSlice';
 import { EllipsisVertical, Heart } from 'lucide-react';
 import { useSelector } from 'react-redux';
@@ -68,9 +68,9 @@ const CardCampaign = ({
     // e.preventDefault();
     if (user?.role as string === "traveler" && e.currentTarget.id === "card-campaign") {
 
-      navigate(paths.travelerDashboard.tripDetail(user?.first_name as string + user?.last_name as string, id));
+      navigate(paths.travelerDashboard.tripDetail(LowerCaseWithUserId(user), id));
     } else {
-      navigate(paths.businessDashboard.lakeDetail(user?.first_name as string + user?.last_name as string, id));
+      navigate(paths.businessDashboard.lakeDetail(LowerCaseWithUserId(user), id));
     }
   }
 

@@ -13,6 +13,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useBoolean } from '@/hooks/use-boolean';
+import { LowerCaseWithUserId, toAbsoluteUrl } from '@/lib/helpers';
 import { useLoginMutation, useSocailLoginMutation } from '@/store/Reducer/auth';
 import { selectUser, setToken, setUser } from '@/store/slices/userSlice';
 import { useAuth0 } from "@auth0/auth0-react";
@@ -20,9 +21,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { AlertCircle, Check, Eye, EyeOff, LoaderCircleIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { getSigninSchema, SigninSchemaType } from '../forms/signin-schema';
+import { useSelector } from 'react-redux';
 
 export function SignInPage() {
 
@@ -33,6 +35,8 @@ export function SignInPage() {
   const navigate = useNavigate();
 
   const show = useBoolean();
+
+  const loading = useBoolean();
 
   const [login] = useLoginMutation();
 
@@ -45,31 +49,6 @@ export function SignInPage() {
   const [currentTab, setCurrentTab] = useState("traveler");
 
   const { loginWithRedirect, user, isAuthenticated } = useAuth0();
-
-  const userData=useSelector(selectUser);
-
-
-  // useEffect(() => {
-
-  //   const pathname = window.location.pathname;
-
-  //   const userType = pathname.includes('?user=business') ? 'business' : 'traveler';
-
-  //   if (userType === 'traveler' || userType === 'business') {
-  //     setCurrentTab(userType);
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   if (currentTab) {
-
-  //     const pathname = currentTab === "business" ? "/login?user=business" : "/login?user-traveler";
-
-  //     navigate(pathname, { replace: true });
-
-  //   }
-  // }, [currentTab, navigate]);
-
 
   useEffect(() => {
     if (!user || !isAuthenticated) return;
@@ -112,7 +91,10 @@ export function SignInPage() {
     if (!userData) return;
 
     let isMounted = true;
-    socailLogin(userData).then((res: any) => {
+
+    loading.onTrue();
+
+    socailLogin(userData).then(async (res: any) => {
       if (!isMounted) return;
       if (!res.error) {
         dispatch(setUser(res?.data?.data?.user));
@@ -122,9 +104,21 @@ export function SignInPage() {
         localStorage.removeItem("currentTab");
 
         if (userData.role === "business") {
-          navigate(paths.businessDashboard.root(userData.first_name + userData.last_name));
+
+          await new Promise((resol) => setTimeout(resol, 2000));
+
+          navigate(paths.businessDashboard.root(LowerCaseWithUserId(res?.data?.data?.user)));
+
+          loading.onFalse();
+
+
         } else {
-          navigate(paths.travelerDashboard.root(userData.first_name + userData.last_name));
+
+          await new Promise((resol) => setTimeout(resol, 2000));
+
+          navigate(paths.travelerDashboard.root(LowerCaseWithUserId(res?.data?.data?.user)));
+
+          loading.onFalse();
         }
       }
     });
@@ -223,12 +217,14 @@ export function SignInPage() {
         dispatch(setToken(response?.data?.data?.token));
 
 
-        if ( response?.data?.data?.user) {
+        if (response?.data?.data?.user) {
 
           const nextPath = searchParams.get('next') ||
             (response?.data?.data?.user.role === 'traveler' ?
-              paths.travelerDashboard.root(response?.data?.data?.user.first_name as string + response?.data?.data?.user.last_name as string)
-              : paths.businessDashboard.root(response?.data?.data?.user.first_name as string + response?.data?.data?.user.last_name as string));
+              paths.travelerDashboard.root(LowerCaseWithUserId(response?.data?.data?.user))
+
+              :
+              paths.businessDashboard.root(LowerCaseWithUserId(response?.data?.data?.user)));
 
           navigate(nextPath);
         }
@@ -250,208 +246,225 @@ export function SignInPage() {
 
   return (
     <>
-      <Tabs value={currentTab} onValueChange={handleChangeTab} >
-        <TabsList className="justify-center px-5 mb-2.5" variant="line">
-          <TabsTrigger value="traveler">Traveler</TabsTrigger>
-          <TabsTrigger value="business">Business</TabsTrigger>
-        </TabsList>
-      </Tabs>
-      <div className="text-center space-y-1 pb-3">
-        <h1 className="text-2xl font-semibold tracking-tight">Login {currentTab === 'traveler' ? 'Traveler' : 'Business'}</h1>
-        <p className="text-sm text-muted-foreground">
-          Welcome back! Log in with your credentials.
-        </p>
-      </div>
-      <div>
-        {error && (
-          <Alert
-            variant="destructive"
-            appearance="light"
-            onClose={() => setError(null)}
-          >
-            <AlertIcon>
-              <AlertCircle />
-            </AlertIcon>
-            <AlertTitle>{error}</AlertTitle>
-          </Alert>
-        )}
-
-        {successMessage && (
-          <Alert appearance="light" onClose={() => setSuccessMessage(null)}>
-            <AlertIcon>
-              <Check />
-            </AlertIcon>
-            <AlertTitle>{successMessage}</AlertTitle>
-          </Alert>
-        )}
-      </div>
-      <div className="flex items-center justify-center gap-4">
-
-
-        <Button
-          variant="outline"
-          className=" cursor-pointer h-[60px] w-[60px] rounded-full"
-          onClick={() => {
-            localStorage.setItem("currentTab", currentTab);
-            localStorage.setItem("currentSocialTab", "google");
-            loginWithRedirect({
-              authorizationParams: {
-                connection: "google-oauth2",
-                redirect_uri: import.meta.env.VITE_AUTH_REDIRECT_URI,
-              }
-            })
-          }}
-        >
-          <span className="w-6 h-6 flex items-center justify-center">
-
-            <img
-              src="/media/images/social/googleIcon.png"
-              alt="Google"
-              className="w-[25px] h-[25px]"
-              width={25}
-              height={25}
-            />
-          </span>
-        </Button>
-
-        <Button
-          variant="outline"
-          className=" cursor-pointer h-[60px] w-[60px] rounded-full"
-          onClick={() => {
-            localStorage.setItem("currentTab", currentTab);
-            localStorage.setItem("currentSocialTab", "facebook");
-            loginWithRedirect({
-              authorizationParams: {
-                connection: "facebook",
-                redirect_uri: import.meta.env.VITE_AUTH_REDIRECT_URI,
-              }
-            })
-          }}
-        >
-          <span className="w-6 h-6 flex items-center justify-center">
-            <img
-              src="/media/images/social/facebook.svg"
-              alt="Meta"
-              className="w-[25px] h-[25px]"
-              width={25}
-              height={25}
-            />
-          </span>
-        </Button>
-      </div>
-      <br />
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="block w-full space-y-5"
-        >
-
-          <div className="relative py-1.5">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">or</span>
-            </div>
+      {loading.value ?
+        <div className="flex flex-col items-center gap-2 justify-center inset-0 z-50 transition-opacity duration-700 ease-in-out">
+          <img
+            className="h-[30px] max-w-none"
+            src={toAbsoluteUrl('/media/app/mini-logo.png')}
+            alt="logo"
+          />
+          <div className="text-muted-foreground font-medium text-sm">
+            Loading...
           </div>
-
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input placeholder="Your email" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+        </div>
+        :
+        <>
+          <Tabs value={currentTab} onValueChange={handleChangeTab} >
+            <TabsList className="justify-center px-5 mb-2.5" variant="line">
+              <TabsTrigger value="traveler">Traveler</TabsTrigger>
+              <TabsTrigger value="business">Business</TabsTrigger>
+            </TabsList>
+          </Tabs>
+          <div className="text-center space-y-1 pb-3">
+            <h1 className="text-2xl font-semibold tracking-tight">Login {currentTab === 'traveler' ? 'Traveler' : 'Business'}</h1>
+            <p className="text-sm text-muted-foreground">
+              Welcome back! Log in with your credentials.
+            </p>
+          </div>
+          <div>
+            {error && (
+              <Alert
+                variant="destructive"
+                appearance="light"
+                onClose={() => setError(null)}
+              >
+                <AlertIcon>
+                  <AlertCircle />
+                </AlertIcon>
+                <AlertTitle>{error}</AlertTitle>
+              </Alert>
             )}
-          />
 
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <div className="flex justify-between items-center gap-2.5">
-                  <FormLabel>Password</FormLabel>
-                </div>
-                <div className="relative">
-                  <Input
-                    placeholder="Your password"
-                    type={show.value ? 'text' : 'password'} // Toggle input type
-                    {...field}
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    mode="icon"
-                    onClick={show.onToggle}
-                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                  >
-                    {show.value ? (
-                      <EyeOff className="text-muted-foreground" />
-                    ) : (
-                      <Eye className="text-muted-foreground" />
-                    )}
-                  </Button>
-                </div>
-                <FormMessage />
-              </FormItem>
+            {successMessage && (
+              <Alert appearance="light" onClose={() => setSuccessMessage(null)}>
+                <AlertIcon>
+                  <Check />
+                </AlertIcon>
+                <AlertTitle>{successMessage}</AlertTitle>
+              </Alert>
             )}
-          />
-          <div className='flex justify-between items-center mb-5'>
-            <FormField
-              control={form.control}
-              name="rememberMe"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-0.5 space-y-0 rounded-md">
-                  <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <div className="space-y-1 leading-none">
-                    <FormLabel className="text-sm text-muted-foreground">
-                      Remember me
+          </div>
+          <div className="flex items-center justify-center gap-4">
 
-                    </FormLabel>
-                    <FormMessage />
-                  </div>
-                </FormItem>
-              )}
-            />
-            <Link
-              to="/forgot-password"
-              className="text-sm font-semibold text-foreground hover:text-primary"
+
+            <Button
+              variant="outline"
+              className=" cursor-pointer h-[60px] w-[60px] rounded-full"
+              onClick={() => {
+                localStorage.setItem("currentTab", currentTab);
+                localStorage.setItem("currentSocialTab", "google");
+                loginWithRedirect({
+                  appState: { returnTo: "/login" },
+                  authorizationParams: {
+                    connection: "google-oauth2",
+                    screen_hint: "login",
+                    redirect_uri: import.meta.env.VITE_AUTH_REDIRECT_URI,
+                  }
+                })
+              }}
             >
-              Forgot Password?
-            </Link>
-          </div>
+              <span className="w-6 h-6 flex items-center justify-center">
 
-          <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-            {form.formState.isSubmitting ? (
-              <span className="flex items-center gap-2">
-                <LoaderCircleIcon className="h-4 w-4 animate-spin" /> Loading...
+                <img
+                  src="/media/images/social/googleIcon.png"
+                  alt="Google"
+                  className="w-[25px] h-[25px]"
+                  width={25}
+                  height={25}
+                />
               </span>
-            ) : (
-              'Login'
-            )}
-          </Button>
+            </Button>
 
-          <div className="text-center text-sm text-muted-foreground">
-            Don't have an account?{' '}
-            <Link
-              to="/signup"
-              className="text-sm font-semibold text-foreground hover:text-primary"
+            <Button
+              variant="outline"
+              className=" cursor-pointer h-[60px] w-[60px] rounded-full"
+              onClick={() => {
+                localStorage.setItem("currentTab", currentTab);
+                localStorage.setItem("currentSocialTab", "facebook");
+                loginWithRedirect({
+                  appState: { returnTo: "/login" },
+                  authorizationParams: {
+                    connection: "facebook",
+                    screen_hint: "login",
+                    redirect_uri: import.meta.env.VITE_AUTH_REDIRECT_URI,
+                  }
+                })
+              }}
             >
-              Sign Up
-            </Link>
+              <span className="w-6 h-6 flex items-center justify-center">
+                <img
+                  src="/media/images/social/facebook.svg"
+                  alt="Meta"
+                  className="w-[25px] h-[25px]"
+                  width={25}
+                  height={25}
+                />
+              </span>
+            </Button>
           </div>
-        </form>
-      </Form >
-    </>
-  );
+          <br />
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="block w-full space-y-5"
+            >
+
+              <div className="relative py-1.5">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-background px-2 text-muted-foreground">or</span>
+                </div>
+              </div>
+
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Your email" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex justify-between items-center gap-2.5">
+                      <FormLabel>Password</FormLabel>
+                    </div>
+                    <div className="relative">
+                      <Input
+                        placeholder="Your password"
+                        type={show.value ? 'text' : 'password'} // Toggle input type
+                        {...field}
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        mode="icon"
+                        onClick={show.onToggle}
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                      >
+                        {show.value ? (
+                          <EyeOff className="text-muted-foreground" />
+                        ) : (
+                          <Eye className="text-muted-foreground" />
+                        )}
+                      </Button>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className='flex justify-between items-center mb-5'>
+                <FormField
+                  control={form.control}
+                  name="rememberMe"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-0.5 space-y-0 rounded-md">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel className="text-sm text-muted-foreground">
+                          Remember me
+
+                        </FormLabel>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <Link
+                  to="/forgot-password"
+                  className="text-sm font-semibold text-foreground hover:text-primary"
+                >
+                  Forgot Password?
+                </Link>
+              </div>
+
+              <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting ? (
+                  <span className="flex items-center gap-2">
+                    <LoaderCircleIcon className="h-4 w-4 animate-spin" /> Loading...
+                  </span>
+                ) : (
+                  'Login'
+                )}
+              </Button>
+
+              <div className="text-center text-sm text-muted-foreground">
+                Don't have an account?{' '}
+                <Link
+                  to="/signup"
+                  className="text-sm font-semibold text-foreground hover:text-primary"
+                >
+                  Sign Up
+                </Link>
+              </div>
+            </form>
+          </Form >
+        </>
+      }    </>);
 }

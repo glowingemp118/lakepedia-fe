@@ -10,6 +10,7 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
+import { toast } from "react-toastify";
 
 interface PageProps {
   name: string;
@@ -35,6 +36,15 @@ const RhfMultipleImages: FC<PageProps> = ({ name, label, onDrop }) => {
           if (!files) return;
 
           const newFiles = Array.from(files);
+
+          // i want only allow images not video and svg 
+          if (newFiles.some(file => !file.type.startsWith('image/') || file.type === 'image/svg+xml')) {
+            toast.error('Only image files are allowed (no videos or SVGs).', {
+              autoClose: 1500
+            });
+            return;
+          }
+
 
           const updated = [...value, ...newFiles];
           onChange(updated);

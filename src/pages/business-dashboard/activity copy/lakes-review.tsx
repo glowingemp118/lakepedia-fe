@@ -17,6 +17,7 @@ import { AnimatePresence } from "motion/react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import QuickEditLakeReviewModal from "./quick-edit-lake-review-modal";
+import Lightbox from "@/components/ui/lightbox";
 
 
 const LakeReviews = () => {
@@ -26,6 +27,10 @@ const LakeReviews = () => {
   const confirm = useBoolean();
 
   const edit = useBoolean();
+
+  const lightbox = useBoolean();
+
+  const [index, setIndex] = useState(0);
 
   const [currentReview, setCurrentReview] = useState<object | null>(null);
 
@@ -76,7 +81,7 @@ const LakeReviews = () => {
 
   // Handle delete
   const handleDelete = () => {
-    setReviews((prev) => prev.filter((r) => r.id !== currentReview));
+    // setReviews((prev) => prev.filter((r) => r.id !== currentReview));
     confirm.onFalse();
   };
   // const handleShareReview = () => {
@@ -85,7 +90,7 @@ const LakeReviews = () => {
   // }
 
   const onDeleteClick = (reviewId: number) => {
-    setCurrentReview(reviewId);
+    // setCurrentReview(reviewId);
     confirm.onTrue();
   }
   return (
@@ -198,7 +203,12 @@ const LakeReviews = () => {
                           initial={{ opacity: 0, y: 15 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: i * 0.1 }}
-                          className="rounded-xl w-[150px] h-[150px] object-cover border shadow-md hover:shadow-lg transition-all"
+                          onClick={() => {
+                            setIndex(i);
+                            lightbox.onTrue();
+                            setCurrentReview(review);
+                          }}
+                          className="rounded-xl cursor-pointer w-[100px] h-[100px] object-cover border shadow-md hover:shadow-lg transition-all"
                         />
                       ))}
                     </div>
@@ -224,6 +234,12 @@ const LakeReviews = () => {
         open={confirm.value}
         onClose={confirm.onFalse}
         onConfirm={handleDelete}
+      />
+      <Lightbox
+        images={currentReview ? (currentReview as { photos: string[] }).photos : []}
+        open={lightbox.value}
+        onClose={lightbox.onFalse}
+        currentIndex={index}
       />
 
       {

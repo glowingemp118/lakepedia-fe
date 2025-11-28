@@ -9,6 +9,7 @@ import { Badge } from "../ui/badge";
 import { Input } from "../ui/input";
 import { useFormContext } from "react-hook-form";
 import { X } from "lucide-react";
+import { FormLabel } from "../ui/form";
 
 // interface Options {
 //   id: number,
@@ -180,6 +181,7 @@ const AutocompleteTags: FC<Props> = ({
   name,
   alreadySelected,
   multiple = true,
+  label
 }) => {
   const defaultValues = useMemo(() =>
     alreadySelected?.map((item) => ({
@@ -252,7 +254,9 @@ const AutocompleteTags: FC<Props> = ({
       {/* Tags */}
       <div className="flex flex-wrap gap-2 mb-3">
         {chip &&
-          selected.map((tag: any) => (
+          selected.length ===0 ? 
+          <FormLabel>{label}</FormLabel>
+          :selected.map((tag: any) => (
             <Badge key={tag.value}>
               <span>{tag.label}</span>
               {multiple && (

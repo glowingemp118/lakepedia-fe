@@ -21,6 +21,7 @@ import {
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import { paths } from './paths';
+import { LowerCaseWithUserId } from '@/lib/helpers';
 
 export const TravelerSidebar = [
 
@@ -152,7 +153,9 @@ export function SidebarMenu() {
                 <Link
                   to={
                     typeof item.path === 'function'
-                      ? item.path(user?.first_name as string + user?.last_name as string)
+                      ? item.path(
+                        LowerCaseWithUserId(user)
+                      )
                       : item.path
                       || ''}
                   {...(item.newTab
