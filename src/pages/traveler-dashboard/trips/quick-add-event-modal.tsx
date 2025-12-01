@@ -1,9 +1,10 @@
 import RHFDatePicker from '@/components/rhf/rhf-date';
+import RHFTextArea from '@/components/rhf/rhf-textarea';
 import RHFTextField from '@/components/rhf/rhf-textfield';
 import { Button } from '@/components/ui/button';
 import DialogContent, { Dialog, DialogFooter, DialogHeader, DialogOverlay, DialogTitle } from '@/components/ui/dialog';
 import { Form } from '@/components/ui/form';
-import { useCreateTripEventMutation } from '@/store/Reducer/trip';
+import { useCreateTripEventMutation, useEditTripEventMutation } from '@/store/Reducer/trip';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { BadgePlus, LoaderCircleIcon, Trash } from 'lucide-react';
 import { FC, useEffect, useMemo } from 'react';
@@ -17,27 +18,31 @@ interface QuickAddEventModalProps {
     open: boolean;
     onClose: () => void;
 }
+
 const QucikAddEventModal: FC<QuickAddEventModalProps> = ({ currentEvent, open, onClose }) => {
 
     const defaultValues = useMemo(() => ({
         date: currentEvent?.date ? new Date(currentEvent?.date) : new Date(),
         day: currentEvent?.day ? currentEvent?.day : 1,
-        activites: currentEvent?.activity || [{ time: "", activity: '' }],
+        activities: currentEvent?.activities || [{ time: "", activity: '', description: "" }],
     }), [currentEvent]);
 
     const { id } = useParams();
 
     const [createTripEvent] = useCreateTripEventMutation();
 
+    const [editTripEvent] = useEditTripEventMutation();
+
 
     const schema = z.object({
         date: z.date().min(new Date(1900, 0, 1), "Date is required"),
         day: z.number().min(1, "Day is required"),
-        activites: z.array(z.object({
+        activities: z.array(z.object({
             time: z.string().min(1, "Time is required").refine((val) => val.trim() !== '', {
                 message: "Time cannot be empty",
             }).regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]\s?(AM|PM)?$/i, "Invalid time format"),
             activity: z.string().min(1, "Activity is required"),
+            description: z.string().min(3, "Description at least 3 characters")
         })).min(1, "At least one activity is required"),
     });
 
@@ -47,9 +52,9 @@ const QucikAddEventModal: FC<QuickAddEventModalProps> = ({ currentEvent, open, o
         defaultValues,
     });
 
-    const fields = useFieldArray({
+    const fields = useFieldArray<any>({
         control: form.control,
-        name: "activites",
+        name: "activities",
     })
     useEffect(() => {
         form.reset(defaultValues);
@@ -71,22 +76,53 @@ const QucikAddEventModal: FC<QuickAddEventModalProps> = ({ currentEvent, open, o
                 year: "numeric"
             }).replace(/\//g, "-")
         };
-        const response = await createTripEvent({
-            tripId: id as string,
-            eventData: formattedData
-        });
-        console.log("create event response", response);
-        if (!response.error) {
-            handleClose();
-            toast.success("Event added successfully", { autoClose: 1500 });
+        if (currentEvent) {
+            
+            const response = await editTripEvent({
+                tripId: id as string,
+                eventId: currentEvent.id,
+                eventData: formattedData
+            });
+
+
+            if (!response.error) {
+                handleClose();
+                toast.success("Event updated successfully", { autoClose: 1500 });
+            }
+        } else {
+
+            const response = await createTripEvent({
+                tripId: id as string,
+                eventData: formattedData
+            });
+            console.log("create event response", response);
+            if (!response.error) {
+                handleClose();
+                toast.success("Event added successfully", { autoClose: 1500 });
+            }
         }
+    }
+    const handleActivity = () => {
+
+        const lastItem: any = fields.fields[fields.fields.length - 1];
+
+        if (lastItem.time.trim() === '' || lastItem.activity.trim() === '' || lastItem.description.trim() === '') {
+
+            form.setError(`activities.${fields.fields.length - 1}.time`, { message: "Please fill in the current activity before adding a new one." },);
+
+            form.setError(`activities.${fields.fields.length - 1}.activity`, { message: "Please fill in the current activity before adding a new one." });
+
+            form.clearErrors(`activities.${fields.fields.length - 1}.description`);
+            return;
+        }
+        fields.append({ time: '', activity: '', description: '' })
     }
 
     return (
         <Dialog open={open} onOpenChange={handleClose}>
             <DialogOverlay className="fixed inset-0 flex items-center justify-center " onClick={(e) => e.stopPropagation()}>
 
-                <DialogContent className="max-w-lg"
+                <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto"
                 >
                     <DialogHeader>
                         <DialogTitle>{currentEvent ? "Edit Event" : "Add New Event"}</DialogTitle>
@@ -101,7 +137,7 @@ const QucikAddEventModal: FC<QuickAddEventModalProps> = ({ currentEvent, open, o
                             <RHFTextField name="day" label="Day" type="number" placeholder="Enter Day" />
 
                             <div className='flex justify-end items-center w-full'> <Button type="button"
-                                onClick={() => fields.append({ time: '', activity: '' })}><BadgePlus /> </Button></div>
+                                onClick={handleActivity}><BadgePlus /> </Button></div>
 
                             {fields.fields.map((field, index) => (
                                 <div
@@ -109,26 +145,36 @@ const QucikAddEventModal: FC<QuickAddEventModalProps> = ({ currentEvent, open, o
                                     className="grid grid-cols-12 gap-3 w-full items-center "
                                 >
                                     {/* Left side - inputs */}
-                                    <div className="md:col-span-11 md:grid md:grid-cols-2 grid-cols-1 col-span-12 gap-3">
+                                    <div className={`${fields.fields.length > 1 ? "md:col-span-11" : "md:col-span-12"} md:grid md:grid-cols-2 grid-cols-1 col-span-12 gap-3`}>
                                         <RHFTextField
-                                            name={`activites.${index}.time`}
+                                            name={`activities.${index}.time`}
                                             label="Time"
                                             placeholder="09:00"
                                             className="w-full"
                                         />
                                         <RHFTextField
-                                            name={`activites.${index}.activity`}
+                                            name={`activities.${index}.activity`}
                                             label="Activity"
                                             placeholder="Enter Activity"
                                             className="w-full md:mt-0 mt-2"
                                         />
+
+                                    </div>
+                                    {fields.fields.length > 1 && <div className=" flex justify-end items-center md:col-span-1 col-span-12 ">
+                                        <Button variant="ghost" mode="icon"> <Trash color="red" size={16} onClick={() => fields.remove(index)} className='cursor-pointer' /></Button>
+
+                                    </div>}
+                                    <div className={`${fields.fields.length > 1 ? "md:col-span-11" : "md:col-span-12"}  grid-cols-1 col-span-12 gap-3`}>
+
+                                        <RHFTextArea name={`activities.${index}.description`}
+                                            label="description"
+                                            placeholder='Enter Description'
+                                            className=""
+                                        />
                                     </div>
 
                                     {/* Right side - delete button */}
-                                    {fields.fields.length > 1 && <div className=" flex justify-end md:col-span-1 col-span-12 ">
-                                        <Trash color="red" size={16} onClick={() => fields.remove(index)} className='cursor-pointer' />
 
-                                    </div>}
                                 </div>
                             ))}
 

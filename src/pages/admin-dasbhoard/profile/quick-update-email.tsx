@@ -34,11 +34,11 @@ const QuickUpdateEmail: FC<PageProps> = ({ open, onClose }) => {
 
         onClose();
     }
-    
+
     const onSubmit = (data: any) => {
-    
-        navigate("/auth/change-email");
-    
+
+        navigate("/change-email");
+
     };
 
     return (

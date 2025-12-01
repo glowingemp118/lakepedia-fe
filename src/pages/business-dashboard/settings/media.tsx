@@ -1,4 +1,4 @@
-import RhfMultipleImages from '@/components/rhf/rhf-multiple-images1';
+import RhfMultipleImages from '@/components/rhf/rhf-multiple-images2';
 import RHFTextField from '@/components/rhf/rhf-textfield';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -17,7 +17,7 @@ interface PageProps {
     profileData: {
         logo?: object;
         thumbnail?: object;
-        gallery_photos?: object[];
+        gallery_photos?: any[];
         youtube_video?: string;
     },
 }
@@ -42,21 +42,18 @@ const MediaInformation: FC<PageProps> = ({ profileData }) => {
 
     const [uploadFile] = useUploadFileMutation();
 
-    const [deleteFile] = useDeleteFileMutation();
+    // const [deleteFile] = useDeleteFileMutation();
 
     const fileOrString = z.union([
         z.string().min(1, "Required"),
         z.instanceof(File),
         z.object({
             file: z.instanceof(File).optional(),
-            url: z.string().optional(),
-            id: z.string().optional(),
         }),
         z.object({
-            url: z.string().optional(),
-            id: z.string().optional(),
-            file: z.object().optional(),
-        })
+            id: z.string().min(1, "Required"),
+            url: z.string().min(1, "Required"),
+        }).strict()
     ]);
 
     const schema = z.object({
@@ -77,35 +74,69 @@ const MediaInformation: FC<PageProps> = ({ profileData }) => {
             methods.reset(defaultValues);
     }, [defaultValues]);
 
-    const onSubmit = async (data: z.infer<typeof schema>) => {
+    const upload = async (file: any) => {
+        const uploadResponse = await uploadFile(file as File)
+
+        if (!uploadResponse?.error) {
+
+            return uploadResponse?.data?.data[0]?.id;
+        }
+
+    }
+
+    // const deleteFileHandler = async (fileId: string) => {
+
+    //     const deleteResponse = await deleteFile(fileId);
+
+    //     if (deleteResponse?.error) { }
+
+    //     return deleteResponse;
+    // }
+
+
+    const onSubmit = async (data: any) => {
 
         let logo = "";
 
         let thumbnail = "";
 
         if (typeof (data.logo) !== 'string') {
-            const uploadResponse: any = await uploadFile((data.logo as { file: File })?.file as File)
-            logo = uploadResponse?.data?.data[0]?.id;
-            let deleteResponse = await deleteFile((profileData?.logo as any)?.id);
-            if (!deleteResponse.error) { }
-        }
-        if (typeof (data.thumbnail) !== 'string') {
-            const uploadResponse: any = await uploadFile((data.thumbnail as { file: File })?.file as File)
-            thumbnail = uploadResponse?.data?.data[0]?.id;
-            let deleteResponse = await deleteFile((profileData?.thumbnail as any)?.id);
-            if (!deleteResponse.error) { }
+
+            logo = await upload((data.logo as { file: File })?.file as File);
         }
 
+        if (typeof (data.thumbnail) !== 'string') {
+            thumbnail = await upload((data.thumbnail as { file: File })?.file as File);
+        }
+
+
         const uploadResponses = await Promise.all(
-            data?.galleryPhotos?.map(async (file) => {
-                if (file.file instanceof File) {
-                    const uploadResponse: any = await uploadFile((file as { file: File })?.file as File);
+
+            methods.watch("galleryPhotos")?.map(async (file: any) => {
+
+                if (file instanceof File) {
+
+                    const uploadResponse: any = await uploadFile((file as File));
+
                     return uploadResponse?.data?.data[0]?.id;
+
                 } else {
-                    return profileData?.gallery_photos?.find((photo: any) => photo.id === file.id as string)?.id;
+                    return profileData?.gallery_photos?.find((photo: any) => photo.id === file.id)?.id;
                 }
             })
         );
+
+
+        // const removeOldPhotos = profileData?.gallery_photos?.filter((photo: any) => !uploadResponses.includes(photo.id));
+
+        // if (removeOldPhotos && removeOldPhotos.length > 0) {
+        //     await Promise.all(
+        //         removeOldPhotos.map(async (photo: any) => {
+        //             await deleteFileHandler(photo.id);
+        //         })
+        //     );
+
+        // }
 
         const mediaData = {
             ...(logo && { logo }),
@@ -180,7 +211,8 @@ const MediaInformation: FC<PageProps> = ({ profileData }) => {
                                 </p>
                             </div>
                             <div className='md:col-span-8 col-span-12 md:mb-4'>
-                                <RhfMultipleImages name='galleryPhotos' onDrop={onDrop} accept="image/*" />
+                                {/* <RhfMultipleImages name='galleryPhotos' onDrop={onDrop} accept="image/*" /> */}
+                                <RhfMultipleImages name='galleryPhotos' />
                             </div>
                             <div className='md:col-span-4 col-span-12 md:block hidden'>
                                 <p className='flex items-center gap-1.5 leading-none font-medium text-sm text-mono'>

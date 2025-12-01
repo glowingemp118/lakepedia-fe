@@ -8,7 +8,7 @@ import { AvatarInput } from '@/partials/common/avatar-input';
 import { useUploadFileMutation } from '@/store/Reducer/file';
 import { useUpdateProfileMutation } from '@/store/Reducer/users';
 import { setUser } from '@/store/slices/userSlice';
-import { countries,stateData } from '@/utils/data';
+import { countries, stateData } from '@/utils/data';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircleIcon } from 'lucide-react';
 import { FC, useEffect, useMemo } from 'react';
@@ -56,7 +56,7 @@ const BasicDetails: FC<PageProps> = ({ profileData }) => {
         firstName: z.string().min(3, 'First name is required'),
         lastName: z.string().min(3, 'Last name is required'),
         email: z.email('Invalid email address'),
-        country: z.string().optional(),
+        country: z.string().min(3, 'Country is required'),
         usState: z.string().optional()
     })
 
@@ -72,6 +72,11 @@ const BasicDetails: FC<PageProps> = ({ profileData }) => {
 
 
     const onSubmit = async (data: z.infer<typeof schema>) => {
+
+        if (['United States', 'Canada', 'Australia'].includes(data.country) && !data.usState) {
+            methods.setError("usState", { message: "State is required" }, { shouldFocus: true });
+            return;
+        }
 
         let image = "";
 
@@ -92,7 +97,7 @@ const BasicDetails: FC<PageProps> = ({ profileData }) => {
         let response: any = await updateProfile(profile);
 
         if (!response?.error) {
-            toast.success("Profile updated successfully",{autoClose:1500});
+            toast.success("Profile updated successfully", { autoClose: 1500 });
 
             dispatch(setUser({
                 ...response?.data?.data?.user,
@@ -105,8 +110,8 @@ const BasicDetails: FC<PageProps> = ({ profileData }) => {
     }
 
     const getStates = (country: string) => {
-         const states=  [...stateData.filter((item) => item.country === country).map((item) => item.region)];
-         return states;
+        const states = [...stateData.filter((item) => item.country === country).map((item) => item.region)];
+        return states;
     }
     return (
         <Card >

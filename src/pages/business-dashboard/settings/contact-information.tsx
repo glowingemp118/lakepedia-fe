@@ -45,7 +45,7 @@ const ContactInformation: FC<PageProps> = ({ profileData }) => {
         name: z.string().min(2, 'Name is required'),
         email: z.string().email('Invalid email address'),
         country: z.string().min(3, 'Country is required'),
-        state: z.string().min(3, 'State is required'),
+        state: z.string().optional(),
         phone: z.string().min(10, 'Phone number is required'),
         latitude: z.string().optional(),
         longitude: z.string().optional(),
@@ -65,6 +65,10 @@ const ContactInformation: FC<PageProps> = ({ profileData }) => {
 
     const onSubmit = async (data: z.infer<typeof schema>) => {
         //console.log(data);
+        if (['United States', 'Canada', 'Australia'].includes(data.country) && !data.state) {
+            methods.setError("state", { message: "State is required " }, { shouldFocus: true });
+            return
+        }
         const updateBusinessProfile = {
             contact_name: data.name,
             contact_email: data.email,
@@ -74,7 +78,9 @@ const ContactInformation: FC<PageProps> = ({ profileData }) => {
             country: data.country,
             state: data.state
         }
+
         let response = await updateBusiness(updateBusinessProfile);
+
         if (!response.error) {
             toast.success("Contact information updated successfully", {
                 autoClose: 2000

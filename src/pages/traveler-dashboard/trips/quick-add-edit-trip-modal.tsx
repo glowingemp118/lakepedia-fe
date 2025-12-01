@@ -45,15 +45,14 @@ export default function QuickAddEditTripModal({ open, onClose, currentTrip }: Ad
     const defaultValues = useMemo(() => ({
         name: currentTrip?.name || '',
         privacySetting: currentTrip?.is_private || true,
-        groupOfPeople: currentTrip?.group_of_people || '2',
+        groupOfPeople: currentTrip?.group_of_people || 2,
         description: currentTrip?.description || '',
         startDate: currentTrip?.start_date ? new Date(currentTrip?.start_date) : new Date(),
         endDate: currentTrip?.start_date ? new Date(currentTrip?.end_date) : new Date(),
-        lakes: currentTrip?.lakes?.map((lake: any) => lake.id),
-        budget: currentTrip?.budget || '',
+        lakes: currentTrip?.lakes?.length > 0 ? currentTrip?.lakes?.map((lake: any) => lake.id) : undefined,
+        budget: currentTrip?.budget || 100,
         tripType: currentTrip?.type || ''
     }), [currentTrip]);
-
 
     const [lake, setLake] = useState('');
 
@@ -70,20 +69,20 @@ export default function QuickAddEditTripModal({ open, onClose, currentTrip }: Ad
 
     const tripSchema = z.object({
         name: z.string().min(3, "Trip name is required"),
-        lakes: z.array(z.number().min(1, "At least one lake must be selected")),
+        lakes: z.array(z.number()).optional(),
         tripType: z.string().min(1, "Trip type is required"),
         privacySetting: z.boolean().optional(),
-        groupOfPeople: z.string().min(1, "Group of people is required"),
+        groupOfPeople: z.number().min(1, "Group of people is required"),
         description: z.string().optional(),
         startDate: z.date(),
         endDate: z.date(),
-        budget: z.string().optional(),
+        budget: z.number().optional(),
     })
     type TripFormData = z.infer<typeof tripSchema>
 
     const form = useForm<TripFormData>({
         resolver: zodResolver(tripSchema),
-        defaultValues,
+        defaultValues
 
     });
 
@@ -110,6 +109,11 @@ export default function QuickAddEditTripModal({ open, onClose, currentTrip }: Ad
 
     const handleFormSubmit = async (data: TripFormData) => {
 
+        if (!data.lakes || data.lakes.length === 0) {
+            form.setError("lakes", { message: "At least one lake must be selected" });
+            return;
+        }
+
         if (currentTrip) {
 
             let response = await updateTrip({
@@ -118,12 +122,12 @@ export default function QuickAddEditTripModal({ open, onClose, currentTrip }: Ad
                     name: data.name,
                     start_date: data.startDate,
                     end_date: data.endDate,
-                    group_of_people: data.groupOfPeople,
+                    group_of_people: data.groupOfPeople?.toString(),
                     lake_ids: data.lakes,
                     type: data.tripType,
                     description: data.description,
                     is_private: data.privacySetting,
-                    budget: data.budget,
+                    budget: data.budget?.toString(),
                 }
             });
             if (!response.error) {
@@ -152,7 +156,6 @@ export default function QuickAddEditTripModal({ open, onClose, currentTrip }: Ad
             }
         }
     }
-
 
     return (
         <Dialog open={open} onOpenChange={onClose} >
@@ -192,10 +195,12 @@ export default function QuickAddEditTripModal({ open, onClose, currentTrip }: Ad
 
                                 chip={true}
                             />
+
                             <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
 
 
                                 <RHFTextField name="groupOfPeople" type="number" label="Group of People" placeholder="e.g. 2" />
+                                
                                 <RHFTextField name="budget" type="number" label="Budget" placeholder="e.g. $500" />
                             </div>
 

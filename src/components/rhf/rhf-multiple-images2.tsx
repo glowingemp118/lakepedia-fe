@@ -38,7 +38,10 @@ const RhfMultipleImages: FC<PageProps> = ({ name, label, onDrop }) => {
           const newFiles = Array.from(files);
 
           // i want only allow images not video and svg 
-          if (newFiles.some(file => !file.type.startsWith('image/') || file.type === 'image/svg+xml')) {
+          if (
+            newFiles.some(file => !file.type.startsWith('image/')
+              || file.type === 'image/svg+xml'
+            )) {
             toast.error('Only image files are allowed (no videos or SVGs).', {
               autoClose: 1500
             });
@@ -54,7 +57,7 @@ const RhfMultipleImages: FC<PageProps> = ({ name, label, onDrop }) => {
 
         // REMOVE IMAGE
         const removeImage = (index: number) => {
-          const updated = value.filter((_: File, i: number) => i !== index);
+          const updated = value.filter((_: any, i: number) => i !== index);
           onChange(updated);
         };
 
@@ -117,9 +120,9 @@ const RhfMultipleImages: FC<PageProps> = ({ name, label, onDrop }) => {
                 {/* Preview */}
                 {value.length > 0 && (
                   <div className="grid md:grid-cols-5 grid-cols-3 gap-3">
-                    {value.map((file: File, index: number) => {
+                    {value.map((file: File | any, index: number) => {
 
-                      const imageURL = typeof file === "string" ? file : URL.createObjectURL(file);
+                      const imageURL = file instanceof File ? URL.createObjectURL(file) : typeof file === "object" ? file?.url : "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png";
 
                       return (
                         <div
@@ -129,7 +132,7 @@ const RhfMultipleImages: FC<PageProps> = ({ name, label, onDrop }) => {
                           <img
                             src={imageURL}
                             alt="preview"
-                            className="w-full h-15 rounded-md"
+                            className="w-full  h-20 rounded-md"
                           />
                           <button
                             type="button"

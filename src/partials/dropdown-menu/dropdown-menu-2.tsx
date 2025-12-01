@@ -9,7 +9,6 @@ import {
 import { useBoolean } from '@/hooks/use-boolean';
 import QuickAddEditTripModal from '@/pages/traveler-dashboard/trips/quick-add-edit-trip-modal';
 import { useDeleteLakeMutation } from '@/store/Reducer/lake';
-import { useDeleteTripMutation } from '@/store/Reducer/trip';
 import { selectUser } from '@/store/slices/userSlice';
 import { LoaderCircleIcon, Pencil, Trash } from 'lucide-react';
 import React, { ReactNode } from 'react';
@@ -24,6 +23,8 @@ export function DropdownMenu2({ trigger, id, trip }: { trigger: ReactNode, id: s
   const edit = useBoolean();
 
   const user = useSelector(selectUser);
+
+  const [currentTrip, setCurrentTrip] = React.useState<any>(trip);
 
   const [deleteLake, { isLoading }] = useDeleteLakeMutation();
 
@@ -82,7 +83,10 @@ export function DropdownMenu2({ trigger, id, trip }: { trigger: ReactNode, id: s
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <QuickAddEditTripModal open={edit.value} onClose={edit.onFalse} currentTrip={trip} />
+      <QuickAddEditTripModal open={edit.value} onClose={() => {
+        edit.onFalse();
+        setCurrentTrip(null);
+      }} currentTrip={currentTrip} />
 
       <ConfirmDialog open={open.value} onClose={open.onFalse}
         title="Delete Lake"
@@ -94,7 +98,7 @@ export function DropdownMenu2({ trigger, id, trip }: { trigger: ReactNode, id: s
             </span> : "Delete Lake"}</Button>
         }
       />
-     
+
     </div>
   );
 }

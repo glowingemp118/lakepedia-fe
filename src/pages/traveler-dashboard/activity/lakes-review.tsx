@@ -5,6 +5,7 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import Lightbox from "@/components/ui/lightbox";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useBoolean } from "@/hooks/use-boolean";
@@ -17,7 +18,6 @@ import { AnimatePresence } from "motion/react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import QuickEditLakeReviewModal from "./quick-edit-lake-review-modal";
-import Lightbox from "@/components/ui/lightbox";
 
 
 const LakeReviews = () => {
@@ -47,10 +47,22 @@ const LakeReviews = () => {
       date: "2025-03-25",
       tags: ["Clean Water", "Family Friendly"],
       photos: [
-        "/media/images/600x600/lake1.jpg",
-        "/media/images/600x600/lake2.jpg",
-        "/media/images/600x600/lake1.jpg",
-        "/media/images/600x600/lake2.jpg",
+        {
+          url: "/media/images/600x600/lake1.jpg",
+          id: 1,
+        },
+        {
+          url: "/media/images/600x600/lake2.jpg",
+          id: 2,
+        },
+        {
+          url: "/media/images/600x600/lake1.jpg",
+          id: 3
+        },
+        {
+          url: "/media/images/600x600/lake2.jpg",
+          id: 4
+        },
       ]
     },
     {
@@ -63,11 +75,23 @@ const LakeReviews = () => {
       date: "2025-03-25",
       tags: ["Clean Water", "Family Friendly"],
       photos: [
-        "/media/images/600x600/lake1.jpg",
-        "/media/images/600x600/lake2.jpg",
-        "/media/images/600x600/lake1.jpg",
-        "/media/images/600x600/lake2.jpg",
-      ],
+        {
+          url: "/media/images/600x600/lake1.jpg",
+          id: 1,
+        },
+        {
+          url: "/media/images/600x600/lake2.jpg",
+          id: 2,
+        },
+        {
+          url: "/media/images/600x600/lake1.jpg",
+          id: 3
+        },
+        {
+          url: "/media/images/600x600/lake2.jpg",
+          id: 4
+        },
+      ]
     },
   ]);
 
@@ -199,7 +223,7 @@ const LakeReviews = () => {
                       {review.photos.map((photo, i) => (
                         <motion.img
                           key={i}
-                          src={photo}
+                          src={photo.url}
                           alt={`Review Photo ${i + 1}`}
                           initial={{ opacity: 0, y: 15 }}
                           animate={{ opacity: 1, y: 0 }}
@@ -209,7 +233,7 @@ const LakeReviews = () => {
                             lightbox.onTrue();
                             setCurrentReview(review);
                           }}
-                          className="rounded-xl w-[100px] cursor-pointer h-[100px] object-cover border shadow-md hover:shadow-lg transition-all"
+                          className="rounded-xl w-[100px] cursor-pointer h-[100px] object-cover border shadow-md hover:shadow-lg transition-transform duration-500 hover:scale-105"
                         />
                       ))}
                     </div>
@@ -235,7 +259,7 @@ const LakeReviews = () => {
         onConfirm={handleDelete}
       />
       <Lightbox
-        images={currentReview ? (currentReview as { photos: string[] }).photos : []}
+        images={currentReview ? (currentReview as { photos: {}[] }).photos.map((item: any) => item.url) : []}
         open={lightbox.value}
         onClose={lightbox.onFalse}
         currentIndex={index}

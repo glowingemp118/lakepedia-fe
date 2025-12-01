@@ -118,6 +118,8 @@ export function SidebarMenu() {
 
   const user = useSelector(selectUser);
 
+  const slug = LowerCaseWithUserId(user);
+
   const items: Item[] = [
 
     ...user?.role === "traveler" ? TravelerSidebar : [],
@@ -131,7 +133,7 @@ export function SidebarMenu() {
     active: 
      typeof item.path === 'string'
       ? pathname === item.path
-      : item.path(user?.first_name as string + user?.last_name as string) === pathname
+      : item.path(slug) === pathname
   }));
 
   return (

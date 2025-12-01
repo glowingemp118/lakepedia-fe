@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { LoaderCircleIcon } from 'lucide-react';
 import { FC, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import * as z from 'zod';
 
 interface PageProps {
@@ -30,7 +31,7 @@ const CreateLakeModal: FC<PageProps> = ({ open, onClose }) => {
 
 
     const schema = z.object({
-        lake: z.number().min(1, { message: "Please select a lake" })
+        lake: z.optional(z.number()),
     });
 
     useEffect(() => {
@@ -49,18 +50,25 @@ const CreateLakeModal: FC<PageProps> = ({ open, onClose }) => {
 
     const form = useForm({
         defaultValues: defaulValues,
-        resolver: zodResolver(schema)
+        resolver: zodResolver(schema),
+        mode: "onSubmit",
     });
+
+    console.log("form errors:", form.formState.errors);
 
     const handleSubmit = async (data: any) => {
 
-        if (!data.lake) return;
+        if (!data.lake) {
+            form.setError("lake", { type: "manual", message: "Please select a lake" });
+            return;
+        };
+
 
         const response = await createLake({
             lake_id: data.lake
         });
         if (!response.error) {
-            console.log("create lake response:", response);
+            toast.success("Lake added successfully", { autoClose: 1500 });
             form.reset(defaulValues);
             onClose();
         }

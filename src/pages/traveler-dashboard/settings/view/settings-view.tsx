@@ -14,7 +14,7 @@ import SocialMediaAccount from "../social-media-account";
 
 const SettingsView = () => {
 
-    const { data: profileData, isLoading, isFetching } = useGetProfileQuery({});
+    const { data: profileData, isLoading } = useGetProfileQuery({});
 
     const basicDetails = useMemo(() => ({
         country: profileData?.user?.country || '',

@@ -58,7 +58,7 @@ const TodoSection = () => {
                         {/* Card Header */}
                         <CardHeader className="card-header border-0">
                             <CardTitle className="card-title">{trip.title}</CardTitle>
-                            <span className="text-muted">
+                            <span >
                                 {Math.round(trip.progress * 100)}% done
                             </span>
                         </CardHeader>
@@ -82,7 +82,7 @@ const TodoSection = () => {
                                     <span
                                         className={clsx(
                                             'fw-semibold',
-                                            task.done && 'text-muted text-decoration-line-through'
+                                            task.done && 'text-decoration-line-through'
                                         )}
                                     >
                                         {task.label}

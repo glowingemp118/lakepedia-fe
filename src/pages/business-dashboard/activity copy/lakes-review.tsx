@@ -46,10 +46,22 @@ const LakeReviews = () => {
       date: "2025-03-25",
       tags: ["Clean Water", "Family Friendly"],
       photos: [
-        "/media/images/600x600/lake1.jpg",
-        "/media/images/600x600/lake2.jpg",
-        "/media/images/600x600/lake1.jpg",
-        "/media/images/600x600/lake2.jpg",
+        {
+          url: "/media/images/600x600/lake1.jpg",
+          id: 1,
+        },
+        {
+          url: "/media/images/600x600/lake2.jpg",
+          id: 2,
+        },
+        {
+          url: "/media/images/600x600/lake1.jpg",
+          id: 3
+        },
+        {
+          url: "/media/images/600x600/lake2.jpg",
+          id: 4
+        },
       ]
     },
     {
@@ -62,11 +74,23 @@ const LakeReviews = () => {
       date: "2025-03-25",
       tags: ["Clean Water", "Family Friendly"],
       photos: [
-        "/media/images/600x600/lake1.jpg",
-        "/media/images/600x600/lake2.jpg",
-        "/media/images/600x600/lake1.jpg",
-        "/media/images/600x600/lake2.jpg",
-      ],
+        {
+          url: "/media/images/600x600/lake1.jpg",
+          id: 1,
+        },
+        {
+          url: "/media/images/600x600/lake2.jpg",
+          id: 2,
+        },
+        {
+          url: "/media/images/600x600/lake1.jpg",
+          id: 3
+        },
+        {
+          url: "/media/images/600x600/lake2.jpg",
+          id: 4
+        },
+      ]
     },
   ]);
 
@@ -198,7 +222,7 @@ const LakeReviews = () => {
                       {review.photos.map((photo, i) => (
                         <motion.img
                           key={i}
-                          src={photo}
+                          src={photo.url}
                           alt={`Review Photo ${i + 1}`}
                           initial={{ opacity: 0, y: 15 }}
                           animate={{ opacity: 1, y: 0 }}
@@ -208,7 +232,7 @@ const LakeReviews = () => {
                             lightbox.onTrue();
                             setCurrentReview(review);
                           }}
-                          className="rounded-xl cursor-pointer w-[100px] h-[100px] object-cover border shadow-md hover:shadow-lg transition-all"
+                          className="rounded-xl cursor-pointer w-[100px] h-[100px] object-cover border shadow-md hover:shadow-lg  transition-transform duration-500 hover:scale-105"
                         />
                       ))}
                     </div>
@@ -236,7 +260,7 @@ const LakeReviews = () => {
         onConfirm={handleDelete}
       />
       <Lightbox
-        images={currentReview ? (currentReview as { photos: string[] }).photos : []}
+         images={currentReview ? (currentReview as { photos: {}[] }).photos.map((item:any) => item.url) : []}
         open={lightbox.value}
         onClose={lightbox.onFalse}
         currentIndex={index}

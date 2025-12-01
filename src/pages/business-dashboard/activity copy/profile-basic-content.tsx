@@ -28,7 +28,7 @@ function ProfileActivityContent() {
                   { key: 'lakes', label: 'Lakes', icon: <Map size={16} /> },
                   { key: 'fishing', label: 'Fishing Reports', icon: <Fish size={16} /> },
                   { key: 'pois', label: 'POIs', icon: <MessageCircleHeart size={16} /> },
-                  { key: 'businessess', label: 'Businessess', icon: <Building size={16} /> },
+                  // { key: 'businessess', label: 'Businessess', icon: <Building size={16} /> },
 
                 ].map((tab) => (
                   <button
@@ -55,7 +55,7 @@ function ProfileActivityContent() {
 
       {subActiveTab === 'pois' && <POIsReviews />}
 
-      {subActiveTab === 'businessess' && <BusinessReviews />}
+      {/* {subActiveTab === 'businessess' && <BusinessReviews />} */}
 
     </div >
   );

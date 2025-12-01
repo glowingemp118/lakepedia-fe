@@ -44,10 +44,10 @@ const POIsReview = () => {
       date: "2025-03-25",
       tags: ["Clean Water", "Family Friendly"],
       photos: [
-        "/media/images/rakaposhi.jpg",
-        "/media/images/eagles-nest.jpg",
-        "/media/images/passu-cones.webp",
-        "/media/images/altit-fort.jpg",
+        { url: "/media/images/rakaposhi.jpg", id: 1 },
+        { url: "/media/images/eagles-nest.jpg", id: 2 },
+        { url: "/media/images/passu-cones.webp", id: 3 },
+        { url: "/media/images/altit-fort.jpg", id: 3 },
       ]
     },
     {
@@ -59,10 +59,10 @@ const POIsReview = () => {
       date: "2025-03-25",
       tags: ["Clean Water", "Family Friendly"],
       photos: [
-        "/media/images/rakaposhi.jpg",
-        "/media/images/eagles-nest.jpg",
-        "/media/images/passu-cones.webp",
-        "/media/images/altit-fort.jpg",
+        { url: "/media/images/rakaposhi.jpg", id: 1 },
+        { url: "/media/images/eagles-nest.jpg", id: 2 },
+        { url: "/media/images/passu-cones.webp", id: 3 },
+        { url: "/media/images/altit-fort.jpg", id: 3 },
       ]
     },
   ]);
@@ -191,7 +191,7 @@ const POIsReview = () => {
                       {review.photos.map((photo, i) => (
                         <motion.img
                           key={i}
-                          src={photo}
+                          src={photo.url}
                           alt={`Review Photo ${i + 1}`}
                           initial={{ opacity: 0, y: 15 }}
                           animate={{ opacity: 1, y: 0 }}
@@ -201,7 +201,7 @@ const POIsReview = () => {
                             lightbox.onTrue();
                             setCurrentReview(review);
                           }}
-                          className="rounded-xl  cursor-pointer w-[100px] h-[100px] object-cover border shadow-md hover:shadow-lg transition-all"
+                          className="rounded-xl  cursor-pointer w-[100px] h-[100px] object-cover border shadow-md hover:shadow-lg transition-transform duration-500 hover:scale-105"
                         />
                       ))}
                     </div>
@@ -226,7 +226,7 @@ const POIsReview = () => {
         onConfirm={handleDelete}
       />
       <Lightbox
-        images={currentReview ? (currentReview as { photos: string[] }).photos : []}
+        images={currentReview ? (currentReview as { photos: {}[] }).photos.map((item:any) => item.url) : []}
         open={lightbox.value}
         onClose={lightbox.onFalse}
         currentIndex={index}

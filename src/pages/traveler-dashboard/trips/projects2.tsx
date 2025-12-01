@@ -1,22 +1,21 @@
 
+import ConfirmDialog from '@/components/comfirm-dialog/confirm-dialog';
 import { paths } from '@/components/layouts/layout-3/components/paths';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { useBoolean } from '@/hooks/use-boolean';
 import { formatDate, LowerCaseWithUserId } from '@/lib/helpers';
 import { DropdownMenu2 } from '@/partials/dropdown-menu/dropdown-menu-2';
-import { EllipsisVertical, Heart, LayoutGrid, List, LoaderCircleIcon, Plus, Trash } from 'lucide-react';
-import { FC, useEffect, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router';
-import QuickAddEditTripModal from './quick-add-edit-trip-modal';
-import ConfirmDialog from '@/components/comfirm-dialog/confirm-dialog';
-import { toast } from 'react-toastify';
 import { useDeleteTripMutation } from '@/store/Reducer/trip';
-import { useSelector } from 'react-redux';
 import { selectUser } from '@/store/slices/userSlice';
+import { EllipsisVertical, LayoutGrid, List, LoaderCircleIcon, Plus, Trash } from 'lucide-react';
+import { FC, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Link, useLocation, useNavigate } from 'react-router';
+import { toast } from 'react-toastify';
+import QuickAddEditTripModal from './quick-add-edit-trip-modal';
 
 
 interface TripItem {
@@ -174,7 +173,7 @@ const Projects2: FC<PageProps> = ({ trips }) => {
           confirm.onTrue();
           setCurrentTrip(trip);
         }}>
-          <Trash size={16} color="red" />
+          <Button variant="ghost" mode="icon"><Trash size={16} color="red" /></Button>
         </div>
       </div>
 
@@ -244,9 +243,9 @@ const Projects2: FC<PageProps> = ({ trips }) => {
           }
         />
 
-        <div className="w-full">
+        {/* <div className="w-full">
           <Progress value={60} className="h-1.5 mb-2" />
-        </div>
+        </div> */}
 
 
         <div className="flex items-center gap-2">
@@ -256,7 +255,7 @@ const Projects2: FC<PageProps> = ({ trips }) => {
             confirm.onTrue();
             setCurrentTrip(trip);
           }}>
-            <Trash size={16} color="red" />
+            <Button variant="ghost" mode="icon"> <Trash size={16} color="red" /></Button>
           </div>
         </div>
       </div>
@@ -310,7 +309,10 @@ const Projects2: FC<PageProps> = ({ trips }) => {
           </Button>
         </div>
 
-        <QuickAddEditTripModal open={open.value} onClose={open.onFalse} currentTrip={""} />
+        <QuickAddEditTripModal open={open.value} onClose={() => {
+          setCurrentTrip(null);
+          open.onFalse();
+        }} currentTrip={currentTrip} />
 
         <ConfirmDialog open={confirm.value} onClose={confirm.onFalse}
           title="Delete Trip"

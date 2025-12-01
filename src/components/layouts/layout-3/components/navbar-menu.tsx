@@ -27,8 +27,6 @@ export function NavbarMenu() {
 
   const user = useSelector(selectUser);
 
-  console.log("USER IN NAVBAR MENU", user);
-
   const slug = LowerCaseWithUserId(user);
 
   const TravelerSidebar = TravelerMemu.map((item) => item.title === "Dashboard" ? {

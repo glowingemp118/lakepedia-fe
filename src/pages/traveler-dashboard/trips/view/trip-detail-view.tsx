@@ -61,7 +61,7 @@ export const TripDetailView = () => {
                                             (trip?.status === 'planned' && 'destructive') ||
                                             "secondary"}
                                     >
-                                        {trip?.status}
+                                        {trip?.status.slice(0,1).toUpperCase() + trip?.status.slice(1).toLowerCase().replace('_', ' ') || "Not Added"}
                                     </Badge>
                                 </div>
                             </div>
@@ -109,7 +109,7 @@ export const TripDetailView = () => {
 
                                     {activeTab === 'overview' && <TripOverView trip={trip} />}
 
-                                    {activeTab === 'itinerary' && <Itinerary trip={sampleTripData} />}
+                                    {activeTab === 'itinerary' && <Itinerary />}
 
                                     {activeTab === 'files' && <Files trip={sampleTripData} />}
 
